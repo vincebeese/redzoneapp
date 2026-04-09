@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rzs-red: #C62828;
+  --color-rzs-charcoal: #212121;
+  --color-rzs-slate: #757575;
+  --color-rzs-gold: #F9A825;
+  --color-zone-yellow: #FBC02D;
+  --color-zone-green: #43A047;
+  --color-zone-red: #C62828;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  @apply bg-white text-rzs-charcoal antialiased;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+.zone-badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+.zone-badge-yellow {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.zone-badge-green {
+  @apply bg-green-100 text-green-800;
+}
+
+.zone-badge-red {
+  @apply bg-red-100 text-red-800;
+}
+
+.btn-primary {
+  @apply bg-rzs-red text-white px-4 py-2 rounded-lg font-medium transition-colors;
+}
+
+.btn-primary:hover {
+  background-color: #b71c1c;
+}
+
+.btn-primary:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 text-rzs-charcoal px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors;
+}
+
+.input-field {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none;
+}
+
+.input-field:focus {
+  @apply ring-2 border-transparent;
+  --tw-ring-color: #C62828;
+}
+
+@media print {
+  body.printing-artifact {
+    visibility: hidden;
+  }
+
+  body.printing-artifact [id^="artifact-"].is-printing {
+    visibility: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99999;
+  }
+
+  body.printing-artifact [id^="artifact-"].is-printing * {
+    visibility: visible;
+  }
+
+  body.printing-artifact [id^="artifact-"].is-printing .artifact-body {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body.printing-artifact [id^="artifact-"].is-printing .artifact-header-buttons {
+    display: none !important;
+  }
+
+  @page {
+    margin: 0.5in;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

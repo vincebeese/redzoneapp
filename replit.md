@@ -1,27 +1,64 @@
-# Workspace
+# Red Zone Selling Coach™
 
 ## Overview
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+AI-powered sales coaching application with three modes: Deal Mode, Coach Mode, and Mindset Mode. Built on the Red Zone Selling™ methodology by Vince Beese.
 
 ## Stack
 
-- **Monorepo tool**: pnpm workspaces
-- **Node.js version**: 24
-- **Package manager**: pnpm
-- **TypeScript version**: 5.9
-- **API framework**: Express 5
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+- **Frontend**: React (Vite) + Tailwind CSS v4 — `artifacts/redzone/`
+- **Backend**: Node.js + Express (ES modules) — `artifacts/api-server/`
+- **Database**: PostgreSQL (Replit built-in)
+- **AI**: Anthropic Claude API
+- **Auth**: Custom JWT (cookie-based)
+- **Billing**: Stripe (optional)
 
 ## Key Commands
 
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- `pnpm --filter @workspace/api-server run dev` — run API server locally
+- `pnpm --filter @workspace/api-server run dev` — start API server
+- `pnpm --filter @workspace/redzone run dev` — start frontend
+- `pnpm --filter @workspace/api-server run build` — rebuild API server bundle
 
-See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+## Environment Variables Required
+
+- `DATABASE_URL` — PostgreSQL connection (provisioned by Replit)
+- `ANTHROPIC_API_KEY` — Anthropic Claude API key
+- `STRIPE_SECRET_KEY` — Stripe secret key (optional)
+- `STRIPE_WEBHOOK_SECRET` — Stripe webhook secret (optional)
+- `RESEND_API_KEY` — Resend email API key (optional)
+- `JWT_SECRET` — JWT signing secret (defaults to dev secret if not set)
+
+## Architecture
+
+- **API Server** (`artifacts/api-server/`): Express server bundled with esbuild. Routes in `src/routes/`, services in `src/services/`, middleware in `src/middleware/`, DB in `src/db/`
+- **Frontend** (`artifacts/redzone/`): React + React Router v6 + Tailwind v4. Pages in `src/pages/`, components in `src/components/`, auth context in `src/context/`
+
+## Features
+
+### Deal Mode
+- Structured coaching for active sales opportunities
+- Zone-based deal progression (Yellow/Green/Red)
+- AI-generated artifacts (Stakeholder Maps, Business Cases, etc.)
+- Context compression for long conversations
+- Transcript upload and analysis
+
+### Coach Mode
+- On-demand situational coaching
+- Objection handling, negotiation tactics, discovery guidance
+- Session-based conversations
+
+### Mindset Mode
+- Performance and mental game coaching
+- Based on the Closer Mentality framework
+- Dark-themed interface for focus
+
+## Database Schema
+
+Core tables: `users`, `modes`, `deals`, `messages`, `sessions`, `session_messages`, `transcripts`, `analytics_events`, `resource_center_tools`, `artifact_templates`, `invites`, `app_settings`
+
+## Custom Brand Colors
+
+- `rzs-red`: #C62828
+- `rzs-charcoal`: #212121
+- `rzs-slate`: #757575
+- `rzs-gold`: #F9A825

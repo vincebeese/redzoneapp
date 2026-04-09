@@ -1,0 +1,166 @@
+import { Router } from 'express';
+import bcrypt from 'bcryptjs';
+import { query } from '../db/index.js';
+import { ensureUser } from '../middleware/auth.js';
+
+const router = Router();
+
+// GET /api/users/me — profile + usage stats
+router.get('/me', ensureUser, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const [activeDealsResult, totalTurnsResult, recentDealsResult] = await Promise.all([
+      query(
+        `SELECT COUNT(*)::int AS count FROM deals WHERE user_id = $1 AND status = 'active'`,
+        [userId]
+      ),
+      query(
+        `SELECT COALESCE(SUM(turn_count), 0)::int AS total FROM deals WHERE user_id = $1`,
+        [userId]
+      ),
+      query(
+        `SELECT id, name, zone, status, deal_value, turn_count, updated_at
+         FROM deals WHERE user_id = $1
+         ORDER BY updated_at DESC LIMIT 5`,
+        [userId]
+      ),
+    ]);
+
+    res.json({
+      id: req.user.id,
+      email: req.user.email,
+      display_name: req.user.display_name || null,
+      is_admin: req.user.is_admin,
+      has_beta_access: req.user.has_beta_access,
+      beta_expires_at: req.user.beta_expires_at,
+      subscription_status: req.user.subscription_status,
+      subscription_ends_at: req.user.subscription_ends_at,
+      created_at: req.user.created_at,
+      usage: {
+        active_deals: activeDealsResult.rows[0].count,
+        total_deal_slots: 10,
+        total_turns: totalTurnsResult.rows[0].total,
+        deals: recentDealsResult.rows,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Failed to fetch user' });
+  }
+});
+
+// PATCH /api/users/me — update display_name
+router.patch('/me', ensureUser, async (req, res) => {
+  try {
+    const { display_name } = req.body;
+
+    if (!display_name || typeof display_name !== 'string') {
+      return res.status(400).json({ error: 'display_name is required' });
+    }
+    if (display_name.trim().length === 0) {
+      return res.status(400).json({ error: 'display_name cannot be empty' });
+    }
+    if (display_name.trim().length > 50) {
+      return res.status(400).json({ error: 'display_name must be 50 characters or less' });
+    }
+
+    const result = await query(
+      `UPDATE users SET display_name = $1 WHERE id = $2
+       RETURNING id, email, display_name, is_admin, has_beta_access,
+                 beta_expires_at, subscription_status, created_at`,
+      [display_name.trim(), req.user.id]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// PATCH /api/users/me/password — change password
+router.patch('/me/password', ensureUser, async (req, res) => {
+  try {
+    const { current_password, new_password } = req.body;
+
+    if (!current_password || !new_password) {
+      return res.status(400).json({ error: 'Both current and new password are required' });
+    }
+    if (new_password.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters' });
+    }
+    if (current_password === new_password) {
+      return res.status(400).json({ error: 'New password must be different from current password' });
+    }
+
+    const userResult = await query(
+      'SELECT password_hash FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    const valid = await bcrypt.compare(current_password, userResult.rows[0].password_hash);
+    if (!valid) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    const hash = await bcrypt.hash(new_password, 12);
+    await query('UPDATE users SET password_hash = $1 WHERE id = $2', [hash, req.user.id]);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'Failed to change password' });
+  }
+});
+
+// DELETE /api/users/me — permanently delete account
+router.delete('/me', ensureUser, async (req, res) => {
+  try {
+    const { confirm } = req.body;
+    if (confirm !== 'DELETE') {
+      return res.status(400).json({ error: 'Must confirm with "DELETE"' });
+    }
+
+    const userId = req.user.id;
+
+    // Explicit ordered delete to satisfy all FK constraints:
+    // 1. messages (references both user_id and deal_id)
+    await query('DELETE FROM messages WHERE user_id = $1', [userId]);
+    // 2. session_messages cascade from sessions, so delete sessions next
+    //    (session_messages.session_id → sessions.id CASCADE handles session_messages)
+    await query('DELETE FROM sessions WHERE user_id = $1', [userId]);
+    // 3. deals (messages already gone, safe to delete)
+    await query('DELETE FROM deals WHERE user_id = $1', [userId]);
+    // 4. finally the user record
+    await query('DELETE FROM users WHERE id = $1', [userId]);
+
+    // Clear the auth cookie
+    res.clearCookie('auth_token');
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    res.status(500).json({ error: 'Failed to delete account' });
+  }
+});
+
+// GET /api/users/subscription — subscription status check
+router.get('/subscription', ensureUser, async (req, res) => {
+  try {
+    const hasAccess =
+      req.user.subscription_status === 'active' ||
+      (req.user.has_beta_access &&
+        (!req.user.beta_expires_at || new Date(req.user.beta_expires_at) > new Date()));
+
+    res.json({
+      hasAccess,
+      subscriptionStatus: req.user.subscription_status,
+      hasBetaAccess: req.user.has_beta_access,
+      betaExpiresAt: req.user.beta_expires_at,
+    });
+  } catch (error) {
+    console.error('Error checking subscription:', error);
+    res.status(500).json({ error: 'Failed to check subscription' });
+  }
+});
+
+export default router;
