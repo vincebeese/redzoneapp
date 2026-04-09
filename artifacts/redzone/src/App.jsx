@@ -6,7 +6,6 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import MagicLinkVerify from './pages/MagicLinkVerify';
-import Dashboard from './pages/Dashboard';
 import DealMode from './pages/DealMode';
 import CoachMode from './pages/CoachMode';
 import MindsetMode from './pages/MindsetMode';
@@ -15,6 +14,7 @@ import Account from './pages/Account';
 import Admin from './pages/Admin';
 import ResourceCenter from './pages/ResourceCenter';
 import Paywall from './components/Paywall';
+import LandingPage from './pages/LandingPage';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -32,27 +32,26 @@ function ProtectedRoute({ children }) {
 function AdminOnly({ children }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (!user?.is_admin) return <Navigate to="/" replace />;
+  if (!user?.is_admin) return <Navigate to="/deals" replace />;
   return children;
 }
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/auth/magic" element={<MagicLinkVerify />} />
       <Route
-        path="/"
         element={
           <ProtectedRoute>
             <Layout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
         <Route path="deals" element={<DealMode />} />
         <Route path="deals/:dealId" element={<DealMode />} />
         <Route path="coach" element={<CoachMode />} />

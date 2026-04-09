@@ -32,7 +32,7 @@ export default function MagicLinkVerify() {
         }
 
         await refreshUser();
-        navigate('/', { replace: true });
+        navigate('/deals', { replace: true });
       } catch {
         setStatus('error');
         setErrorMsg('Something went wrong. Please try again.');

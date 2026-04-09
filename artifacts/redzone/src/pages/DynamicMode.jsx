@@ -245,7 +245,7 @@ export default function DynamicMode() {
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center">
           <p className="text-gray-500 mb-4">This mode is not available.</p>
-          <button onClick={() => navigate('/')} className="btn-primary">Go to Dashboard</button>
+          <button onClick={() => navigate('/deals')} className="btn-primary">Go to Dashboard</button>
         </div>
       </div>
     );
