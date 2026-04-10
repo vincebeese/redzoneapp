@@ -35,10 +35,7 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between px-6 py-3">
           {/* Logo */}
-          <div className="flex flex-col leading-tight">
-            <span className="text-base font-bold" style={{ color: '#C62828' }}>Red Zone Selling</span>
-            <span className="text-xs text-gray-400">Coach™</span>
-          </div>
+          <img src="/logo.png" alt="Red Zone Selling Coach" style={{ height: '40px', width: 'auto' }} />
 
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-5">
