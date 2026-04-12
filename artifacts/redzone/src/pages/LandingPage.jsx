@@ -369,7 +369,7 @@ export default function LandingPage() {
                 <p className="text-xs font-medium mb-0.5">Red Zone Selling</p>
                 <p className="text-xs text-gray-500 mb-1">The Ultimate Playbook for High-Performing Enterprise Sellers</p>
                 <a
-                  href="https://www.amazon.com"
+                  href="https://www.amazon.com/dp/B0FLLHQG13"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs font-medium"
@@ -409,7 +409,7 @@ export default function LandingPage() {
       <footer className="relative px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
         <span className="text-sm font-medium tracking-wider" style={{ color: '#C62828' }}>REDZONESELLING.CO</span>
         <div className="absolute left-1/2 -translate-x-1/2 flex flex-wrap gap-4">
-          <button onClick={() => scrollTo('book')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</button>
+          <a href="https://www.amazon.com/dp/B0FLLHQG13" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
           <button onClick={() => scrollTo('coaching')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Coaching</button>
           <button onClick={() => scrollTo('offerings')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Workshops</button>
           <button onClick={() => scrollTo('offerings')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Consulting</button>
