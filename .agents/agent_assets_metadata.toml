@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "jU73xFKaMYMNd0QJfLMJJ"
+uri = "file://screenshots/wireframe-v4.jpg"
+type = "image"
+title = "Wireframe v4 — Current Site Layout"
