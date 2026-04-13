@@ -40,12 +40,10 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         <NavLink
-          to="/"
+          to="/dashboard"
           className={({ isActive }) =>
             `flex items-center px-4 py-3 rounded-lg transition-colors ${
-              isActive && location.pathname === '/'
-                ? 'bg-rzs-red text-white'
-                : 'text-gray-300 hover:bg-gray-700'
+              isActive ? 'bg-rzs-red text-white' : 'text-gray-300 hover:bg-gray-700'
             }`
           }
         >

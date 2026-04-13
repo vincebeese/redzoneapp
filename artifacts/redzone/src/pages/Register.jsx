@@ -77,7 +77,7 @@ export default function Register() {
       }
 
       await login(email, password);
-      navigate('/deals');
+      navigate('/dashboard');
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {

@@ -15,6 +15,7 @@ import Admin from './pages/Admin';
 import ResourceCenter from './pages/ResourceCenter';
 import Paywall from './components/Paywall';
 import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/Dashboard';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function ProtectedRoute({ children }) {
@@ -53,6 +54,7 @@ export default function App() {
           </ProtectedRoute>
         }
       >
+        <Route path="dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
         <Route path="deals" element={<ErrorBoundary><DealMode /></ErrorBoundary>} />
         <Route path="deals/:dealId" element={<ErrorBoundary><DealMode /></ErrorBoundary>} />
         <Route path="coach" element={<ErrorBoundary><CoachMode /></ErrorBoundary>} />

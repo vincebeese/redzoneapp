@@ -9,7 +9,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate('/deals', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [user, loading, navigate]);
 
