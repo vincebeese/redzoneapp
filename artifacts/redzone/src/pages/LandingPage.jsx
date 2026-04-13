@@ -145,7 +145,7 @@ export default function LandingPage() {
       <hr className="border-gray-200" />
 
       {/* HOW IT WORKS + TRY IT FREE — side by side */}
-      <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-200">
+      <div className="flex flex-row divide-x divide-gray-200">
 
         {/* HOW IT WORKS */}
         <section id="how-it-works" className="flex-1 px-6 py-7">
