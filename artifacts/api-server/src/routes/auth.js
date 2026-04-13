@@ -84,11 +84,12 @@ router.post('/register', async (req, res) => {
     }
 
     const password_hash = await bcrypt.hash(password, 10);
+    const newUserId = randomUUID();
     const result = await query(
-      `INSERT INTO users (email, password_hash, display_name, has_beta_access, subscription_status)
-       VALUES ($1, $2, $3, $4, 'inactive')
+      `INSERT INTO users (id, email, password_hash, display_name, has_beta_access, subscription_status)
+       VALUES ($1, $2, $3, $4, $5, 'inactive')
        RETURNING id, email, display_name, is_admin, has_beta_access, subscription_status`,
-      [emailTrimmed, password_hash, display_name?.trim() || null, grantBetaAccess]
+      [newUserId, emailTrimmed, password_hash, display_name?.trim() || null, grantBetaAccess]
     );
 
     // Mark invite as accepted

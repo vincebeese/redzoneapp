@@ -2,8 +2,9 @@
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM users WHERE email = 'vince@vincebeese.com') THEN
-    INSERT INTO users (email, password_hash, is_admin, has_beta_access, subscription_status)
+    INSERT INTO users (id, email, password_hash, is_admin, has_beta_access, subscription_status)
     VALUES (
+      gen_random_uuid()::text,
       'vince@vincebeese.com',
       '$2b$12$c88EqqYxSaU2iKBUVDOnK.WIrN3kIlAWKTmOSbXk.68Hr/L93kaqq',
       true,
