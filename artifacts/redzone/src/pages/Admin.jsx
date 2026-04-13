@@ -447,8 +447,8 @@ function ToolBuilderTab() {
   function load() {
     setLoading(true);
     fetch('/api/admin/artifact-templates', { credentials: 'include' })
-      .then(r => r.json())
-      .then(setTemplates)
+      .then(r => r.ok ? r.json() : Promise.reject(new Error('Server error')))
+      .then(data => setTemplates(Array.isArray(data) ? data : []))
       .catch(() => showFlash('error', 'Failed to load templates'))
       .finally(() => setLoading(false));
   }
@@ -2081,8 +2081,12 @@ function ResourceCenterManager() {
   function load() {
     setLoading(true);
     fetch('/api/admin/resource-center', { credentials: 'include' })
-      .then(r => r.json())
-      .then(setTools)
+      .then(r => r.ok ? r.json() : Promise.reject(new Error('Server error')))
+      .then(data => {
+        if (data && typeof data === 'object' && !Array.isArray(data) && !data.error) {
+          setTools(data);
+        }
+      })
       .catch(() => showFlash('error', 'Failed to load Resource Center'))
       .finally(() => setLoading(false));
   }
