@@ -290,8 +290,20 @@ router.patch('/users/:id', async (req, res) => {
     const values = [];
     let i = 1;
 
+    const beingApproved = has_beta_access === true && !existingUser.has_beta_access;
+
     if (has_beta_access !== undefined) { updates.push(`has_beta_access = $${i++}`); values.push(has_beta_access); }
-    if (beta_expires_at !== undefined) { updates.push(`beta_expires_at = $${i++}`); values.push(beta_expires_at || null); }
+
+    // Auto-set 14-day trial window when approving for the first time
+    if (beingApproved && beta_expires_at === undefined) {
+      const trialEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+      updates.push(`beta_expires_at = $${i++}`);
+      values.push(trialEnd);
+    } else if (beta_expires_at !== undefined) {
+      updates.push(`beta_expires_at = $${i++}`);
+      values.push(beta_expires_at || null);
+    }
+
     if (is_admin !== undefined) { updates.push(`is_admin = $${i++}`); values.push(is_admin); }
     if (subscription_status !== undefined) { updates.push(`subscription_status = $${i++}`); values.push(subscription_status); }
 
@@ -305,7 +317,6 @@ router.patch('/users/:id', async (req, res) => {
     if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
 
     // Send beta approved email if access was just granted
-    const beingApproved = has_beta_access === true && !existingUser.has_beta_access;
     if (beingApproved) {
       sendBetaApprovedEmail({ toEmail: existingUser.email, displayName: existingUser.display_name })
         .catch((err) => console.error('Beta approved email failed:', err.message));

@@ -1,104 +1,197 @@
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+
+const PLANS = [
+  {
+    id: 'founding',
+    name: 'Founding Member',
+    badge: 'Limited Time',
+    badgeColor: '#c8102e',
+    monthlyPrice: 39,
+    annualPrice: 390,
+    annualMonthly: 32.50,
+    monthlyPriceId: 'price_1TKjiqAD6A0v3Wn8YMAsDWRB',
+    annualPriceId: 'price_1TKjiqAD6A0v3Wn8oLoY0Gpl',
+    description: 'Locked-in founder rate — yours forever as long as you stay subscribed.',
+    features: [
+      'Deal Mode: full pipeline coaching',
+      'Coach Mode: on-demand situational guidance',
+      'Mindset Mode: peak performance coaching',
+      'AI-generated artifacts & action plans',
+      'Unlimited deals & session history',
+      'Founding Member rate — locked in for life',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    badge: 'Most Popular',
+    badgeColor: '#1a1a2e',
+    monthlyPrice: 79,
+    annualPrice: 790,
+    annualMonthly: 65.83,
+    monthlyPriceId: 'price_1TKjirAD6A0v3Wn8yjzrzniE',
+    annualPriceId: 'price_1TKjirAD6A0v3Wn8OBCmtF1s',
+    description: 'Full access for elite performers who want every edge available.',
+    features: [
+      'Everything in Founding Member',
+      'Priority AI response times',
+      'Advanced deal analytics',
+      'Early access to new features',
+      'Priority support',
+    ],
+    highlight: true,
+  },
+];
 
 export default function Paywall() {
-  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const [annual, setAnnual] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState(null);
+  const [error, setError] = useState('');
 
-  async function handleSubscribe() {
-    setLoading(true);
+  async function handleSubscribe(plan) {
+    const priceId = annual ? plan.annualPriceId : plan.monthlyPriceId;
+    setLoadingPlan(plan.id);
+    setError('');
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ priceId }),
       });
       if (res.ok) {
         const { url } = await res.json();
         window.location.href = url;
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Failed to start checkout. Please try again.');
       }
-    } catch (error) {
-      console.error('Failed to start checkout:', error);
+    } catch {
+      setError('Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setLoadingPlan(null);
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-        {/* Logo/Brand */}
-        <div className="w-16 h-16 bg-rzs-red rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-
-        <h1 className="text-2xl font-bold text-rzs-charcoal mb-2">
-          Unlock Red Zone Selling Coach
-        </h1>
-
-        <p className="text-gray-600 mb-3">
-          Get unlimited access to AI-powered sales coaching that helps you close more deals.
+    <div className="min-h-screen bg-rzs-charcoal flex flex-col items-center justify-start py-12 px-4">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Upgrade Your Game</h1>
+        <p className="text-gray-400 text-base max-w-md mx-auto">
+          Your beta trial has ended. Choose a plan to keep your deals, sessions, and coaching history.
         </p>
-
-        <p className="text-sm text-gray-500 mb-6">
-          Your account has been created. Beta access is granted by invitation —{' '}
-          <a href="mailto:vince@redzoneselling.co" className="text-rzs-red hover:underline">
-            contact vince@redzoneselling.co
-          </a>{' '}
-          to get started.
-        </p>
-
-        {/* Features */}
-        <div className="text-left space-y-3 mb-8">
-          <Feature text="Deal Mode: Structured coaching for active opportunities" />
-          <Feature text="Coach Mode: On-demand situational guidance" />
-          <Feature text="Mindset Mode: Peak performance mental coaching" />
-          <Feature text="AI-generated artifacts: Stakeholder maps, action plans, and more" />
-          <Feature text="Unlimited conversations and deal storage" />
-        </div>
-
-        {/* Pricing */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <p className="text-3xl font-bold text-rzs-charcoal">
-            $49<span className="text-lg font-normal text-gray-500">/month</span>
-          </p>
-          <p className="text-sm text-gray-500 mt-1">Cancel anytime</p>
-        </div>
-
-        {/* CTA */}
-        <button
-          onClick={handleSubscribe}
-          disabled={loading}
-          className="w-full btn-primary py-4 text-lg"
-        >
-          {loading ? (
-            <span className="inline-flex items-center gap-2">
-              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Loading...
-            </span>
-          ) : (
-            'Start Subscription'
-          )}
-        </button>
-
-        <p className="text-xs text-gray-400 mt-4">
-          Secure payment powered by Stripe
-        </p>
-
-        {/* Footer */}
-        <div className="mt-8 pt-6 border-t border-gray-100">
-          <p className="text-sm text-gray-400">REDZONESELLING.CO</p>
-        </div>
       </div>
-    </div>
-  );
-}
 
-function Feature({ text }) {
-  return (
-    <div className="flex items-start gap-3">
-      <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-      </svg>
-      <span className="text-gray-700 text-sm">{text}</span>
+      {/* Billing toggle */}
+      <div className="flex items-center gap-3 mb-10">
+        <span className={`text-sm font-medium ${!annual ? 'text-white' : 'text-gray-400'}`}>Monthly</span>
+        <button
+          onClick={() => setAnnual(!annual)}
+          className={`relative w-12 h-6 rounded-full transition-colors ${annual ? 'bg-rzs-red' : 'bg-gray-600'}`}
+        >
+          <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${annual ? 'translate-x-6' : ''}`} />
+        </button>
+        <span className={`text-sm font-medium ${annual ? 'text-white' : 'text-gray-400'}`}>
+          Annual <span className="text-green-400 font-semibold">Save ~17%</span>
+        </span>
+      </div>
+
+      {error && (
+        <div className="mb-6 bg-red-900/40 border border-red-700 text-red-300 text-sm rounded-lg px-4 py-3 max-w-xl w-full text-center">
+          {error}
+        </div>
+      )}
+
+      {/* Plan cards */}
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl">
+        {PLANS.map((plan) => (
+          <div
+            key={plan.id}
+            className={`flex-1 rounded-2xl p-7 flex flex-col ${
+              plan.highlight
+                ? 'bg-white ring-2 ring-rzs-red shadow-xl'
+                : 'bg-gray-800 ring-1 ring-gray-700'
+            }`}
+          >
+            {/* Badge */}
+            <div className="flex items-center justify-between mb-4">
+              <h2 className={`text-xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
+                {plan.name}
+              </h2>
+              <span
+                className="text-xs font-semibold px-2.5 py-1 rounded-full text-white"
+                style={{ backgroundColor: plan.badgeColor }}
+              >
+                {plan.badge}
+              </span>
+            </div>
+
+            {/* Price */}
+            <div className="mb-1">
+              <span className={`text-4xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
+                ${annual ? plan.annualMonthly.toFixed(0) : plan.monthlyPrice}
+              </span>
+              <span className={`text-sm ml-1 ${plan.highlight ? 'text-gray-500' : 'text-gray-400'}`}>/mo</span>
+            </div>
+            {annual && (
+              <p className={`text-xs mb-1 ${plan.highlight ? 'text-gray-500' : 'text-gray-400'}`}>
+                Billed ${plan.annualPrice}/year
+              </p>
+            )}
+
+            <p className={`text-sm mb-6 leading-relaxed ${plan.highlight ? 'text-gray-600' : 'text-gray-400'}`}>
+              {plan.description}
+            </p>
+
+            {/* Features */}
+            <ul className="space-y-2.5 mb-8 flex-1">
+              {plan.features.map((f) => (
+                <li key={f} className="flex items-start gap-2.5">
+                  <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className={`text-sm ${plan.highlight ? 'text-gray-700' : 'text-gray-300'}`}>{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA */}
+            <button
+              onClick={() => handleSubscribe(plan)}
+              disabled={loadingPlan !== null}
+              className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
+                plan.highlight
+                  ? 'bg-rzs-red text-white hover:bg-red-700'
+                  : 'bg-gray-700 text-white hover:bg-gray-600 border border-gray-600'
+              }`}
+            >
+              {loadingPlan === plan.id ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Loading…
+                </span>
+              ) : (
+                `Choose ${plan.name}`
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-xs text-gray-500 mt-8 text-center">
+        Secure payment via Stripe · Cancel anytime · All plans include full access
+      </p>
+
+      <p className="text-xs text-gray-600 mt-2 text-center">
+        Questions?{' '}
+        <a href="mailto:vince@redzoneselling.co" className="text-gray-400 hover:text-gray-300 underline">
+          vince@redzoneselling.co
+        </a>
+      </p>
     </div>
   );
 }

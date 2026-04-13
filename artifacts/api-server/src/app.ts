@@ -15,6 +15,7 @@ import artifactsRouter from "./routes/artifacts.js";
 import documentsRouter from "./routes/documents.js";
 import resourceCenterRouter from "./routes/resourceCenter.js";
 import analyticsRouter from "./routes/analytics.js";
+import { startTrialChecker } from "./services/trialChecker.js";
 
 const app: Express = express();
 
@@ -49,5 +50,7 @@ app.use((err: Error & { status?: number }, _req: express.Request, res: express.R
     error: err.message || "Internal server error",
   });
 });
+
+startTrialChecker();
 
 export default app;

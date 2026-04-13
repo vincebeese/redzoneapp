@@ -241,6 +241,71 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
   return data;
 }
 
+export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLeft, sessionCount }) {
+  const { client, fromEmail } = await getResendClient();
+  const appUrl = process.env.APP_URL || 'https://redzoneselling.co';
+  const firstName = displayName?.split(' ')[0] || 'there';
+
+  const subjects = {
+    '7day':      'Your Red Zone Selling Coach trial ends in 7 days',
+    '2day':      'Last chance — your trial ends in 2 days',
+    '50session': "You've hit the halfway mark on your trial sessions",
+    '75session': 'Only 25 coaching sessions left in your trial',
+  };
+
+  const headlines = {
+    '7day':      '7 days left in your trial',
+    '2day':      'Your trial ends in 2 days',
+    '50session': "50 sessions in — halfway there",
+    '75session': '75 sessions used — 25 remaining',
+  };
+
+  const bodies = {
+    '7day': `Your beta trial of Red Zone Selling Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, upgrade to a plan before your trial expires.`,
+    '2day': `Your beta trial expires in <strong>2 days</strong>. Don't lose your deals, sessions, and coaching history — subscribe now to keep everything and stay in the game.`,
+    '50session': `You've completed <strong>50 coaching sessions</strong> — you've got 50 more before your trial ends. When you're ready to go unlimited, upgrading takes less than 2 minutes.`,
+    '75session': `You've used <strong>75 of your 100 trial sessions</strong>. You've got 25 left. Lock in your rate now before your trial ends and keep your momentum going.`,
+  };
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: subjects[type] || 'Your Red Zone Selling Coach trial is ending soon',
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Trial Update</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
+
+        <h2 style="font-size: 20px; color: #1a1a2e; margin-bottom: 8px;">${headlines[type] || 'Your trial is ending soon'}</h2>
+
+        <p style="font-size: 15px; line-height: 1.6;">${bodies[type] || 'Your trial is ending soon. Upgrade to keep access.'}</p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${appUrl}/paywall"
+             style="background-color: #c8102e; color: #ffffff; text-decoration: none;
+                    padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
+            View Plans &amp; Subscribe
+          </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          Questions? Reply to this email or reach out to <a href="mailto:vince@redzoneselling.co" style="color: #c8102e;">vince@redzoneselling.co</a>
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center;">REDZONESELLING.CO</p>
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send trial warning email: ${error.message}`);
+  return data;
+}
+
 export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
   const { client, fromEmail } = await getResendClient();
 

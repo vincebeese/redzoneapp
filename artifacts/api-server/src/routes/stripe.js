@@ -100,6 +100,7 @@ router.post('/checkout', ensureUser, async (req, res) => {
       );
     }
 
+    const baseUrl = process.env.APP_URL || process.env.CLIENT_URL || 'https://redzoneselling.co';
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       line_items: [
@@ -109,8 +110,8 @@ router.post('/checkout', ensureUser, async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/?success=true`,
-      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/paywall`,
+      success_url: `${baseUrl}/dashboard?subscribed=true`,
+      cancel_url: `${baseUrl}/paywall`,
     });
 
     res.json({ url: session.url });
@@ -127,9 +128,10 @@ router.post('/portal', ensureUser, async (req, res) => {
       return res.status(400).json({ error: 'No subscription found' });
     }
 
+    const portalBase = process.env.APP_URL || process.env.CLIENT_URL || 'https://redzoneselling.co';
     const session = await stripe.billingPortal.sessions.create({
       customer: req.user.stripe_customer_id,
-      return_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/account`,
+      return_url: `${portalBase}/account`,
     });
 
     res.json({ url: session.url });
