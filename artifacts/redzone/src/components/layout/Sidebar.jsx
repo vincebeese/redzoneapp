@@ -38,7 +38,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+      <nav className="flex-1 p-4 pb-6 space-y-2 overflow-y-auto">
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
