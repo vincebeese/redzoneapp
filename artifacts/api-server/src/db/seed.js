@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import pool from './index.js';
 
 // Deal Mode System Prompt (with deferred artifacts commented out)
