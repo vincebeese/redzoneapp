@@ -1,27 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [user, loading, navigate]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-red-700 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (user) return null;
 
   function scrollTo(id) {
     const el = document.getElementById(id);
@@ -46,20 +29,34 @@ export default function LandingPage() {
             <button onClick={() => scrollTo('contact')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Contact</button>
           </div>
 
-          {/* Desktop Login — right */}
+          {/* Desktop Login / Go to App — right */}
           <div className="hidden sm:flex items-center gap-3">
             <div className="w-px h-4 bg-gray-200" />
-            <Link
-              to="/login"
-              className="text-sm font-medium text-gray-900 border border-gray-300 rounded px-3 py-1 hover:bg-gray-50 transition-colors"
-            >
-              Login
-            </Link>
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium text-white rounded px-3 py-1 hover:opacity-90 transition-opacity"
+                style={{ background: '#C62828' }}
+              >
+                Go to App
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="text-sm font-medium text-gray-900 border border-gray-300 rounded px-3 py-1 hover:bg-gray-50 transition-colors"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
-          {/* Mobile: Login + hamburger */}
+          {/* Mobile: Login/Go to App + hamburger */}
           <div className="flex sm:hidden items-center gap-3">
-            <Link to="/login" className="text-sm font-medium text-gray-900 border border-gray-300 rounded px-3 py-1">Login</Link>
+            {user ? (
+              <Link to="/dashboard" className="text-sm font-medium text-white rounded px-3 py-1" style={{ background: '#C62828' }}>Go to App</Link>
+            ) : (
+              <Link to="/login" className="text-sm font-medium text-gray-900 border border-gray-300 rounded px-3 py-1">Login</Link>
+            )}
             <button
               onClick={() => setMobileMenuOpen((v) => !v)}
               className="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -87,13 +84,23 @@ export default function LandingPage() {
             <button onClick={() => scrollTo('about')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">About</button>
             <button onClick={() => scrollTo('contact')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Contact</button>
             <div className="pt-1">
-              <Link
-                to="/register"
-                className="block w-full text-center text-sm font-medium text-white py-2 rounded"
-                style={{ background: '#C62828' }}
-              >
-                Start Your Free Beta
-              </Link>
+              {user ? (
+                <Link
+                  to="/dashboard"
+                  className="block w-full text-center text-sm font-medium text-white py-2 rounded"
+                  style={{ background: '#C62828' }}
+                >
+                  Go to App
+                </Link>
+              ) : (
+                <Link
+                  to="/register"
+                  className="block w-full text-center text-sm font-medium text-white py-2 rounded"
+                  style={{ background: '#C62828' }}
+                >
+                  Start Your Free Beta
+                </Link>
+              )}
             </div>
           </div>
         )}
