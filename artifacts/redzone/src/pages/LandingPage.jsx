@@ -35,15 +35,15 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="relative flex items-center justify-between px-6 py-3">
           {/* Logo */}
-          <img src="/logo.png" alt="Red Zone Selling Coach" style={{ height: '52px', width: 'auto' }} />
+          <img src="/logo.png" alt="Red Zone Selling Coach" style={{ height: '64px', width: 'auto' }} />
 
           {/* Desktop nav links — centered */}
-          <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-5">
-            <a href="https://www.amazon.com/dp/B0FLLHQG13" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Book</a>
-            <button onClick={() => scrollTo('coaching')} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Coaching</button>
-            <button onClick={() => scrollTo('offerings')} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Offerings</button>
-            <button onClick={() => scrollTo('about')} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">About</button>
-            <button onClick={() => scrollTo('contact')} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Contact</button>
+          <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
+            <a href="https://www.amazon.com/dp/B0FLLHQG13" target="_blank" rel="noopener noreferrer" className="text-base text-gray-500 hover:text-gray-900 transition-colors">Book</a>
+            <button onClick={() => scrollTo('coaching')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Coaching</button>
+            <button onClick={() => scrollTo('offerings')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Offerings</button>
+            <button onClick={() => scrollTo('about')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">About</button>
+            <button onClick={() => scrollTo('contact')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Contact</button>
           </div>
 
           {/* Desktop Login — right */}
@@ -100,35 +100,35 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO */}
-      <section id="hero" className="px-6 py-8 text-center max-w-2xl mx-auto">
+      <section id="hero" className="px-8 py-6 text-center max-w-4xl mx-auto">
         <span
           className="inline-block text-xs font-medium border rounded-full px-3 py-1 mb-3"
           style={{ color: '#C62828', borderColor: '#C62828' }}
         >
           Beta — Limited Early Access
         </span>
-        <h1 className="text-4xl font-medium leading-tight mb-2">
+        <h1 className="text-5xl font-medium leading-tight mb-2">
           Your <span style={{ color: '#C62828' }}>RZS AI Sales Coach.</span>
         </h1>
         <h2 className="text-2xl font-medium mb-3">Built on Red Zone Selling.</h2>
-        <p className="text-sm text-gray-500 max-w-sm mx-auto mb-5 leading-relaxed">
+        <p className="text-base text-gray-500 max-w-lg mx-auto mb-5 leading-relaxed">
           Deal coaching. Strategic coaching. Mindset coaching. Your coach, on demand, every time.
         </p>
         <Link
           to="/register"
-          className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90"
+          className="inline-block text-sm font-medium text-white px-8 py-3 rounded transition-colors hover:opacity-90"
           style={{ background: '#C62828' }}
         >
           Start Your Free Beta
         </Link>
         <div
-          className="mt-5 mx-auto max-w-sm text-left p-3 rounded-r-lg bg-gray-50"
+          className="mt-4 mx-auto max-w-xl text-left px-4 py-3 rounded-r-lg bg-gray-50 flex items-start gap-3"
           style={{ borderLeft: '2px solid #C62828' }}
         >
-          <p className="text-xs text-gray-500 italic leading-relaxed">
+          <p className="text-sm text-gray-500 italic leading-relaxed">
             "Closing enterprise deals isn't about tactics. It's about knowing exactly where you are in the deal and what to do next. That's what Red Zone Selling teaches."
+            <cite className="text-xs text-gray-400 not-italic block mt-1">Vince Beese, Author · Red Zone Selling</cite>
           </p>
-          <cite className="text-xs text-gray-400 not-italic block mt-2">Vince Beese, Author · Red Zone Selling</cite>
         </div>
       </section>
 
