@@ -15,6 +15,7 @@ import Admin from './pages/Admin';
 import ResourceCenter from './pages/ResourceCenter';
 import Paywall from './components/Paywall';
 import LandingPage from './pages/LandingPage';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -52,15 +53,15 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route path="deals" element={<DealMode />} />
-        <Route path="deals/:dealId" element={<DealMode />} />
-        <Route path="coach" element={<CoachMode />} />
-        <Route path="mindset" element={<MindsetMode />} />
-        <Route path="mode/:slug" element={<DynamicMode />} />
-        <Route path="resources" element={<ResourceCenter />} />
-        <Route path="account" element={<Account />} />
-        <Route path="admin" element={<AdminOnly><Admin /></AdminOnly>} />
-        <Route path="paywall" element={<Paywall />} />
+        <Route path="deals" element={<ErrorBoundary><DealMode /></ErrorBoundary>} />
+        <Route path="deals/:dealId" element={<ErrorBoundary><DealMode /></ErrorBoundary>} />
+        <Route path="coach" element={<ErrorBoundary><CoachMode /></ErrorBoundary>} />
+        <Route path="mindset" element={<ErrorBoundary><MindsetMode /></ErrorBoundary>} />
+        <Route path="mode/:slug" element={<ErrorBoundary><DynamicMode /></ErrorBoundary>} />
+        <Route path="resources" element={<ErrorBoundary><ResourceCenter /></ErrorBoundary>} />
+        <Route path="account" element={<ErrorBoundary><Account /></ErrorBoundary>} />
+        <Route path="admin" element={<AdminOnly><ErrorBoundary><Admin /></ErrorBoundary></AdminOnly>} />
+        <Route path="paywall" element={<ErrorBoundary><Paywall /></ErrorBoundary>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
