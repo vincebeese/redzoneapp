@@ -132,6 +132,9 @@ export default function LandingPage() {
         >
           Free Beta Signup
         </a>
+        <p className="mt-2 text-xs text-gray-400">
+          Beta is limited — sign up today. <span className="font-medium text-gray-500">Launch begins April 27th.</span>
+        </p>
         <div
           className="mt-4 mx-auto max-w-xl text-left px-4 py-3 rounded-r-lg bg-gray-50 flex items-start gap-3"
           style={{ borderLeft: '2px solid #C62828' }}
@@ -219,12 +222,15 @@ export default function LandingPage() {
           href="https://share.hsforms.com/27Y2DuRENQAaD5oYyfeu1Hgoe8gn"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-3"
+          className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-2"
           style={{ background: '#C62828' }}
         >
           Free Beta Signup
         </a>
-        <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
+        <p className="text-xs text-gray-400 mb-3">
+          Beta is limited — sign up today. <span className="font-medium text-gray-500">Launch begins April 27th.</span>
+        </p>
+        <div className="flex flex-wrap justify-center gap-2 mt-0 mb-2">
           <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
             <strong className="text-gray-900 font-medium">Founding Member</strong> $39/mo · Limited · 100 sessions/mo
           </span>
