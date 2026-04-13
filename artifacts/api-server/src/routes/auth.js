@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool, { query } from '../db/index.js';
-import { sendPasswordResetEmail, sendMagicLinkEmail } from '../services/email.js';
+import { sendPasswordResetEmail, sendMagicLinkEmail, sendWelcomeEmail, sendNewUserAdminNotification } from '../services/email.js';
 import { logEvent } from '../services/analytics.js';
 
 const router = Router();
@@ -40,6 +40,10 @@ router.post('/register', async (req, res) => {
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  if (!display_name || !display_name.trim()) {
+    return res.status(400).json({ error: 'Your name is required' });
   }
 
   const emailTrimmed = email.toLowerCase().trim();
@@ -105,6 +109,17 @@ router.post('/register', async (req, res) => {
     if (inviteId) {
       logEvent(user.id, 'invite_accepted', { invited_by: null });
     }
+
+    // Send welcome email to new user and notify admin (non-blocking)
+    const adminEmail = process.env.ADMIN_EMAIL || 'vince@vincebeese.com';
+    sendWelcomeEmail({ toEmail: user.email, displayName: user.display_name }).catch((err) =>
+      console.error('Welcome email failed:', err.message)
+    );
+    sendNewUserAdminNotification({
+      adminEmail,
+      newUserEmail: user.email,
+      newUserName: user.display_name,
+    }).catch((err) => console.error('Admin notification email failed:', err.message));
 
     const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
     const jwtVersion = versionRow.rows[0]?.value || '1';

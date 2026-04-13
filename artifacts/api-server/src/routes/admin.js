@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import adminOnly from '../middleware/adminOnly.js';
-import { sendInviteEmail } from '../services/email.js';
+import { sendInviteEmail, sendBetaApprovedEmail } from '../services/email.js';
 import { count as sseCount } from '../services/sseCounter.js';
 import { bustRCCache } from '../services/resourceCenter.js';
 
@@ -281,6 +281,11 @@ router.patch('/users/:id', async (req, res) => {
       return res.status(400).json({ error: 'Cannot modify your own admin status' });
     }
 
+    // Fetch current user state so we can detect beta approval
+    const existing = await query(`SELECT email, display_name, has_beta_access FROM users WHERE id = $1`, [id]);
+    if (existing.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    const existingUser = existing.rows[0];
+
     const updates = [];
     const values = [];
     let i = 1;
@@ -298,6 +303,14 @@ router.patch('/users/:id', async (req, res) => {
       values
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+
+    // Send beta approved email if access was just granted
+    const beingApproved = has_beta_access === true && !existingUser.has_beta_access;
+    if (beingApproved) {
+      sendBetaApprovedEmail({ toEmail: existingUser.email, displayName: existingUser.display_name })
+        .catch((err) => console.error('Beta approved email failed:', err.message));
+    }
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Error updating user:', error);

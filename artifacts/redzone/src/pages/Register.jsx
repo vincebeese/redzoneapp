@@ -10,6 +10,7 @@ export default function Register() {
   const inviteToken = searchParams.get('invite');
 
   const [displayName, setDisplayName] = useState('');
+  const [nameError, setNameError] = useState('');
   const [email, setEmail] = useState('');
   const [emailLocked, setEmailLocked] = useState(false);
   const [password, setPassword] = useState('');
@@ -45,6 +46,12 @@ export default function Register() {
     e.preventDefault();
     setError('');
     setEmailError('');
+    setNameError('');
+
+    if (!displayName.trim()) {
+      setNameError('Your name is required');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -148,16 +155,18 @@ export default function Register() {
 
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-700">
-              Your name <span className="text-gray-400 font-normal">(optional)</span>
+              Your name <span className="text-rzs-red">*</span>
             </label>
             <input
               type="text"
               value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              onChange={(e) => { setDisplayName(e.target.value); if (nameError) setNameError(''); }}
               autoFocus={!inviteToken}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-rzs-charcoal focus:outline-none focus:ring-2 focus:ring-rzs-red focus:border-transparent"
+              required
+              className={`w-full border rounded-lg px-4 py-2.5 text-rzs-charcoal focus:outline-none focus:ring-2 focus:ring-rzs-red focus:border-transparent ${nameError ? 'border-red-400' : 'border-gray-300'}`}
               placeholder="Your name"
             />
+            {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
           </div>
 
           <div className="space-y-1">
