@@ -144,11 +144,8 @@ export default function LandingPage() {
 
       <hr className="border-gray-200" />
 
-      {/* HOW IT WORKS + TRY IT FREE — side by side */}
-      <div className="flex flex-row divide-x divide-gray-200">
-
-        {/* HOW IT WORKS */}
-        <section id="how-it-works" className="flex-1 px-6 py-7">
+      {/* HOW IT WORKS */}
+        <section id="how-it-works" className="px-6 py-7 max-w-2xl mx-auto w-full">
           <h2 className="text-xl font-medium text-center mb-2">AI Coaching Modes. Every selling situation is covered.</h2>
           <p className="text-sm text-gray-500 text-center mb-4 max-w-md mx-auto leading-relaxed">
             Start a session, step away, and pick up right where you left off.
@@ -199,31 +196,31 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* TRY IT FREE */}
-        <section id="try-it-free" className="flex-1 px-6 py-7 bg-gray-50 text-center flex flex-col justify-center">
-          <h2 className="text-xl font-medium mb-2">Start free. No commitment.</h2>
-          <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto leading-relaxed">
-            14 days or 100 sessions — full access to all three modes. Choose a plan when you're ready.
-          </p>
-          <Link
-            to="/register"
-            className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-3"
-            style={{ background: '#C62828' }}
-          >
-            Start Your Free Beta
-          </Link>
-          <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
-            <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
-              <strong className="text-gray-900 font-medium">Founding Member</strong> $39/mo · Limited · 100 sessions/mo
-            </span>
-            <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
-              <strong className="text-gray-900 font-medium">Pro</strong> $79/mo · 200 sessions/mo
-            </span>
-          </div>
-          <p className="text-xs text-gray-400 italic">One session = one message in, one coach response out.</p>
-        </section>
+      <hr className="border-gray-200" />
 
-      </div>
+      {/* TRY IT FREE */}
+      <section id="try-it-free" className="px-6 py-7 bg-gray-50 text-center">
+        <h2 className="text-xl font-medium mb-2">Start free. No commitment.</h2>
+        <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto leading-relaxed">
+          14 days or 100 sessions — full access to all three modes. Choose a plan when you're ready.
+        </p>
+        <Link
+          to="/register"
+          className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-3"
+          style={{ background: '#C62828' }}
+        >
+          Start Your Free Beta
+        </Link>
+        <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
+          <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
+            <strong className="text-gray-900 font-medium">Founding Member</strong> $39/mo · Limited · 100 sessions/mo
+          </span>
+          <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
+            <strong className="text-gray-900 font-medium">Pro</strong> $79/mo · 200 sessions/mo
+          </span>
+        </div>
+        <p className="text-xs text-gray-400 italic">One session = one message in, one coach response out.</p>
+      </section>
 
       <hr className="border-gray-200" />
 
