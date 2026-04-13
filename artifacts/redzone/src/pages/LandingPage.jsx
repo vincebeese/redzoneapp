@@ -407,7 +407,7 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer className="relative px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-        <span className="text-sm font-medium tracking-wider" style={{ color: '#C62828' }}>REDZONESELLING.CO</span>
+        <img src="/logo.png" alt="Red Zone Selling" style={{ height: '36px', width: 'auto' }} />
         <div className="absolute left-1/2 -translate-x-1/2 flex flex-wrap gap-4">
           <a href="https://www.amazon.com/dp/B0FLLHQG13" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
           <button onClick={() => scrollTo('coaching')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Coaching</button>
