@@ -112,7 +112,7 @@ export default function LandingPage() {
         </h1>
         <h2 className="text-2xl font-medium mb-3">Built on Red Zone Selling.</h2>
         <p className="text-base text-gray-500 max-w-lg mx-auto mb-5 leading-relaxed">
-          Deal coaching. Strategic coaching. Mindset coaching. Your coach, on demand, every time.
+          Deal coaching. Strategic coaching. Mindset coaching.<br />Your coach, on demand, every time.
         </p>
         <Link
           to="/register"
@@ -144,83 +144,86 @@ export default function LandingPage() {
 
       <hr className="border-gray-200" />
 
-      {/* HOW IT WORKS */}
-      <section id="how-it-works" className="px-6 py-7">
-        <h2 className="text-xl font-medium text-center mb-2">AI Coaching Modes. Every selling situation is covered.</h2>
-        <p className="text-sm text-gray-500 text-center mb-4 max-w-md mx-auto leading-relaxed">
-          Start a session, step away, and pick up right where you left off.
-        </p>
-        <div className="flex flex-col gap-3 max-w-2xl mx-auto">
-          {[
-            {
-              num: '1',
-              mode: 'Deal Mode',
-              title: "You're stuck on a deal",
-              desc: "Drop in the situation. Get a Red Zone diagnosis — which zone you're in, what's at risk, and the exact play to run next.",
-              outcome: 'You leave with a named play and a time-bound next action',
-            },
-            {
-              num: '2',
-              mode: 'Coach Mode',
-              title: 'You need strategic guidance',
-              desc: 'Ask anything about your pipeline, your process, or how to handle a specific selling scenario. Direct answers grounded in the system.',
-              outcome: 'You leave with clarity and a concrete next step',
-            },
-            {
-              num: '3',
-              mode: 'Mindset Mode',
-              title: 'The pressure is real',
-              desc: "You lost a deal. You're in a slump. You're walking into the biggest close of the quarter. Get your head right before the moment arrives.",
-              outcome: 'You leave grounded, refocused, and ready to compete',
-            },
-          ].map((step) => (
-            <div
-              key={step.num}
-              className="grid border border-gray-200 rounded-lg overflow-hidden"
-              style={{ gridTemplateColumns: '72px 1fr' }}
-            >
+      {/* HOW IT WORKS + TRY IT FREE — side by side */}
+      <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-200">
+
+        {/* HOW IT WORKS */}
+        <section id="how-it-works" className="flex-1 px-6 py-7">
+          <h2 className="text-xl font-medium text-center mb-2">AI Coaching Modes. Every selling situation is covered.</h2>
+          <p className="text-sm text-gray-500 text-center mb-4 max-w-md mx-auto leading-relaxed">
+            Start a session, step away, and pick up right where you left off.
+          </p>
+          <div className="flex flex-col gap-3">
+            {[
+              {
+                num: '1',
+                mode: 'Deal Mode',
+                title: "You're stuck on a deal",
+                desc: "Drop in the situation. Get a Red Zone diagnosis — which zone you're in, what's at risk, and the exact play to run next.",
+                outcome: 'You leave with a named play and a time-bound next action',
+              },
+              {
+                num: '2',
+                mode: 'Coach Mode',
+                title: 'You need strategic guidance',
+                desc: 'Ask anything about your pipeline, your process, or how to handle a specific selling scenario. Direct answers grounded in the system.',
+                outcome: 'You leave with clarity and a concrete next step',
+              },
+              {
+                num: '3',
+                mode: 'Mindset Mode',
+                title: 'The pressure is real',
+                desc: "You lost a deal. You're in a slump. You're walking into the biggest close of the quarter. Get your head right before the moment arrives.",
+                outcome: 'You leave grounded, refocused, and ready to compete',
+              },
+            ].map((step) => (
               <div
-                className="flex flex-col items-center justify-center px-2 py-4 gap-1"
-                style={{ background: '#212121' }}
+                key={step.num}
+                className="grid border border-gray-200 rounded-lg overflow-hidden"
+                style={{ gridTemplateColumns: '72px 1fr' }}
               >
-                <span className="text-2xl font-medium leading-none" style={{ color: '#C62828' }}>{step.num}</span>
-                <span className="text-center text-xs font-medium uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '9px' }}>{step.mode}</span>
+                <div
+                  className="flex flex-col items-center justify-center px-2 py-4 gap-1"
+                  style={{ background: '#212121' }}
+                >
+                  <span className="text-2xl font-medium leading-none" style={{ color: '#C62828' }}>{step.num}</span>
+                  <span className="text-center text-xs font-medium uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '9px' }}>{step.mode}</span>
+                </div>
+                <div className="p-4 bg-gray-50">
+                  <p className="text-sm font-medium mb-1">{step.title}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed mb-1">{step.desc}</p>
+                  <p className="text-xs text-gray-400 italic">{step.outcome}</p>
+                </div>
               </div>
-              <div className="p-4 bg-gray-50">
-                <p className="text-sm font-medium mb-1">{step.title}</p>
-                <p className="text-xs text-gray-500 leading-relaxed mb-1">{step.desc}</p>
-                <p className="text-xs text-gray-400 italic">{step.outcome}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      <hr className="border-gray-200" />
+        {/* TRY IT FREE */}
+        <section id="try-it-free" className="flex-1 px-6 py-7 bg-gray-50 text-center flex flex-col justify-center">
+          <h2 className="text-xl font-medium mb-2">Start free. No commitment.</h2>
+          <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto leading-relaxed">
+            14 days or 100 sessions — full access to all three modes. Choose a plan when you're ready.
+          </p>
+          <Link
+            to="/register"
+            className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-3"
+            style={{ background: '#C62828' }}
+          >
+            Start Your Free Beta
+          </Link>
+          <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
+            <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
+              <strong className="text-gray-900 font-medium">Founding Member</strong> $39/mo · Limited · 100 sessions/mo
+            </span>
+            <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
+              <strong className="text-gray-900 font-medium">Pro</strong> $79/mo · 200 sessions/mo
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 italic">One session = one message in, one coach response out.</p>
+        </section>
 
-      {/* TRY IT FREE */}
-      <section id="try-it-free" className="px-6 py-7 bg-gray-50 text-center">
-        <h2 className="text-xl font-medium mb-2">Start free. No commitment.</h2>
-        <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto leading-relaxed">
-          14 days or 100 sessions — full access to all three modes. Choose a plan when you're ready.
-        </p>
-        <Link
-          to="/register"
-          className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-3"
-          style={{ background: '#C62828' }}
-        >
-          Start Your Free Beta
-        </Link>
-        <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
-          <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
-            <strong className="text-gray-900 font-medium">Founding Member</strong> $39/mo · Limited · 100 sessions/mo
-          </span>
-          <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
-            <strong className="text-gray-900 font-medium">Pro</strong> $79/mo · 200 sessions/mo
-          </span>
-        </div>
-        <p className="text-xs text-gray-400 italic">One session = one message in, one coach response out.</p>
-      </section>
+      </div>
 
       <hr className="border-gray-200" />
 
