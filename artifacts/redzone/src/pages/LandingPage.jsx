@@ -93,13 +93,15 @@ export default function LandingPage() {
                   Go to App
                 </Link>
               ) : (
-                <Link
-                  to="/register"
+                <a
+                  href="https://share.hsforms.com/27Y2DuRENQAaD5oYyfeu1Hgoe8gn"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block w-full text-center text-sm font-medium text-white py-2 rounded"
                   style={{ background: '#C62828' }}
                 >
-                  Start Your Free Beta
-                </Link>
+                  Free Beta Signup
+                </a>
               )}
             </div>
           </div>
@@ -121,13 +123,15 @@ export default function LandingPage() {
         <p className="text-base text-gray-500 max-w-lg mx-auto mb-5 leading-relaxed">
           Deal coaching. Strategic coaching. Mindset coaching.<br />Your coach, on demand, every time.
         </p>
-        <Link
-          to="/register"
+        <a
+          href="https://share.hsforms.com/27Y2DuRENQAaD5oYyfeu1Hgoe8gn"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block text-sm font-medium text-white px-8 py-3 rounded transition-colors hover:opacity-90"
           style={{ background: '#C62828' }}
         >
-          Start Your Free Beta
-        </Link>
+          Free Beta Signup
+        </a>
         <div
           className="mt-4 mx-auto max-w-xl text-left px-4 py-3 rounded-r-lg bg-gray-50 flex items-start gap-3"
           style={{ borderLeft: '2px solid #C62828' }}
@@ -211,13 +215,15 @@ export default function LandingPage() {
         <p className="text-sm text-gray-500 mb-4 max-w-xs mx-auto leading-relaxed">
           14 days or 100 sessions — full access to all three modes. Choose a plan when you're ready.
         </p>
-        <Link
-          to="/register"
+        <a
+          href="https://share.hsforms.com/27Y2DuRENQAaD5oYyfeu1Hgoe8gn"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block text-sm font-medium text-white px-7 py-3 rounded transition-colors hover:opacity-90 mb-3"
           style={{ background: '#C62828' }}
         >
-          Start Your Free Beta
-        </Link>
+          Free Beta Signup
+        </a>
         <div className="flex flex-wrap justify-center gap-2 mt-3 mb-2">
           <span className="text-xs text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1">
             <strong className="text-gray-900 font-medium">Founding Member</strong> $39/mo · Limited · 100 sessions/mo
@@ -250,7 +256,7 @@ export default function LandingPage() {
               <p className="text-xs text-gray-500 leading-relaxed mb-3">
                 Your always-on AI sales coach — deal reviews, call prep, objection handling, mindset coaching. Three modes. 24/7. Available the moment you need it.
               </p>
-              <Link to="/register" className="text-xs font-medium" style={{ color: '#C62828' }}>Start Your Free Beta →</Link>
+              <a href="https://share.hsforms.com/27Y2DuRENQAaD5oYyfeu1Hgoe8gn" target="_blank" rel="noopener noreferrer" className="text-xs font-medium" style={{ color: '#C62828' }}>Free Beta Signup →</a>
             </div>
           </div>
           {/* 1:1 Coaching */}
