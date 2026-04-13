@@ -470,8 +470,8 @@ router.get('/me', async (req, res) => {
     }
 
     const result = await query(
-      `SELECT id, email, is_admin, has_beta_access, beta_expires_at,
-              subscription_status, subscription_ends_at, created_at
+      `SELECT id, email, display_name, is_admin, has_beta_access, beta_expires_at,
+              subscription_status, subscription_ends_at, session_bonus, created_at
        FROM users WHERE id = $1`,
       [payload.userId]
     );

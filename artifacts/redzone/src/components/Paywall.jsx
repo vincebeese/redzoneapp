@@ -1,29 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const PLANS = [
-  {
+const PLANS = {
+  founding: {
     id: 'founding',
     name: 'Founding Member',
-    badge: 'Limited Time',
+    badge: 'Limited — 50 seats',
     badgeColor: '#c8102e',
     monthlyPrice: 39,
     annualPrice: 390,
     annualMonthly: 32.50,
     monthlyPriceId: 'price_1TKjiqAD6A0v3Wn8YMAsDWRB',
     annualPriceId: 'price_1TKjiqAD6A0v3Wn8oLoY0Gpl',
-    description: 'Locked-in founder rate — yours forever as long as you stay subscribed.',
+    sessions: '100 sessions/mo',
+    description: 'Locked-in founder rate for life. Once 50 seats are claimed, this plan closes permanently.',
     features: [
+      '100 coaching sessions per month',
       'Deal Mode: full pipeline coaching',
-      'Coach Mode: on-demand situational guidance',
-      'Mindset Mode: peak performance coaching',
-      'AI-generated artifacts & action plans',
-      'Unlimited deals & session history',
-      'Founding Member rate — locked in for life',
+      'Coach Mode: on-demand guidance',
+      'Mindset Mode: peak performance',
+      'AI artifacts & action plans',
+      'Rate locked for life',
     ],
     highlight: false,
+    cta: 'Claim Founding Member Rate',
   },
-  {
+  starter: {
+    id: 'starter',
+    name: 'Starter',
+    badge: 'Available',
+    badgeColor: '#374151',
+    monthlyPrice: 49,
+    annualPrice: 490,
+    annualMonthly: 40.83,
+    monthlyPriceId: 'price_1TKjiqAD6A0v3Wn8LWHxtVTO',
+    annualPriceId: 'price_1TKjiqAD6A0v3Wn8fWzigOFS',
+    sessions: '100 sessions/mo',
+    description: 'Full access with 100 coaching sessions per month.',
+    features: [
+      '100 coaching sessions per month',
+      'Deal Mode: full pipeline coaching',
+      'Coach Mode: on-demand guidance',
+      'Mindset Mode: peak performance',
+      'AI artifacts & action plans',
+    ],
+    highlight: false,
+    cta: 'Get Started with Starter',
+  },
+  pro: {
     id: 'pro',
     name: 'Pro',
     badge: 'Most Popular',
@@ -33,23 +57,42 @@ const PLANS = [
     annualMonthly: 65.83,
     monthlyPriceId: 'price_1TKjirAD6A0v3Wn8yjzrzniE',
     annualPriceId: 'price_1TKjirAD6A0v3Wn8OBCmtF1s',
-    description: 'Full access for elite performers who want every edge available.',
+    sessions: '200 sessions/mo',
+    description: 'Double the sessions plus priority access. Team pricing at $65/seat/mo for 5+ seats.',
     features: [
-      'Everything in Founding Member',
+      '200 coaching sessions per month',
+      'Everything in Starter',
       'Priority AI response times',
       'Advanced deal analytics',
       'Early access to new features',
-      'Priority support',
+      'Team pricing available (5+ seats)',
     ],
     highlight: true,
+    cta: 'Go Pro',
   },
-];
+};
 
 export default function Paywall() {
   const { user } = useAuth();
   const [annual, setAnnual] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [error, setError] = useState('');
+  const [seatInfo, setSeatInfo] = useState({ count: 0, available: true, remaining: 50 });
+  const [seatLoading, setSeatLoading] = useState(true);
+
+  const isSubscriber = user?.subscription_status === 'active';
+  const trialExpired = !isSubscriber && (
+    !user?.has_beta_access ||
+    (user?.beta_expires_at && new Date(user.beta_expires_at) <= new Date())
+  );
+
+  useEffect(() => {
+    fetch('/api/stripe/seat-count', { credentials: 'include' })
+      .then((r) => r.json())
+      .then((d) => setSeatInfo(d))
+      .catch(() => setSeatInfo({ count: 0, available: true, remaining: 50 }))
+      .finally(() => setSeatLoading(false));
+  }, []);
 
   async function handleSubscribe(plan) {
     const priceId = annual ? plan.annualPriceId : plan.monthlyPriceId;
@@ -62,11 +105,10 @@ export default function Paywall() {
         credentials: 'include',
         body: JSON.stringify({ priceId }),
       });
+      const data = await res.json();
       if (res.ok) {
-        const { url } = await res.json();
-        window.location.href = url;
+        window.location.href = data.url;
       } else {
-        const data = await res.json();
         setError(data.error || 'Failed to start checkout. Please try again.');
       }
     } catch {
@@ -76,18 +118,82 @@ export default function Paywall() {
     }
   }
 
+  async function handleSessionPack() {
+    setLoadingPlan('session_pack');
+    setError('');
+    try {
+      const res = await fetch('/api/stripe/session-pack', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || 'Failed to start checkout.');
+      }
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
+
+  // Decide which two plans to show
+  const leftPlan = seatInfo.available ? PLANS.founding : PLANS.starter;
+  const rightPlan = PLANS.pro;
+
   return (
     <div className="min-h-screen bg-rzs-charcoal flex flex-col items-center justify-start py-12 px-4">
+
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Upgrade Your Game</h1>
-        <p className="text-gray-400 text-base max-w-md mx-auto">
-          Your beta trial has ended. Choose a plan to keep your deals, sessions, and coaching history.
-        </p>
+      <div className="text-center mb-8 max-w-lg">
+        {isSubscriber ? (
+          <>
+            <h1 className="text-3xl font-bold text-white mb-2">Session Limit Reached</h1>
+            <p className="text-gray-400 text-base">
+              You've used all your sessions for this billing period. Add more instantly with a Session Pack, or upgrade to Pro for 200 sessions/mo.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="text-3xl font-bold text-white mb-2">Your Trial Has Ended</h1>
+            <p className="text-gray-400 text-base">
+              Choose a plan to keep your deals, sessions, and coaching history — and keep closing.
+            </p>
+          </>
+        )}
+      </div>
+
+      {/* Session Pack highlight (always visible — quick add-on) */}
+      <div className="w-full max-w-2xl mb-6">
+        <div className="bg-gray-800 border border-gray-700 rounded-xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-white font-semibold text-base">Session Pack</span>
+              <span className="text-xs bg-rzs-red text-white px-2 py-0.5 rounded-full font-medium">Add-on</span>
+            </div>
+            <p className="text-gray-400 text-sm">+25 sessions · One-time · $9 · No subscription required</p>
+          </div>
+          <button
+            onClick={handleSessionPack}
+            disabled={loadingPlan !== null}
+            className="shrink-0 bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loadingPlan === 'session_pack' ? (
+              <span className="inline-flex items-center gap-2">
+                <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Loading…
+              </span>
+            ) : (
+              'Buy Session Pack — $9'
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Billing toggle */}
-      <div className="flex items-center gap-3 mb-10">
+      <div className="flex items-center gap-3 mb-8">
         <span className={`text-sm font-medium ${!annual ? 'text-white' : 'text-gray-400'}`}>Monthly</span>
         <button
           onClick={() => setAnnual(!annual)}
@@ -101,14 +207,26 @@ export default function Paywall() {
       </div>
 
       {error && (
-        <div className="mb-6 bg-red-900/40 border border-red-700 text-red-300 text-sm rounded-lg px-4 py-3 max-w-xl w-full text-center">
+        <div className="mb-5 bg-red-900/40 border border-red-700 text-red-300 text-sm rounded-lg px-4 py-3 max-w-2xl w-full text-center">
           {error}
+        </div>
+      )}
+
+      {/* Founding Member seat availability notice */}
+      {!seatLoading && !seatInfo.available && (
+        <div className="mb-5 bg-amber-900/30 border border-amber-700 text-amber-300 text-sm rounded-lg px-4 py-3 max-w-2xl w-full text-center">
+          Founding Member is sold out (50/50 seats claimed). Starter plan is now available.
+        </div>
+      )}
+      {!seatLoading && seatInfo.available && seatInfo.remaining <= 10 && (
+        <div className="mb-5 bg-amber-900/30 border border-amber-700 text-amber-300 text-sm rounded-lg px-4 py-3 max-w-2xl w-full text-center">
+          Only {seatInfo.remaining} Founding Member seat{seatInfo.remaining !== 1 ? 's' : ''} remaining.
         </div>
       )}
 
       {/* Plan cards */}
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl">
-        {PLANS.map((plan) => (
+        {[leftPlan, rightPlan].map((plan) => (
           <div
             key={plan.id}
             className={`flex-1 rounded-2xl p-7 flex flex-col ${
@@ -117,13 +235,13 @@ export default function Paywall() {
                 : 'bg-gray-800 ring-1 ring-gray-700'
             }`}
           >
-            {/* Badge */}
-            <div className="flex items-center justify-between mb-4">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-2 mb-4">
               <h2 className={`text-xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
                 {plan.name}
               </h2>
               <span
-                className="text-xs font-semibold px-2.5 py-1 rounded-full text-white"
+                className="text-xs font-semibold px-2.5 py-1 rounded-full text-white shrink-0"
                 style={{ backgroundColor: plan.badgeColor }}
               >
                 {plan.badge}
@@ -131,17 +249,20 @@ export default function Paywall() {
             </div>
 
             {/* Price */}
-            <div className="mb-1">
+            <div className="mb-0.5">
               <span className={`text-4xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
-                ${annual ? plan.annualMonthly.toFixed(0) : plan.monthlyPrice}
+                ${annual ? Math.floor(plan.annualMonthly) : plan.monthlyPrice}
               </span>
               <span className={`text-sm ml-1 ${plan.highlight ? 'text-gray-500' : 'text-gray-400'}`}>/mo</span>
             </div>
             {annual && (
-              <p className={`text-xs mb-1 ${plan.highlight ? 'text-gray-500' : 'text-gray-400'}`}>
+              <p className={`text-xs mb-1 ${plan.highlight ? 'text-gray-400' : 'text-gray-500'}`}>
                 Billed ${plan.annualPrice}/year
               </p>
             )}
+            <p className={`text-xs font-medium mb-4 ${plan.highlight ? 'text-rzs-red' : 'text-rzs-red'}`}>
+              {plan.sessions}
+            </p>
 
             <p className={`text-sm mb-6 leading-relaxed ${plan.highlight ? 'text-gray-600' : 'text-gray-400'}`}>
               {plan.description}
@@ -175,7 +296,7 @@ export default function Paywall() {
                   Loading…
                 </span>
               ) : (
-                `Choose ${plan.name}`
+                plan.cta
               )}
             </button>
           </div>
@@ -183,9 +304,8 @@ export default function Paywall() {
       </div>
 
       <p className="text-xs text-gray-500 mt-8 text-center">
-        Secure payment via Stripe · Cancel anytime · All plans include full access
+        Secure payment via Stripe · Cancel anytime
       </p>
-
       <p className="text-xs text-gray-600 mt-2 text-center">
         Questions?{' '}
         <a href="mailto:vince@redzoneselling.co" className="text-gray-400 hover:text-gray-300 underline">

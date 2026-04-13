@@ -115,6 +115,30 @@ router.post('/', ensureUser, async (req, res) => {
   }
 
   try {
+    // Enforce 100-session lifetime cap for beta trial users
+    const isBetaTrial = req.user.has_beta_access &&
+      req.user.subscription_status !== 'active' &&
+      !req.user.is_admin;
+
+    if (isBetaTrial) {
+      const countResult = await query(
+        `SELECT COUNT(*)::int AS count FROM sessions WHERE user_id = $1`,
+        [req.user.id]
+      );
+      const sessionCount = countResult.rows[0].count;
+      const sessionLimit = 100 + (req.user.session_bonus || 0);
+
+      if (sessionCount >= sessionLimit) {
+        // Hard-stop: collapse the trial expiry to now so the middleware blocks future requests
+        await query(`UPDATE users SET beta_expires_at = NOW() WHERE id = $1`, [req.user.id]);
+        return res.status(402).json({
+          error: 'Trial session limit reached',
+          paywall: true,
+          reason: 'sessions',
+        });
+      }
+    }
+
     const result = await query(
       `INSERT INTO sessions (user_id, mode_slug) VALUES ($1, $2) RETURNING id, mode_slug, created_at, updated_at`,
       [req.user.id, mode_slug]

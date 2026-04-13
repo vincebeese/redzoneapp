@@ -7,6 +7,13 @@ import { logEvent } from '../services/analytics.js';
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+const FOUNDING_PRICE_IDS = [
+  'price_1TKjiqAD6A0v3Wn8YMAsDWRB', // monthly $39
+  'price_1TKjiqAD6A0v3Wn8oLoY0Gpl', // annual $390
+];
+const SESSION_PACK_PRICE_ID = 'price_1TKjirAD6A0v3Wn8r14nrESC';
+const FOUNDING_SEAT_CAP = 50;
+
 // Webhook handler (raw body, before JSON middleware)
 router.post('/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -66,6 +73,19 @@ router.post('/webhook', async (req, res) => {
         break;
       }
 
+      case 'checkout.session.completed': {
+        const session = event.data.object;
+        if (session.metadata?.type === 'session_pack' && session.metadata?.userId) {
+          await query(
+            `UPDATE users SET session_bonus = session_bonus + 25 WHERE id = $1`,
+            [session.metadata.userId]
+          );
+          logEvent(session.metadata.userId, 'session_pack_purchased', { bonus: 25 });
+          console.log(`Session pack (+25) applied to user ${session.metadata.userId}`);
+        }
+        break;
+      }
+
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }
@@ -77,38 +97,45 @@ router.post('/webhook', async (req, res) => {
   }
 });
 
-// Create checkout session
+// Get Founding Member seat count (public — needed by Paywall before login check)
+router.get('/seat-count', async (req, res) => {
+  try {
+    const subs = await stripe.subscriptions.list({
+      status: 'active',
+      limit: 100,
+      expand: ['data.items.data.price'],
+    });
+    const count = subs.data.filter((s) =>
+      s.items.data.some((i) => FOUNDING_PRICE_IDS.includes(i.price.id))
+    ).length;
+    res.json({ count, available: count < FOUNDING_SEAT_CAP, remaining: FOUNDING_SEAT_CAP - count });
+  } catch (err) {
+    console.error('Seat count error:', err.message);
+    res.json({ count: 0, available: true, remaining: FOUNDING_SEAT_CAP });
+  }
+});
+
+// Create subscription checkout session
 router.post('/checkout', ensureUser, async (req, res) => {
   try {
     const { priceId } = req.body;
+    if (!priceId) return res.status(400).json({ error: 'priceId is required' });
 
-    // Get or create Stripe customer
     let customerId = req.user.stripe_customer_id;
-
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: req.user.email,
-        metadata: {
-          userId: req.user.id,
-        },
+        name: req.user.display_name || undefined,
+        metadata: { userId: req.user.id },
       });
       customerId = customer.id;
-
-      await query(
-        `UPDATE users SET stripe_customer_id = $1 WHERE id = $2`,
-        [customerId, req.user.id]
-      );
+      await query(`UPDATE users SET stripe_customer_id = $1 WHERE id = $2`, [customerId, req.user.id]);
     }
 
-    const baseUrl = process.env.APP_URL || process.env.CLIENT_URL || 'https://redzoneselling.co';
+    const baseUrl = process.env.APP_URL || 'https://redzoneselling.co';
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       success_url: `${baseUrl}/dashboard?subscribed=true`,
       cancel_url: `${baseUrl}/paywall`,
@@ -121,6 +148,37 @@ router.post('/checkout', ensureUser, async (req, res) => {
   }
 });
 
+// Purchase a Session Pack (+25 sessions, one-time payment)
+router.post('/session-pack', ensureUser, async (req, res) => {
+  try {
+    let customerId = req.user.stripe_customer_id;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: req.user.email,
+        name: req.user.display_name || undefined,
+        metadata: { userId: req.user.id },
+      });
+      customerId = customer.id;
+      await query(`UPDATE users SET stripe_customer_id = $1 WHERE id = $2`, [customerId, req.user.id]);
+    }
+
+    const baseUrl = process.env.APP_URL || 'https://redzoneselling.co';
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      line_items: [{ price: SESSION_PACK_PRICE_ID, quantity: 1 }],
+      mode: 'payment',
+      success_url: `${baseUrl}/dashboard?session_pack=true`,
+      cancel_url: `${baseUrl}/paywall`,
+      metadata: { userId: req.user.id, type: 'session_pack' },
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Session pack checkout error:', error);
+    res.status(500).json({ error: 'Failed to create session pack checkout' });
+  }
+});
+
 // Create customer portal session
 router.post('/portal', ensureUser, async (req, res) => {
   try {
@@ -128,7 +186,7 @@ router.post('/portal', ensureUser, async (req, res) => {
       return res.status(400).json({ error: 'No subscription found' });
     }
 
-    const portalBase = process.env.APP_URL || process.env.CLIENT_URL || 'https://redzoneselling.co';
+    const portalBase = process.env.APP_URL || 'https://redzoneselling.co';
     const session = await stripe.billingPortal.sessions.create({
       customer: req.user.stripe_customer_id,
       return_url: `${portalBase}/account`,
