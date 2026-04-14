@@ -25,6 +25,10 @@ export default function CoachMode() {
   const [renameValue, setRenameValue] = useState('');
   const renameCommitted = useRef(false);
   const renameCancelled = useRef(false);
+  const [editingHeaderTitle, setEditingHeaderTitle] = useState(false);
+  const [headerTitleValue, setHeaderTitleValue] = useState('');
+  const headerTitleRef = useRef(null);
+  const headerTitleCommitted = useRef(false);
 
   const loadSessions = useCallback(async () => {
     setSessionsLoading(true);
@@ -174,6 +178,39 @@ export default function CoachMode() {
     } finally {
       setIsLoading(false);
       setStreamingContent('');
+    }
+  }
+
+  useEffect(() => {
+    if (editingHeaderTitle && headerTitleRef.current) {
+      headerTitleRef.current.focus();
+      headerTitleRef.current.select();
+    }
+  }, [editingHeaderTitle]);
+
+  function startHeaderEdit() {
+    headerTitleCommitted.current = false;
+    setHeaderTitleValue(activeSession.title || activeSession.first_message || '');
+    setEditingHeaderTitle(true);
+  }
+
+  async function commitHeaderEdit() {
+    if (headerTitleCommitted.current) return;
+    headerTitleCommitted.current = true;
+    setEditingHeaderTitle(false);
+    const title = headerTitleValue.trim() || 'New Chat';
+    try {
+      const res = await fetch(`/api/sessions/${activeSession.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ title }),
+      });
+      if (!res.ok) throw new Error();
+      setSessions((prev) => prev.map((s) => (s.id === activeSession.id ? { ...s, title } : s)));
+      setActiveSession((prev) => ({ ...prev, title }));
+    } catch {
+      setSendError('Could not rename session.');
     }
   }
 
@@ -386,8 +423,41 @@ export default function CoachMode() {
             </svg>
           </button>
           <div className="flex-1">
-            <h1 className="font-semibold text-rzs-charcoal">Coach Mode</h1>
-            <p className="text-sm text-gray-500">On-demand situational coaching</p>
+            {activeSession ? (
+              editingHeaderTitle ? (
+                <input
+                  ref={headerTitleRef}
+                  type="text"
+                  value={headerTitleValue}
+                  onChange={(e) => setHeaderTitleValue(e.target.value)}
+                  onBlur={commitHeaderEdit}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); commitHeaderEdit(); }
+                    else if (e.key === 'Escape') { headerTitleCommitted.current = true; setEditingHeaderTitle(false); }
+                  }}
+                  className="font-semibold text-rzs-charcoal bg-transparent border-b border-rzs-charcoal outline-none w-56 sm:w-72"
+                  placeholder="New Chat"
+                />
+              ) : (
+                <h1
+                  className="font-semibold text-rzs-charcoal cursor-pointer hover:text-rzs-red group flex items-center gap-1 w-fit"
+                  onClick={startHeaderEdit}
+                  title="Click to rename"
+                >
+                  <span className="truncate max-w-[200px] sm:max-w-xs">
+                    {activeSession.title || activeSession.first_message || 'New Chat'}
+                  </span>
+                  <svg className="w-3.5 h-3.5 opacity-0 group-hover:opacity-50 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </h1>
+              )
+            ) : (
+              <>
+                <h1 className="font-semibold text-rzs-charcoal">Coach Mode</h1>
+                <p className="text-sm text-gray-500">On-demand situational coaching</p>
+              </>
+            )}
           </div>
         </header>
 
