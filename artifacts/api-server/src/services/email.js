@@ -223,6 +223,17 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
           </a>
         </div>
 
+        <div style="background: #f9f9f9; border: 1px solid #eee; border-left: 3px solid #c8102e; border-radius: 6px; padding: 16px 20px; margin: 24px 0;">
+          <p style="font-size: 14px; font-weight: 600; color: #1a1a2e; margin: 0 0 6px 0;">Join the Red Zone Selling Community on Slack</p>
+          <p style="font-size: 14px; color: #555; line-height: 1.5; margin: 0 0 12px 0;">
+            Connect with other beta members, share wins, ask questions, and get direct access to Vince.
+          </p>
+          <a href="https://join.slack.com/t/redzoneselling/shared_invite/zt-3v9x4pguq-m8pAfJ3yOge7qNsZHfyp7g"
+             style="color: #c8102e; font-size: 14px; font-weight: 600; text-decoration: none;">
+            Join the Slack Community →
+          </a>
+        </div>
+
         <p style="font-size: 15px; line-height: 1.6;">
           Welcome to the team. Let's close some deals.
         </p>

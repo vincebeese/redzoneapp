@@ -97,6 +97,15 @@ export default function Sidebar() {
             <span className="mr-3">📚</span>
             Resources
           </NavLink>
+          <a
+            href="https://join.slack.com/t/redzoneselling/shared_invite/zt-3v9x4pguq-m8pAfJ3yOge7qNsZHfyp7g"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center px-4 py-3 rounded-lg transition-colors text-gray-300 hover:bg-gray-700"
+          >
+            <span className="mr-3">💬</span>
+            Slack Community
+          </a>
         </div>
       </nav>
 
