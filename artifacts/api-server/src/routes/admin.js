@@ -541,7 +541,7 @@ router.post('/invites', async (req, res) => {
     }
 
     const token = randomUUID();
-    const appBase = process.env.APP_BASE_URL || `https://${process.env.REPLIT_DEV_DOMAIN}`;
+    const appBase = process.env.APP_URL || `https://${process.env.REPLIT_DEV_DOMAIN}` || 'https://redzoneselling.co';
     const inviteUrl = `${appBase}/register?invite=${token}`;
 
     await query(

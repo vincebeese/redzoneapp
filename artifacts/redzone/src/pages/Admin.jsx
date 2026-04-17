@@ -1299,15 +1299,14 @@ function UsersTab({ onInvite }) {
   async function grantBeta(userId) {
     setSaving(userId);
     try {
-      const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       const r = await fetch(`/api/admin/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ has_beta_access: true, beta_expires_at: expires }),
+        body: JSON.stringify({ has_beta_access: true }),
       });
       if (!r.ok) { const d = await r.json(); showFlash('error', d.error); return; }
-      showFlash('success', 'Beta access granted (30 days)');
+      showFlash('success', 'Beta access approved — 14-day trial started. Approval email sent.');
       await fetchUsers();
     } catch { showFlash('error', 'Failed'); }
     finally { setSaving(null); }
@@ -1403,16 +1402,16 @@ function UsersTab({ onInvite }) {
                           className="text-xs text-rzs-red hover:underline">
                           {expanded === u.id ? 'Close' : 'Edit'}
                         </button>
-                        {!u.has_beta_access && (
+                        {!u.has_beta_access && !u.is_admin && (
                           <button onClick={() => grantBeta(u.id)} disabled={saving === u.id}
-                            className="text-xs text-blue-600 hover:underline disabled:opacity-50">
-                            Grant beta
+                            className="text-xs px-2.5 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors">
+                            {saving === u.id ? 'Approving…' : 'Approve'}
                           </button>
                         )}
                         {u.has_beta_access && (
                           <button onClick={() => revokeBeta(u.id)} disabled={saving === u.id}
                             className="text-xs text-orange-600 hover:underline disabled:opacity-50">
-                            Revoke
+                            Revoke beta
                           </button>
                         )}
                         {u.id !== me?.id && (

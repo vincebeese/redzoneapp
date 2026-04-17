@@ -4,10 +4,14 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import PasswordInput from '../components/PasswordInput';
 
 export default function Register() {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get('invite');
+
+  useEffect(() => {
+    if (user) navigate('/dashboard', { replace: true });
+  }, [user]);
 
   const [displayName, setDisplayName] = useState('');
   const [nameError, setNameError] = useState('');
