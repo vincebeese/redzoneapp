@@ -1353,10 +1353,19 @@ function UsersTab({ onInvite }) {
     a.click();
   }
 
-  const filtered = users.filter(u =>
-    !search || u.email?.toLowerCase().includes(search.toLowerCase()) ||
-    (u.display_name || '').toLowerCase().includes(search.toLowerCase())
-  );
+  function statusRank(u) {
+    if (u.is_admin) return 0;
+    if (u.subscription_status === 'active') return 1;
+    if (u.has_beta_access) return 2;
+    return 3;
+  }
+
+  const filtered = users
+    .filter(u =>
+      !search || u.email?.toLowerCase().includes(search.toLowerCase()) ||
+      (u.display_name || '').toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => statusRank(a) - statusRank(b));
 
   return (
     <div className="space-y-4">
