@@ -544,10 +544,11 @@ router.post('/invites', async (req, res) => {
     const appBase = process.env.APP_URL || `https://${process.env.REPLIT_DEV_DOMAIN}` || 'https://redzoneselling.co';
     const inviteUrl = `${appBase}/register?invite=${token}`;
 
+    const inviteExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await query(
-      `INSERT INTO invites (email, token, invited_by, has_beta_access)
-       VALUES ($1, $2, $3, true)`,
-      [emailTrimmed, token, req.user.id]
+      `INSERT INTO invites (email, token, invited_by, has_beta_access, expires_at)
+       VALUES ($1, $2, $3, true, $4)`,
+      [emailTrimmed, token, req.user.id, inviteExpiresAt]
     );
 
     // Look up inviter display name for the email
