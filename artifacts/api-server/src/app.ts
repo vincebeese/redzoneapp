@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 
 import authRouter from "./routes/auth.js";
 import modesRouter from "./routes/modes.js";
@@ -19,6 +20,16 @@ import { startTrialChecker } from "./services/trialChecker.js";
 
 const app: Express = express();
 
+// Rate limiter for sensitive auth endpoints (login, magic-link, forgot/reset password)
+const authRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+  skipSuccessfulRequests: false,
+});
+
 app.use("/api/stripe/webhook", express.raw({ type: "application/json" }));
 
 app.use(cors({ origin: true, credentials: true }));
@@ -30,6 +41,10 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+app.post("/api/auth/login", authRateLimiter);
+app.post("/api/auth/magic-link/request", authRateLimiter);
+app.post("/api/auth/forgot-password", authRateLimiter);
+app.post("/api/auth/reset-password", authRateLimiter);
 app.use("/api/auth", authRouter);
 app.use("/api/modes", modesRouter);
 app.use("/api/deals", dealsRouter);

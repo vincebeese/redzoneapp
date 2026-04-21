@@ -104,8 +104,12 @@ router.patch('/me/password', ensureUser, async (req, res) => {
     }
 
     const hash = await bcrypt.hash(new_password, 12);
-    await query('UPDATE users SET password_hash = $1 WHERE id = $2', [hash, req.user.id]);
+    await query(
+      'UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2',
+      [hash, req.user.id]
+    );
 
+    res.clearCookie('auth_token', { path: '/' });
     res.json({ success: true });
   } catch (error) {
     console.error('Error changing password:', error);

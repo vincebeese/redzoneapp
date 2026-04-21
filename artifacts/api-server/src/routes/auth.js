@@ -7,7 +7,11 @@ import { sendPasswordResetEmail, sendMagicLinkEmail, sendWelcomeEmail, sendNewUs
 import { logEvent } from '../services/analytics.js';
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'rzs-dev-secret-change-in-production';
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable must be set before starting the server');
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // Validate an invite token (public — no auth required)
@@ -123,7 +127,9 @@ router.post('/register', async (req, res) => {
 
     const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
     const jwtVersion = versionRow.rows[0]?.value || '1';
-    const token = jwt.sign({ userId: user.id, jwt_version: jwtVersion }, JWT_SECRET, { expiresIn: '7d' });
+    const sessionVersionRow = await query(`SELECT session_version FROM users WHERE id = $1`, [user.id]).catch(() => ({ rows: [] }));
+    const sessionVersion = sessionVersionRow.rows[0]?.session_version ?? 1;
+    const token = jwt.sign({ userId: user.id, jwt_version: jwtVersion, session_version: sessionVersion }, JWT_SECRET, { expiresIn: '7d' });
 
     res.cookie('auth_token', token, {
       httpOnly: true,
@@ -171,7 +177,7 @@ router.post('/login', async (req, res) => {
 
     const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
     const jwtVersion = versionRow.rows[0]?.value || '1';
-    const token = jwt.sign({ userId: user.id, jwt_version: jwtVersion }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id, jwt_version: jwtVersion, session_version: user.session_version ?? 1 }, JWT_SECRET, { expiresIn: '7d' });
 
     res.cookie('auth_token', token, {
       httpOnly: true,
@@ -285,7 +291,9 @@ router.get('/magic-link/verify', async (req, res) => {
       const user = userResult.rows[0];
       const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
       const jwtVersion = versionRow.rows[0]?.value || '1';
-      const jwtToken = jwt.sign({ userId: user.id, jwt_version: jwtVersion }, JWT_SECRET, { expiresIn: '7d' });
+      const sessionVerRow = await query(`SELECT session_version FROM users WHERE id = $1`, [user.id]).catch(() => ({ rows: [] }));
+      const sessionVersion = sessionVerRow.rows[0]?.session_version ?? 1;
+      const jwtToken = jwt.sign({ userId: user.id, jwt_version: jwtVersion, session_version: sessionVersion }, JWT_SECRET, { expiresIn: '7d' });
 
       res.cookie('auth_token', jwtToken, {
         httpOnly: true,
@@ -423,7 +431,7 @@ router.post('/reset-password', async (req, res) => {
       }
 
       await client.query(
-        `UPDATE users SET password_hash = $1 WHERE id = $2`,
+        `UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2`,
         [password_hash, consumed.rows[0].user_id]
       );
 
@@ -471,14 +479,23 @@ router.get('/me', async (req, res) => {
 
     const result = await query(
       `SELECT id, email, display_name, is_admin, has_beta_access, beta_expires_at,
-              subscription_status, subscription_ends_at, session_bonus, created_at
+              subscription_status, subscription_ends_at, session_bonus, created_at,
+              session_version
        FROM users WHERE id = $1`,
       [payload.userId]
     );
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Not logged in' });
     }
-    res.json(result.rows[0]);
+    const user = result.rows[0];
+
+    // Check per-user session_version — invalidates tokens after password change/reset
+    if ((payload.session_version ?? 1) !== (user.session_version ?? 1)) {
+      return res.status(401).json({ error: 'Session expired, please sign in again' });
+    }
+
+    const { session_version: _sv, ...userResponse } = user;
+    res.json(userResponse);
   } catch (err) {
     return res.status(401).json({ error: 'Not logged in' });
   }

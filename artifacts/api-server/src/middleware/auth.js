@@ -2,7 +2,10 @@ import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js';
 import { logEvent } from '../services/analytics.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'rzs-dev-secret-change-in-production';
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable must be set before starting the server');
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const THIRTY_MINUTES = 30 * 60 * 1000;
 
@@ -33,6 +36,12 @@ export async function ensureUser(req, res, next) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     req.user = result.rows[0];
+
+    // Check per-user session_version to invalidate tokens after password change/reset
+    const dbSessionVersion = req.user.session_version ?? 1;
+    if ((payload.session_version ?? 1) !== dbSessionVersion) {
+      return res.status(401).json({ error: 'Session expired, please sign in again' });
+    }
 
     // Session tracking — fire session_start if first request or gap > 30 min
     const lastAt = req.user.last_event_at ? new Date(req.user.last_event_at).getTime() : 0;
