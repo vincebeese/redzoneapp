@@ -25,15 +25,16 @@ export async function runTrialCheck() {
   try {
     // Fetch all active beta users who are not yet on a paid plan and not admins
     const { rows: users } = await query(`
-      SELECT u.id, u.email, u.display_name, u.beta_expires_at,
-             COUNT(s.id)::int AS session_count
+      SELECT u.id, u.email, u.display_name, u.beta_expires_at, u.session_bonus,
+        (
+          COALESCE((SELECT COUNT(*) FROM messages m WHERE m.user_id = u.id AND m.role = 'assistant'), 0) +
+          COALESCE((SELECT COUNT(*) FROM session_messages sm JOIN sessions s ON s.id = sm.session_id WHERE s.user_id = u.id AND sm.role = 'assistant'), 0)
+        )::int AS session_count
       FROM users u
-      LEFT JOIN sessions s ON s.user_id = u.id
       WHERE u.has_beta_access = true
         AND u.is_admin = false
         AND u.subscription_status != 'active'
         AND u.beta_expires_at IS NOT NULL
-      GROUP BY u.id, u.email, u.display_name, u.beta_expires_at
     `);
 
     const now = new Date();

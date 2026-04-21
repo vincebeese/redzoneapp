@@ -28,16 +28,19 @@ export async function requireSubscription(req, res, next) {
         });
       }
 
-      // 2. Session limit — count sessions used (with optional bonus)
-      const sessionResult = await query(
-        `SELECT COUNT(*)::int AS session_count FROM sessions WHERE user_id = $1`,
+      // 2. Turn limit — count total AI responses across all modes (1 turn = 1 message in + 1 response out)
+      const turnResult = await query(
+        `SELECT (
+          COALESCE((SELECT COUNT(*) FROM messages WHERE user_id = $1 AND role = 'assistant'), 0) +
+          COALESCE((SELECT COUNT(*) FROM session_messages sm JOIN sessions s ON s.id = sm.session_id WHERE s.user_id = $1 AND sm.role = 'assistant'), 0)
+        )::int AS total_turns`,
         [user.id]
       );
-      const sessionCount = sessionResult.rows[0]?.session_count || 0;
+      const turnCount = parseInt(turnResult.rows[0]?.total_turns || 0);
       const bonus = user.session_bonus || 0;
       const limit = SESSION_TRIAL_LIMIT + bonus;
 
-      if (sessionCount >= limit) {
+      if (turnCount >= limit) {
         return res.status(402).json({
           error: 'Session limit reached',
           paywall: true,
