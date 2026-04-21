@@ -63,7 +63,6 @@ export default function App() {
         <Route path="mode/:slug" element={<ErrorBoundary><DynamicMode /></ErrorBoundary>} />
         <Route path="learning" element={<ErrorBoundary><LearningHub /></ErrorBoundary>} />
         <Route path="resources" element={<ErrorBoundary><ResourceCenter /></ErrorBoundary>} />
-        <Route path="learning" element={<ErrorBoundary><LearningHub /></ErrorBoundary>} />
         <Route path="account" element={<ErrorBoundary><Account /></ErrorBoundary>} />
         <Route path="admin" element={<AdminOnly><ErrorBoundary><Admin /></ErrorBoundary></AdminOnly>} />
         <Route path="paywall" element={<ErrorBoundary><Paywall /></ErrorBoundary>} />
