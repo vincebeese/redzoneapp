@@ -303,6 +303,17 @@ router.post('/deal/opening', ensureUser, requireSubscription, async (req, res) =
   res.on('close', () => sseDecrement());
 
   try {
+    // Verify the deal belongs to the authenticated user before doing any work
+    const dealCheck = await query(
+      `SELECT id FROM deals WHERE id = $1 AND user_id = $2`,
+      [dealId, req.user.id]
+    );
+    if (dealCheck.rows.length === 0) {
+      res.write(`data: ${JSON.stringify({ error: 'Deal not found' })}\n\n`);
+      res.write('data: [DONE]\n\n');
+      return res.end();
+    }
+
     const modeConfig = await getModeConfig('deal');
 
     if (!modeConfig.system_prompt) {
