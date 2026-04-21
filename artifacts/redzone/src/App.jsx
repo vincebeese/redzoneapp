@@ -13,6 +13,7 @@ import DynamicMode from './pages/DynamicMode';
 import Account from './pages/Account';
 import Admin from './pages/Admin';
 import ResourceCenter from './pages/ResourceCenter';
+import LearningHub from './pages/LearningHub';
 import Paywall from './components/Paywall';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
@@ -61,6 +62,7 @@ export default function App() {
         <Route path="mindset" element={<ErrorBoundary><MindsetMode /></ErrorBoundary>} />
         <Route path="mode/:slug" element={<ErrorBoundary><DynamicMode /></ErrorBoundary>} />
         <Route path="resources" element={<ErrorBoundary><ResourceCenter /></ErrorBoundary>} />
+        <Route path="learning" element={<ErrorBoundary><LearningHub /></ErrorBoundary>} />
         <Route path="account" element={<ErrorBoundary><Account /></ErrorBoundary>} />
         <Route path="admin" element={<AdminOnly><ErrorBoundary><Admin /></ErrorBoundary></AdminOnly>} />
         <Route path="paywall" element={<ErrorBoundary><Paywall /></ErrorBoundary>} />

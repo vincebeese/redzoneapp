@@ -6,6 +6,7 @@ const navItems = [
   { name: 'Coach', path: '/coach', icon: '🎯' },
   { name: 'Mindset', path: '/mindset', icon: '🧠' },
   { name: 'Resources', path: '/resources', icon: '📚' },
+  { name: 'Learning', path: '/learning', icon: '🎓' },
 ];
 
 export default function MobileNav() {
