@@ -40,6 +40,16 @@ const seatCountRateLimiter = rateLimit({
   skipSuccessfulRequests: false,
 });
 
+// Rate limiter for transcript uploads — limits in-memory buffering and AI quota abuse
+const transcriptUploadRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many transcript uploads. Please wait before trying again." },
+  skipSuccessfulRequests: false,
+});
+
 app.use("/api/stripe/webhook", express.raw({ type: "application/json" }));
 
 app.use(cors({ origin: true, credentials: true }));
@@ -64,6 +74,7 @@ app.use("/api/sessions", sessionsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/stripe", stripeRouter);
+app.post("/api/transcripts", transcriptUploadRateLimiter);
 app.use("/api/transcripts", transcriptsRouter);
 app.use("/api/artifacts", artifactsRouter);
 app.use("/api/documents", documentsRouter);

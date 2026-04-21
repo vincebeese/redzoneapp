@@ -104,8 +104,26 @@ router.post('/', ensureUser, (req, res, next) => {
     const deal_id = req.body?.deal_id;
     const call_type = req.body?.call_type;
 
+    // Validate required fields and deal ownership BEFORE any expensive parsing
+    if (!deal_id || !call_type) {
+      return res.status(400).json({ error: 'deal_id and call_type are required' });
+    }
+    if (!VALID_CALL_TYPES.includes(call_type)) {
+      return res.status(400).json({ error: 'Invalid call_type' });
+    }
+
+    // Verify deal ownership before doing any file parsing work
+    const dealResult = await query(
+      `SELECT * FROM deals WHERE id = $1 AND user_id = $2`,
+      [deal_id, req.user.id]
+    );
+    if (dealResult.rows.length === 0) {
+      return res.status(403).json({ error: 'Deal not found or access denied' });
+    }
+    const deal = dealResult.rows[0];
+
     if (req.file) {
-      // File upload path
+      // File upload path — parsing happens only after ownership is confirmed
       let parsed;
       try {
         parsed = await parseTranscriptFile(req.file);
@@ -119,6 +137,11 @@ router.post('/', ensureUser, (req, res, next) => {
 
       if (!raw_text || !raw_text.trim()) {
         return res.status(400).json({ error: 'No text found in this file. Try pasting the transcript text directly.' });
+      }
+
+      // Enforce a character limit in addition to word count to prevent single-token bypass
+      if (raw_text.length > 500000) {
+        return res.status(400).json({ error: 'Transcript too long. Maximum 500,000 characters. Try splitting into sections by call segment.' });
       }
 
       const wordCount = raw_text.trim().split(/\s+/).filter(w => w.length > 0).length;
@@ -136,23 +159,6 @@ router.post('/', ensureUser, (req, res, next) => {
         return res.status(400).json({ error: 'Transcript too long — maximum 50,000 characters' });
       }
     }
-
-    if (!deal_id || !call_type) {
-      return res.status(400).json({ error: 'deal_id and call_type are required' });
-    }
-    if (!VALID_CALL_TYPES.includes(call_type)) {
-      return res.status(400).json({ error: 'Invalid call_type' });
-    }
-
-    // Verify deal ownership
-    const dealResult = await query(
-      `SELECT * FROM deals WHERE id = $1 AND user_id = $2`,
-      [deal_id, req.user.id]
-    );
-    if (dealResult.rows.length === 0) {
-      return res.status(403).json({ error: 'Deal not found or access denied' });
-    }
-    const deal = dealResult.rows[0];
 
     const word_count = raw_text.trim().split(/\s+/).filter((w) => w.length > 0).length;
 
