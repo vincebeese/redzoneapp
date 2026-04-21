@@ -30,6 +30,16 @@ const authRateLimiter = rateLimit({
   skipSuccessfulRequests: false,
 });
 
+// Rate limiter for the public seat-count endpoint (unauthenticated, makes live Stripe calls)
+const seatCountRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+  skipSuccessfulRequests: false,
+});
+
 app.use("/api/stripe/webhook", express.raw({ type: "application/json" }));
 
 app.use(cors({ origin: true, credentials: true }));
@@ -46,6 +56,7 @@ app.post("/api/auth/magic-link/request", authRateLimiter);
 app.post("/api/auth/forgot-password", authRateLimiter);
 app.post("/api/auth/reset-password", authRateLimiter);
 app.use("/api/auth", authRouter);
+app.get("/api/stripe/seat-count", seatCountRateLimiter);
 app.use("/api/modes", modesRouter);
 app.use("/api/deals", dealsRouter);
 app.use("/api/chat", chatRouter);

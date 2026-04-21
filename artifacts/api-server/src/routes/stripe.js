@@ -14,6 +14,37 @@ const FOUNDING_PRICE_IDS = [
 const SESSION_PACK_PRICE_ID = 'price_1TKjirAD6A0v3Wn8r14nrESC';
 const FOUNDING_SEAT_CAP = 50;
 
+const ALLOWED_PRICE_IDS = new Set([
+  ...FOUNDING_PRICE_IDS,
+  'price_1TKjiqAD6A0v3Wn8LWHxtVTO', // starter monthly
+  'price_1TKjiqAD6A0v3Wn8fWzigOFS', // starter annual
+  'price_1TKjirAD6A0v3Wn8yjzrzniE', // pro monthly
+  'price_1TKjirAD6A0v3Wn8OBCmtF1s', // pro annual
+]);
+
+// In-memory cache for founding seat count
+const SEAT_COUNT_CACHE_TTL = 60 * 1000; // 60 seconds
+let _seatCountCache = null;
+let _seatCountCacheExpiry = 0;
+
+async function getFoundingSeatInfo() {
+  const now = Date.now();
+  if (_seatCountCache !== null && now < _seatCountCacheExpiry) {
+    return _seatCountCache;
+  }
+  const subs = await stripe.subscriptions.list({
+    status: 'active',
+    limit: 100,
+    expand: ['data.items.data.price'],
+  });
+  const count = subs.data.filter((s) =>
+    s.items.data.some((i) => FOUNDING_PRICE_IDS.includes(i.price.id))
+  ).length;
+  _seatCountCache = { count, available: count < FOUNDING_SEAT_CAP, remaining: FOUNDING_SEAT_CAP - count };
+  _seatCountCacheExpiry = now + SEAT_COUNT_CACHE_TTL;
+  return _seatCountCache;
+}
+
 // Webhook handler (raw body, before JSON middleware)
 router.post('/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -50,6 +81,8 @@ router.post('/webhook', async (req, res) => {
         if (event.type === 'customer.subscription.created' && subUserId) {
           logEvent(subUserId, 'subscription_started', { plan: subscription.items?.data?.[0]?.price?.id || 'default' });
         }
+        // Invalidate seat count cache when subscriptions change
+        _seatCountCache = null;
         console.log(`Subscription ${status} for customer ${customerId}`);
         break;
       }
@@ -69,6 +102,8 @@ router.post('/webhook', async (req, res) => {
         if (delUserId) {
           logEvent(delUserId, 'subscription_cancelled', { plan: subscription.items?.data?.[0]?.price?.id || 'default', days_active: 0 });
         }
+        // Invalidate seat count cache when subscriptions change
+        _seatCountCache = null;
         console.log(`Subscription cancelled for customer ${customerId}`);
         break;
       }
@@ -98,17 +133,11 @@ router.post('/webhook', async (req, res) => {
 });
 
 // Get Founding Member seat count (public — needed by Paywall before login check)
+// Responses are cached for 60 seconds to avoid exhausting Stripe API quota
 router.get('/seat-count', async (req, res) => {
   try {
-    const subs = await stripe.subscriptions.list({
-      status: 'active',
-      limit: 100,
-      expand: ['data.items.data.price'],
-    });
-    const count = subs.data.filter((s) =>
-      s.items.data.some((i) => FOUNDING_PRICE_IDS.includes(i.price.id))
-    ).length;
-    res.json({ count, available: count < FOUNDING_SEAT_CAP, remaining: FOUNDING_SEAT_CAP - count });
+    const seatInfo = await getFoundingSeatInfo();
+    res.json(seatInfo);
   } catch (err) {
     console.error('Seat count error:', err.message);
     res.json({ count: 0, available: true, remaining: FOUNDING_SEAT_CAP });
@@ -120,6 +149,19 @@ router.post('/checkout', ensureUser, async (req, res) => {
   try {
     const { priceId } = req.body;
     if (!priceId) return res.status(400).json({ error: 'priceId is required' });
+
+    // Validate against server-side allowlist — never trust client-supplied price IDs
+    if (!ALLOWED_PRICE_IDS.has(priceId)) {
+      return res.status(400).json({ error: 'Invalid plan selected' });
+    }
+
+    // Enforce founding seat cap server-side
+    if (FOUNDING_PRICE_IDS.includes(priceId)) {
+      const seatInfo = await getFoundingSeatInfo();
+      if (!seatInfo.available) {
+        return res.status(400).json({ error: 'Founding Member seats are sold out' });
+      }
+    }
 
     let customerId = req.user.stripe_customer_id;
     if (!customerId) {
