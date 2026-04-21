@@ -31,7 +31,7 @@ export async function streamChat({ systemPrompt, messages, maxTokens = 1200, onC
   const stream = await anthropic.messages.stream({
     model: COACHING_MODEL,
     max_tokens: maxTokens,
-    system: systemPrompt,
+    system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
     messages: messages.map((m) => ({
       role: m.role,
       content: m.content,
@@ -59,7 +59,7 @@ export async function chat({ systemPrompt, messages, maxTokens = 600, model = CO
   const response = await anthropic.messages.create({
     model,
     max_tokens: maxTokens,
-    system: systemPrompt,
+    system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
     messages: messages.map((m) => ({
       role: m.role,
       content: m.content,

@@ -412,6 +412,54 @@ function AnalyticsTab() {
           </div>
         </div>
       </div>
+
+      {/* Section 5 — Claude Spend */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Claude AI Spend ({period}d)</p>
+        <div className="bg-white border border-gray-200 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-medium text-rzs-charcoal">Cost by user</p>
+            {!loading && (
+              <span className="text-sm font-bold text-rzs-charcoal">
+                Total: ${(data?.claude_spend?.total_cost || 0).toFixed(4)}
+              </span>
+            )}
+          </div>
+          {loading ? (
+            <div className="space-y-2">{[...Array(4)].map((_, i) => <div key={i} className="h-8 bg-gray-100 rounded animate-pulse" />)}</div>
+          ) : (data?.claude_spend?.users?.length > 0) ? (
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-gray-400 border-b border-gray-100">
+                  <th className="text-left pb-2">User</th>
+                  <th className="text-right pb-2">Calls</th>
+                  <th className="text-right pb-2">Tokens in</th>
+                  <th className="text-right pb-2">Tokens out</th>
+                  <th className="text-right pb-2">Est. cost</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {data.claude_spend.users.map((u, i) => (
+                  <tr key={i}>
+                    <td className="py-1.5 text-rzs-charcoal font-medium truncate max-w-[180px]">
+                      {u.display_name || u.email}
+                      {u.display_name && <span className="text-gray-400 font-normal ml-1 text-[10px]">{u.email}</span>}
+                    </td>
+                    <td className="py-1.5 text-right text-gray-600">{u.calls}</td>
+                    <td className="py-1.5 text-right text-gray-600">{u.tokens_in.toLocaleString()}</td>
+                    <td className="py-1.5 text-right text-gray-600">{u.tokens_out.toLocaleString()}</td>
+                    <td className={`py-1.5 text-right font-semibold ${u.est_cost > 1 ? 'text-red-600' : u.est_cost > 0.25 ? 'text-amber-600' : 'text-green-700'}`}>
+                      ${u.est_cost.toFixed(4)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-xs text-gray-400 text-center py-4">No spend recorded in this period yet</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

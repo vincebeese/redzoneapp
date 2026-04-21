@@ -910,11 +910,11 @@ let analyticsCache = { data: null, ts: 0 };
 const ANALYTICS_TTL = 10 * 60 * 1000; // 10 minutes
 
 router.get('/analytics', async (req, res) => {
-  if (analyticsCache.data && Date.now() - analyticsCache.ts < ANALYTICS_TTL) {
+  const period = Math.min(parseInt(req.query.period) || 30, 90);
+
+  if (analyticsCache.data && analyticsCache.period === period && Date.now() - analyticsCache.ts < ANALYTICS_TTL) {
     return res.json(analyticsCache.data);
   }
-
-  const period = Math.min(parseInt(req.query.period) || 30, 90);
 
   try {
     const [
@@ -1120,6 +1120,39 @@ router.get('/analytics', async (req, res) => {
       avg_turns_lost: lostTurns ? parseFloat(parseFloat(lostTurns.avg_turns).toFixed(1)) : null,
     };
 
+    // 15. Per-user Claude spend (current period)
+    let userSpend = [];
+    let totalSpendCost = 0;
+    try {
+      const userSpendResult = await query(`
+        SELECT u.email, u.display_name,
+               COUNT(asl.id)::int AS calls,
+               COALESCE(SUM(asl.tokens_in), 0)::int AS tokens_in,
+               COALESCE(SUM(asl.tokens_out), 0)::int AS tokens_out,
+               ROUND(COALESCE(SUM(asl.est_cost), 0)::numeric, 4) AS est_cost
+        FROM api_spend_log asl
+        JOIN users u ON u.id = asl.user_id
+        WHERE asl.created_at > NOW() - INTERVAL '${period} days'
+        GROUP BY u.id, u.email, u.display_name
+        ORDER BY est_cost DESC
+        LIMIT 15
+      `);
+      const totalSpendResult = await query(`
+        SELECT ROUND(COALESCE(SUM(est_cost), 0)::numeric, 4) AS total
+        FROM api_spend_log
+        WHERE created_at > NOW() - INTERVAL '${period} days'
+      `);
+      userSpend = userSpendResult.rows.map(r => ({
+        email: r.email,
+        display_name: r.display_name,
+        calls: r.calls,
+        tokens_in: parseInt(r.tokens_in),
+        tokens_out: parseInt(r.tokens_out),
+        est_cost: parseFloat(r.est_cost),
+      }));
+      totalSpendCost = parseFloat(totalSpendResult.rows[0]?.total || 0);
+    } catch { /* spend log may not be populated */ }
+
     const data = {
       key_metrics: {
         total_users: totalUsers,
@@ -1139,10 +1172,11 @@ router.get('/analytics', async (req, res) => {
       feature_adoption: featureAdoption,
       retention_cohorts: retentionCohorts,
       deal_health: dealHealth,
+      claude_spend: { users: userSpend, total_cost: totalSpendCost },
       period,
     };
 
-    analyticsCache = { data, ts: Date.now() };
+    analyticsCache = { data, ts: Date.now(), period };
     res.json(data);
   } catch (error) {
     console.error('Analytics query error:', error);
