@@ -24,6 +24,8 @@ export const users = pgTable("users", {
   passwordHash: text("password_hash"),
   displayName: text("display_name"),
   lastEventAt: timestamp("last_event_at", { withTimezone: true }),
+  sessionBonus: integer("session_bonus").default(0).notNull(),
+  sessionVersion: integer("session_version").default(1).notNull(),
 });
 
 export const modes = pgTable("modes", {
@@ -186,4 +188,36 @@ export const passwordResetTokens = pgTable("password_reset_tokens", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   usedAt: timestamp("used_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).default(sql`now()`),
+});
+
+export const apiSpendLog = pgTable("api_spend_log", {
+  id: serial("id").primaryKey(),
+  model: text("model"),
+  tokensIn: integer("tokens_in"),
+  tokensOut: integer("tokens_out"),
+  estCost: numeric("est_cost"),
+  userId: text("user_id"),
+  modeSlug: text("mode_slug"),
+  createdAt: timestamp("created_at", { withTimezone: true }).default(sql`now()`),
+});
+
+export const trialNotifications = pgTable("trial_notifications", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  notificationType: text("notification_type").notNull(),
+  sentAt: timestamp("sent_at", { withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const dealDocuments = pgTable("deal_documents", {
+  id: serial("id").primaryKey(),
+  dealId: integer("deal_id").notNull(),
+  userId: text("user_id").notNull(),
+  documentType: text("document_type").notNull(),
+  originalFilename: text("original_filename").notNull(),
+  sourceFormat: text("source_format").default("text"),
+  rawText: text("raw_text"),
+  wordCount: integer("word_count").default(0),
+  analysis: jsonb("analysis"),
+  createdAt: timestamp("created_at", { withTimezone: true }).default(sql`now()`),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`now()`),
 });
