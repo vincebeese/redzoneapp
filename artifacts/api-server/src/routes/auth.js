@@ -125,19 +125,23 @@ router.post('/register', async (req, res) => {
       newUserName: user.display_name,
     }).catch((err) => console.error('Admin notification email failed:', err.message));
 
-    const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
-    const jwtVersion = versionRow.rows[0]?.value || '1';
-    const sessionVersionRow = await query(`SELECT session_version FROM users WHERE id = $1`, [user.id]).catch(() => ({ rows: [] }));
-    const sessionVersion = sessionVersionRow.rows[0]?.session_version ?? 1;
-    const token = jwt.sign({ userId: user.id, jwt_version: jwtVersion, session_version: sessionVersion }, JWT_SECRET, { expiresIn: '7d' });
+    // Only set auth cookie if the user has beta access (invite-based signup).
+    // Non-beta users must wait for admin approval before they can log in.
+    if (user.has_beta_access) {
+      const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
+      const jwtVersion = versionRow.rows[0]?.value || '1';
+      const sessionVersionRow = await query(`SELECT session_version FROM users WHERE id = $1`, [user.id]).catch(() => ({ rows: [] }));
+      const sessionVersion = sessionVersionRow.rows[0]?.session_version ?? 1;
+      const token = jwt.sign({ userId: user.id, jwt_version: jwtVersion, session_version: sessionVersion }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.cookie('auth_token', token, {
-      httpOnly: true,
-      maxAge: COOKIE_MAX_AGE,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-    });
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        maxAge: COOKIE_MAX_AGE,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+      });
+    }
 
     res.status(201).json({
       id: user.id,

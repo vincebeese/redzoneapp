@@ -22,6 +22,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [registered, setRegistered] = useState(false);
   const [inviteStatus, setInviteStatus] = useState(null);
   const [inviteError, setInviteError] = useState('');
 
@@ -87,13 +88,44 @@ export default function Register() {
         return;
       }
 
-      await login(email, password);
-      navigate('/dashboard');
+      if (data.has_beta_access) {
+        await login(email, password);
+        navigate('/dashboard');
+      } else {
+        setRegistered(true);
+      }
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
+  }
+
+  if (registered) {
+    return (
+      <div className="min-h-screen bg-rzs-charcoal flex items-center justify-center p-4">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-rzs-red">Red Zone Selling</h1>
+            <p className="text-gray-400 text-sm mt-1">Coach™</p>
+          </div>
+          <div className="bg-white rounded-xl p-8 shadow-lg text-center space-y-4">
+            <div className="text-4xl">🏈</div>
+            <h2 className="text-lg font-semibold text-rzs-charcoal">You're on deck!</h2>
+            <p className="text-sm text-gray-600">
+              Your account has been created. We'll review your request and send you an email at <strong>{email}</strong> once you've been approved.
+            </p>
+            <p className="text-sm text-gray-500">
+              Questions? Reach out to{' '}
+              <a href="mailto:vince@redzoneselling.co" className="text-rzs-red hover:underline">
+                vince@redzoneselling.co
+              </a>
+            </p>
+          </div>
+          <p className="text-center text-xs text-gray-500 mt-6">REDZONESELLING.CO</p>
+        </div>
+      </div>
+    );
   }
 
   if (inviteStatus === 'invalid') {
