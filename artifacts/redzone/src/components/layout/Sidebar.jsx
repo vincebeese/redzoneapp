@@ -87,6 +87,17 @@ export default function Sidebar() {
             Tools
           </p>
           <NavLink
+            to="/learning"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-3 rounded-lg transition-colors ${
+                isActive ? 'bg-rzs-red text-white' : 'text-gray-300 hover:bg-gray-700'
+              }`
+            }
+          >
+            <span className="mr-3">🎓</span>
+            Learning Hub
+          </NavLink>
+          <NavLink
             to="/resources"
             className={({ isActive }) =>
               `flex items-center px-4 py-3 rounded-lg transition-colors ${

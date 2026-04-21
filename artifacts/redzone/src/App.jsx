@@ -61,6 +61,7 @@ export default function App() {
         <Route path="coach" element={<ErrorBoundary><CoachMode /></ErrorBoundary>} />
         <Route path="mindset" element={<ErrorBoundary><MindsetMode /></ErrorBoundary>} />
         <Route path="mode/:slug" element={<ErrorBoundary><DynamicMode /></ErrorBoundary>} />
+        <Route path="learning" element={<ErrorBoundary><LearningHub /></ErrorBoundary>} />
         <Route path="resources" element={<ErrorBoundary><ResourceCenter /></ErrorBoundary>} />
         <Route path="learning" element={<ErrorBoundary><LearningHub /></ErrorBoundary>} />
         <Route path="account" element={<ErrorBoundary><Account /></ErrorBoundary>} />

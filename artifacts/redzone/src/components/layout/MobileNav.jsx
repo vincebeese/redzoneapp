@@ -5,6 +5,7 @@ const navItems = [
   { name: 'Deals', path: '/deals', icon: '📊' },
   { name: 'Coach', path: '/coach', icon: '🎯' },
   { name: 'Mindset', path: '/mindset', icon: '🧠' },
+  { name: 'Learning', path: '/learning', icon: '🎓' },
   { name: 'Resources', path: '/resources', icon: '📚' },
   { name: 'Learning', path: '/learning', icon: '🎓' },
 ];
