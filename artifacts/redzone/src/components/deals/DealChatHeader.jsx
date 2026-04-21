@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ZoneScorecardModal from './ZoneScorecardModal';
+
+const ZONE_ORDER = ['yellow', 'green', 'red'];
 
 export default function DealChatHeader({ deal, onUpdateDeal, transcriptCount = 0, onOpenTranscripts }) {
   const navigate = useNavigate();
   const [showZoneMenu, setShowZoneMenu] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
+  const [pendingZone, setPendingZone] = useState(null);
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState('');
   const titleInputRef = useRef(null);
@@ -120,8 +124,15 @@ export default function DealChatHeader({ deal, onUpdateDeal, transcriptCount = 0
                   <button
                     key={zone}
                     onClick={() => {
-                      onUpdateDeal({ zone });
                       setShowZoneMenu(false);
+                      const currentIdx = ZONE_ORDER.indexOf(deal.zone);
+                      const targetIdx = ZONE_ORDER.indexOf(zone);
+                      // Only gate advances (moving to a higher zone)
+                      if (targetIdx > currentIdx) {
+                        setPendingZone(zone);
+                      } else {
+                        onUpdateDeal({ zone });
+                      }
                     }}
                     className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${
                       zone === deal.zone ? 'bg-gray-50' : ''
@@ -134,6 +145,19 @@ export default function DealChatHeader({ deal, onUpdateDeal, transcriptCount = 0
               </div>
             )}
           </div>
+
+          {/* Zone Scorecard Modal — soft gate on advancement */}
+          {pendingZone && (
+            <ZoneScorecardModal
+              fromZone={deal.zone}
+              toZone={pendingZone}
+              onAdvance={() => {
+                onUpdateDeal({ zone: pendingZone });
+                setPendingZone(null);
+              }}
+              onCancel={() => setPendingZone(null)}
+            />
+          )}
 
           {/* Status selector */}
           <div className="relative">
