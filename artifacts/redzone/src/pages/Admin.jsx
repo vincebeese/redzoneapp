@@ -1783,11 +1783,20 @@ function PromptsTab() {
         credentials: 'include',
         body: JSON.stringify(editForm),
       });
-      if (!r.ok) { const d = await r.json(); showFlash('error', d.error); return; }
-      showFlash('success', 'Mode saved');
+      if (r.status === 401) {
+        showFlash('error', 'Session expired — your changes were NOT saved. Please log out and log back in, then re-enter your changes.');
+        return;
+      }
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        showFlash('error', d.error || `Save failed (status ${r.status}) — your changes were NOT saved.`);
+        return;
+      }
+      const updated = await r.json();
+      setModes(prev => prev.map(m => m.id === id ? updated : m));
+      showFlash('success', `Saved at ${new Date(updated.updated_at).toLocaleTimeString()}`);
       setEditing(null);
-      await fetchModes();
-    } catch { showFlash('error', 'Save failed'); }
+    } catch { showFlash('error', 'Network error — your changes were NOT saved. Check your connection and try again.'); }
     finally { setSaving(false); }
   }
 
@@ -1879,6 +1888,9 @@ function PromptsTab() {
                     </div>
                     <p className="text-xs text-gray-400 mt-0.5">
                       slug: {mode.slug} · ~{estTokens(mode.system_prompt).toLocaleString()} prompt tokens
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      Last saved: {mode.updated_at ? new Date(mode.updated_at).toLocaleString() : '—'}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
