@@ -648,7 +648,6 @@ async function seed() {
            name = EXCLUDED.name,
            display_name = EXCLUDED.display_name,
            description = EXCLUDED.description,
-           system_prompt = EXCLUDED.system_prompt,
            max_tokens = EXCLUDED.max_tokens,
            sort_order = EXCLUDED.sort_order,
            updated_at = NOW()
