@@ -6,3 +6,21 @@ id = "jU73xFKaMYMNd0QJfLMJJ"
 uri = "file://screenshots/wireframe-v4.jpg"
 type = "image"
 title = "Wireframe v4 — Current Site Layout"
+
+[[outputs]]
+id = "oAXOxsOzRGsG6MGW-su3G"
+uri = "file://.local/prompts/deal_mode_final.md"
+type = "text"
+title = "Deal Mode — Live in Production"
+
+[[outputs]]
+id = "5KfgYaNgZtB4kV7xzg5Tp"
+uri = "file://.local/prompts/coach_mode_final.md"
+type = "text"
+title = "Coach Mode — Live in Production"
+
+[[outputs]]
+id = "lE1JkE720k669Xmi8XFQC"
+uri = "file://.local/prompts/mindset_mode_final.md"
+type = "text"
+title = "Mindset Mode — Live in Production"
