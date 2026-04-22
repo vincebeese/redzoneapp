@@ -175,7 +175,7 @@ Value: ${deal.deal_value ? `$${Number(deal.deal_value).toLocaleString()}` : 'Not
 Close Date: ${deal.close_date || 'Not provided'}
 Status: ${deal.status}
 Deal opened: ${new Date(deal.created_at).toLocaleDateString()}
-Last updated: ${new Date(deal.updated_at).toLocaleDateString()}
+Last updated: ${new Date(deal.updated_at).toLocaleDateString()}${deal.notes ? `\n\nREP NOTES:\n${deal.notes}` : ''}
 
 ${contextSummary ? `ENTITY STATE:\n${JSON.stringify(contextSummary, null, 2)}` : 'No prior context — new deal.'}`;
 

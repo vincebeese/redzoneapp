@@ -83,11 +83,13 @@ router.post('/', ensureUser, requireSubscription, async (req, res) => {
       });
     }
 
+    const { notes } = req.body;
+
     const result = await query(
-      `INSERT INTO deals (user_id, name, company, zone, deal_value, close_date)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO deals (user_id, name, company, zone, deal_value, close_date, notes)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [req.user.id, name, company, zone, deal_value || null, close_date || null]
+      [req.user.id, name, company, zone, deal_value || null, close_date || null, notes || null]
     );
 
     const deal = result.rows[0];

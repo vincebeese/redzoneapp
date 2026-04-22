@@ -52,6 +52,7 @@ export const deals = pgTable("deals", {
   zone: text("zone"),
   dealValue: numeric("deal_value"),
   closeDate: date("close_date"),
+  notes: text("notes"),
   status: text("status").default("active"),
   turnCount: integer("turn_count").default(0),
   reasoningThread: jsonb("reasoning_thread"),

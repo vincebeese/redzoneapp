@@ -7,6 +7,7 @@ export default function NewDealModal({ onClose, onCreate }) {
     zone: 'yellow',
     deal_value: '',
     close_date: '',
+    notes: '',
   });
 
   function handleSubmit(e) {
@@ -122,6 +123,24 @@ export default function NewDealModal({ onClose, onCreate }) {
               onChange={(e) => setFormData({ ...formData, close_date: e.target.value })}
               className="input-field"
             />
+          </div>
+
+          {/* Deal Notes */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Deal Notes (optional)
+            </label>
+            <textarea
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              className="input-field resize-none"
+              placeholder="Where is this deal right now? What's happened so far, who have you spoken to, what's the current situation?"
+              rows={4}
+              maxLength={2000}
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              The coach reads these notes before your first message and starts with full context.
+            </p>
           </div>
 
           {/* Actions */}
