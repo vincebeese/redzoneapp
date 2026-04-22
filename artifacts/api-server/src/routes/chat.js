@@ -155,7 +155,9 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
         if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
         if (lines.length > 0) {
-          systemPrompt += '\n\n# SELLER PROFILE (on file — apply silently to all coaching)\n' + lines.join('\n');
+          const total = 5;
+          const filled = lines.length;
+          systemPrompt += `\n\n# SELLER PROFILE (${filled}/${total} fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
       }
     } catch (err) {
