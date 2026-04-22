@@ -118,13 +118,13 @@ export default function Sidebar() {
             Slack Community
           </a>
           <a
-            href="/faq.html"
+            href="https://www.amazon.com/dp/B0FLLHQG13"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center px-4 py-3 rounded-lg transition-colors text-gray-300 hover:bg-gray-700"
           >
-            <span className="mr-3">❓</span>
-            Beta FAQ
+            <span className="mr-3">📘</span>
+            Get Red Zone Selling
           </a>
         </div>
       </nav>
