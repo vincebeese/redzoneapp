@@ -168,7 +168,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
     if (mode === 'deal') {
       try {
         const templatesResult = await query(`
-          SELECT slug, name, offer_language, trigger_zone, trigger_condition, resource_center_id, resource_center_url
+          SELECT type, name, offer_language, trigger_zone, trigger_condition, resource_center_id, resource_center_url
           FROM artifact_templates
           WHERE is_active = true
           ORDER BY created_at ASC
@@ -176,14 +176,14 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         if (templatesResult.rows.length > 0) {
           systemPrompt += '\n\n# ADDITIONAL ARTIFACTS\nThese custom artifacts are also available. Offer them using the ARTIFACT_OFFER signal.\n\n';
           templatesResult.rows.forEach(t => {
-            systemPrompt += `${t.slug}:\n`;
+            systemPrompt += `${t.type}:\n`;
             systemPrompt += `  Zone: ${t.trigger_zone}\n`;
             systemPrompt += `  When: ${t.trigger_condition}\n`;
             systemPrompt += `  Offer: "${t.offer_language || 'Would you like me to build this?'}"\n`;
             if (t.resource_center_url) {
               systemPrompt += `  Resource: ${t.resource_center_id || 'RC'} → ${t.resource_center_url}\n`;
             }
-            systemPrompt += `  Signal: [ARTIFACT_OFFER:{"type":"${t.slug}","label":"${t.name}"}]\n\n`;
+            systemPrompt += `  Signal: [ARTIFACT_OFFER:{"type":"${t.type}","label":"${t.name}"}]\n\n`;
           });
         }
       } catch (err) {

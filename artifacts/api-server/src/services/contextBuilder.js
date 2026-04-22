@@ -226,7 +226,7 @@ export async function assembleDealContext(dealId, currentInput, userId) {
 
   // Get transcript summaries for context injection
   const transcriptsResult = await query(
-    `SELECT id, call_type, word_count, created_at, analysis
+    `SELECT id, word_count, created_at, analysis
      FROM transcripts WHERE deal_id = $1 ORDER BY created_at ASC`,
     [dealId]
   );
