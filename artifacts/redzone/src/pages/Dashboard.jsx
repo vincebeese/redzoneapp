@@ -56,6 +56,22 @@ export default function Dashboard() {
         subtitle="Red Zone Selling Coach™"
       />
 
+      {/* Beta FAQ Banner */}
+      <div className="mx-4 lg:mx-6 mt-4 flex items-center justify-between gap-3 bg-rzs-charcoal rounded-lg px-4 py-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="text-xs font-bold tracking-widest uppercase text-rzs-red flex-shrink-0">Beta</span>
+          <span className="text-white text-xs font-medium truncate">New to the RZS AI Coach? Read the Beta FAQ.</span>
+        </div>
+        <a
+          href="/faq.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-shrink-0 text-[11px] font-semibold text-rzs-red border border-rzs-red/40 rounded px-3 py-1 hover:bg-rzs-red hover:text-white transition-colors whitespace-nowrap"
+        >
+          Read FAQ ↗
+        </a>
+      </div>
+
       <div className="p-4 lg:p-6 space-y-6">
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

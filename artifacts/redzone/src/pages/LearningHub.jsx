@@ -43,20 +43,6 @@ const STATIC_CONTENT = {
   ],
   masterclasses: [
     {
-      id: 'm1',
-      code: 'M1',
-      name: 'BlueSnap Workshop',
-      description: "Vince's live coaching session on enterprise selling with the BlueSnap sales team.",
-      url: null,
-    },
-    {
-      id: 'm2',
-      code: 'M2',
-      name: 'Closing in the Red Zone',
-      description: 'The mental game and tactical execution of closing high-stakes enterprise deals.',
-      url: null,
-    },
-    {
       id: 'm3',
       code: 'M3',
       name: 'The Cost of Doing Nothing',

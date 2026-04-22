@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RZS AI Coach — Beta FAQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C41E1E;
+    --red-dark: #9E1818;
+    --red-light: #FDF0F0;
+    --ink: #111111;
+    --ink-mid: #444444;
+    --ink-soft: #888888;
+    --rule: #E8E0DC;
+    --bg: #FAFAF8;
+    --white: #FFFFFF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--red);
+  }
+
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    letter-spacing: 0.01em;
+  }
+
+  .logo span {
+    color: var(--red);
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    padding: 5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 60%, rgba(196,30,30,0.08) 100%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .hero-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.55);
+    max-width: 520px;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  /* ── NAV PILLS ── */
+  .nav-pills {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+  }
+
+  .nav-pills-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-pills-inner::-webkit-scrollbar { display: none; }
+
+  .nav-pill {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.9rem 1.2rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .nav-pill:hover {
+    color: var(--red);
+    border-bottom-color: var(--red);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* ── SECTION ── */
+  .faq-section {
+    padding-top: 4rem;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-label-bar {
+    width: 4px;
+    height: 28px;
+    background: var(--red);
+    flex-shrink: 0;
+    border-radius: 2px;
+  }
+
+  .section-label h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── FAQ ITEM ── */
+  .faq-item {
+    border-top: 1px solid var(--rule);
+    padding: 1.6rem 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .faq-q {
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--ink);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .faq-q::before {
+    content: 'Q';
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    background: var(--red);
+    padding: 2px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .faq-a {
+    font-size: 0.95rem;
+    color: var(--ink-mid);
+    line-height: 1.75;
+    padding-left: 2rem;
+  }
+
+  .faq-a strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .faq-a a {
+    color: var(--red);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196,30,30,0.3);
+    transition: border-color 0.2s;
+  }
+
+  .faq-a a:hover {
+    border-color: var(--red);
+  }
+
+  /* ── MODE CARDS ── */
+  .mode-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 0.5rem 0 0.5rem 2rem;
+  }
+
+  .mode-card {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.1rem 1rem;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mode-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--red);
+  }
+
+  .mode-card-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+
+  .mode-card-desc {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--red-light);
+    border-left: 3px solid var(--red);
+    border-radius: 0 4px 4px 0;
+    padding: 1rem 1.2rem;
+    margin: 0.5rem 0 0.5rem 2rem;
+    font-size: 0.88rem;
+    color: var(--ink-mid);
+    line-height: 1.65;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-logo span { color: var(--red); }
+
+  .footer-links {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .footer-links a {
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    margin: 0 0.75rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--red); }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .info-tile {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.2rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .info-tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--red);
+  }
+
+  .info-tile-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.4rem;
+  }
+
+  .info-tile-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .info-tile-note {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-top: 0.25rem;
+    line-height: 1.5;
+  }
+
+  /* ── OFFICE HOURS BLOCK ── */
+  .office-hours {
+    background: var(--ink);
+    border-radius: 6px;
+    padding: 1.6rem 1.8rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .oh-left {}
+
+  .oh-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.4rem;
+  }
+
+  .oh-time {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .oh-detail {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 0.3rem;
+  }
+
+  .oh-right {
+    text-align: right;
+  }
+
+  .oh-until {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 0.3rem;
+  }
+
+  .oh-date {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  /* ── BULLET LIST ── */
+  .faq-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .faq-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: 0.95rem;
+    color: var(--ink-mid);
+    line-height: 1.65;
+    padding: 0.35rem 0;
+  }
+
+  .faq-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.55rem;
+  }
+
+  @media (max-width: 640px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .office-hours { flex-direction: column; }
+    .oh-right { text-align: left; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .hero { padding: 3.5rem 1.5rem 3rem; }
+    main { padding: 0 1.5rem 4rem; }
+    .mode-cards { grid-template-columns: 1fr; }
+    .nav-pill { padding: 0.9rem 0.9rem; }
+    .callout { margin-left: 0; }
+    .mode-cards { margin-left: 0; }
+    .faq-a { padding-left: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">RZS <span>AI Coach</span></div>
+    <div class="badge">Beta</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Beta Resource</div>
+    <h1>Frequently Asked<br><em>Questions</em></h1>
+    <p class="hero-sub">Everything you need to know to get the most out of your first sessions with the RZS AI Coach.</p>
+  </div>
+</div>
+
+<!-- NAV PILLS -->
+<nav class="nav-pills">
+  <div class="nav-pills-inner">
+    <a class="nav-pill" href="#beta">Beta Details</a>
+    <a class="nav-pill" href="#support">Support</a>
+    <a class="nav-pill" href="#basics">The Basics</a>
+    <a class="nav-pill" href="#profile">Seller Profile</a>
+    <a class="nav-pill" href="#deal">Deal Mode</a>
+    <a class="nav-pill" href="#coach">Coach Mode</a>
+    <a class="nav-pill" href="#mindset">Mindset Mode</a>
+    <a class="nav-pill" href="#general">General</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- BETA DETAILS -->
+  <section class="faq-section" id="beta">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>Beta Details</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How long does the beta last?</div>
+      <div class="faq-a">
+        <div class="info-grid">
+          <div class="info-tile">
+            <div class="info-tile-label">Duration</div>
+            <div class="info-tile-value">14 days</div>
+            <div class="info-tile-note">Starting from your first session</div>
+          </div>
+          <div class="info-tile">
+            <div class="info-tile-label">Session Limit</div>
+            <div class="info-tile-value">100 sessions</div>
+            <div class="info-tile-note">1 session = 1 turn: you ask, coach answers</div>
+          </div>
+        </div>
+        <div class="callout" style="margin-top: 1rem; margin-left: 0;">The beta ends at whichever comes first — 14 days or 100 sessions. Access is free during the beta. After, you can sign up for one of two subscription tiers or walk away.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What do we need from you during the beta?</div>
+      <div class="faq-a">
+        Beta feedback is the job. Here's what that looks like:
+        <ul class="faq-list" style="margin-top: 0.75rem;">
+          <li>Use it on a real deal or coaching situation — not a hypothetical</li>
+          <li>Note what lands and what feels off. Specifics beat generalities.</li>
+          <li>Show up to Office Hours, drop reactions in <strong>#ai_coach_feedback</strong> on Slack, or email <a href="mailto:vince@vincebeese.com">vince@vincebeese.com</a></li>
+          <li>At the end of Week 1, complete a short survey</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT & OFFICE HOURS -->
+  <section class="faq-section" id="support">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>Support &amp; Office Hours</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">When are Office Hours?</div>
+      <div class="faq-a">
+        <div class="office-hours">
+          <div class="oh-left">
+            <div class="oh-eyebrow">Daily Office Hours</div>
+            <div class="oh-time">Noon — 12:25 PM ET</div>
+            <div class="oh-detail">Every day through May 1st. Bring questions, reactions, or just show up.</div>
+          </div>
+          <div class="oh-right">
+            <div class="oh-until">Running until</div>
+            <div class="oh-date">May 1, 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I reach Vince outside of Office Hours?</div>
+      <div class="faq-a">Two ways: drop a message in <strong>#ai_coach_feedback</strong> on Slack or email <a href="mailto:vince@vincebeese.com">vince@vincebeese.com</a>. Include which mode you were in, what you typed, and a screenshot if you can grab one.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I share feedback?</div>
+      <div class="faq-a"><strong>#ai_coach_feedback</strong> on Slack or <a href="mailto:vince@vincebeese.com">vince@vincebeese.com</a>. What's working, what's off, what's missing. Your feedback directly shapes what gets built next.</div>
+    </div>
+  </section>
+
+  <!-- THE BASICS -->
+  <section class="faq-section" id="basics">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>The Basics</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is the RZS AI Coach?</div>
+      <div class="faq-a">It's a sales coaching tool built on the Red Zone Selling system. You describe a real situation — a deal, a skill gap, a mindset challenge — and it coaches you the way Vince would. Specific, direct, and immediately actionable.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What are the three modes?</div>
+      <div class="faq-a">
+        <div class="mode-cards">
+          <div class="mode-card">
+            <div class="mode-card-name">Deal Mode</div>
+            <div class="mode-card-desc">Coaching on a specific active deal. Diagnoses the zone, names the play, gives you language to use.</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-card-name">Coach Mode</div>
+            <div class="mode-card-desc">On-demand advice for any live selling situation. No deal required. Think of it as Vince on speed dial.</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-card-name">Mindset Mode</div>
+            <div class="mode-card-desc">The mental game. Use it when you're pressing, processing a loss, or preparing for a high-stakes moment.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I know which mode to use?</div>
+      <div class="faq-a">Got a specific deal you're stuck on? <strong>Deal Mode.</strong> Facing a situation and not sure what play to run? <strong>Coach Mode.</strong> In your head and need to reset before your next call? <strong>Mindset Mode.</strong></div>
+    </div>
+  </section>
+
+  <!-- SELLER PROFILE -->
+  <section class="faq-section" id="profile">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>Seller Profile</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is the Seller Profile and do I need to fill it out?</div>
+      <div class="faq-a">It's five fields — your ICP, average deal size, sales cycle, win themes, and loss patterns. You don't have to fill it out, but every field you add makes the coaching sharper. Without it, the AI coaches cold. With it, it flags your known loss patterns before you repeat them.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Where do I find it?</div>
+      <div class="faq-a"><strong>Account → Seller Profile.</strong> Takes about two minutes.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What if I only fill out some of the fields?</div>
+      <div class="faq-a">No problem. The AI uses whatever is there and will ask for missing fields one at a time — one question per session, never more.</div>
+    </div>
+  </section>
+
+  <!-- DEAL MODE -->
+  <section class="faq-section" id="deal">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>Deal Mode</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What do I need to have ready before I start?</div>
+      <div class="faq-a">Just a deal you're actively working. Company name, where you think it stands, and a quick description of where you're stuck. The more specific you are, the sharper the coaching. It loves reading call transcripts — feed them if you have them.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What's a zone and which one should I pick?</div>
+      <div class="faq-a">Every deal lives in one of three zones — <strong>Yellow</strong> (qualification), <strong>Green</strong> (momentum), or <strong>Red</strong> (closing). Pick the one that matches where your deal actually is. If you're not sure, start with Yellow. You can also move your deal forward or back manually once you reach certain thresholds.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Why is it asking me to justify my zone selection?</div>
+      <div class="faq-a">
+        If you start a deal in Green or Red Zone, the AI asks what forward signals put it there. That's not a test — it's the first coaching move. Zone accuracy matters. A deal classified in the wrong zone gets the wrong plays.
+        <div class="callout">Zone accuracy is everything in the Red Zone Selling system. The AI challenges your classification to make sure the coaching that follows actually fits where you are.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COACH MODE -->
+  <section class="faq-section" id="coach">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>Coach Mode</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How is Coach Mode different from Deal Mode?</div>
+      <div class="faq-a">Deal Mode runs a structured diagnosis on one specific deal. Coach Mode is a direct conversation — you describe any selling situation and get coaching on it. No deal creation required.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I use Coach Mode for skill building?</div>
+      <div class="faq-a">Yes. Tell it what skill you want to sharpen — discovery, multi-threading, closing, negotiation — and it will drill you on it, including role-play if you want it.</div>
+    </div>
+  </section>
+
+  <!-- MINDSET MODE -->
+  <section class="faq-section" id="mindset">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>Mindset Mode</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What kind of situations is Mindset Mode for?</div>
+      <div class="faq-a">Bad quarter. Lost deal. Pressing on calls. Fear before a big presentation. Confidence dip. Any moment where the mental game is getting in the way of the selling game.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Is this therapy?</div>
+      <div class="faq-a">Ha, no. It's a performance coach. It acknowledges briefly, reframes fast, and gets you back to work. If what you're experiencing goes beyond a tough quarter, it will tell you and point you toward the right support.</div>
+    </div>
+  </section>
+
+  <!-- GENERAL -->
+  <section class="faq-section" id="general">
+    <div class="section-label">
+      <div class="section-label-bar"></div>
+      <h2>General</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Is my information private?</div>
+      <div class="faq-a">Yes. Your deals, coaching sessions, and profile data are only visible to you.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Something isn't working — who do I contact?</div>
+      <div class="faq-a">Head to the <strong>#ai_coach_feedback</strong> Slack channel or email <a href="mailto:vince@vincebeese.com">vince@vincebeese.com</a>. You can also bring it to Office Hours — daily at Noon ET through May 1st.</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">RZS <span>AI Coach</span></div>
+    <div class="footer-links">
+      <a href="https://redzoneselling.co">redzoneselling.co</a>
+      <a href="mailto:vince@vincebeese.com">vince@vincebeese.com</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
