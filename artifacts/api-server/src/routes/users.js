@@ -147,6 +147,57 @@ router.delete('/me', ensureUser, async (req, res) => {
   }
 });
 
+// GET /api/users/profile — seller profile
+router.get('/profile', ensureUser, async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns
+       FROM seller_profiles WHERE user_id = $1`,
+      [req.user.id]
+    );
+    res.json(result.rows[0] || {});
+  } catch (error) {
+    console.error('Error fetching seller profile:', error);
+    res.status(500).json({ error: 'Failed to fetch seller profile' });
+  }
+});
+
+// PATCH /api/users/profile — upsert seller profile
+router.patch('/profile', ensureUser, async (req, res) => {
+  try {
+    const { icp, avg_deal_size, sales_cycle, win_themes, loss_patterns } = req.body;
+
+    const fields = { icp, avg_deal_size, sales_cycle, win_themes, loss_patterns };
+    for (const [key, val] of Object.entries(fields)) {
+      if (val !== undefined && val !== null && typeof val !== 'string') {
+        return res.status(400).json({ error: `${key} must be a string` });
+      }
+      if (typeof val === 'string' && val.length > 1000) {
+        return res.status(400).json({ error: `${key} must be 1000 characters or less` });
+      }
+    }
+
+    const result = await query(
+      `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW())
+       ON CONFLICT (user_id) DO UPDATE SET
+         icp = EXCLUDED.icp,
+         avg_deal_size = EXCLUDED.avg_deal_size,
+         sales_cycle = EXCLUDED.sales_cycle,
+         win_themes = EXCLUDED.win_themes,
+         loss_patterns = EXCLUDED.loss_patterns,
+         updated_at = NOW()
+       RETURNING icp, avg_deal_size, sales_cycle, win_themes, loss_patterns`,
+      [req.user.id, icp || null, avg_deal_size || null, sales_cycle || null, win_themes || null, loss_patterns || null]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error saving seller profile:', error);
+    res.status(500).json({ error: 'Failed to save seller profile' });
+  }
+});
+
 // GET /api/users/subscription — subscription status check
 router.get('/subscription', ensureUser, async (req, res) => {
   try {

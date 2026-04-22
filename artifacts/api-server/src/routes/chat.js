@@ -139,6 +139,29 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       if (rcBlock) systemPrompt += rcBlock;
     }
 
+    // Inject seller profile for all modes (silent — applied by the AI per prompt instructions)
+    try {
+      const profileResult = await query(
+        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns
+         FROM seller_profiles WHERE user_id = $1`,
+        [req.user.id]
+      );
+      const p = profileResult.rows[0];
+      if (p) {
+        const lines = [];
+        if (p.icp) lines.push(`ICP: ${p.icp}`);
+        if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
+        if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
+        if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
+        if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
+        if (lines.length > 0) {
+          systemPrompt += '\n\n# SELLER PROFILE (on file — apply silently to all coaching)\n' + lines.join('\n');
+        }
+      }
+    } catch (err) {
+      console.warn('Could not load seller profile:', err.message);
+    }
+
     // Inject active artifact templates into Deal Mode system prompt
     if (mode === 'deal') {
       try {

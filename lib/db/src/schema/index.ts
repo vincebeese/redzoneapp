@@ -208,6 +208,16 @@ export const trialNotifications = pgTable("trial_notifications", {
   sentAt: timestamp("sent_at", { withTimezone: true }).default(sql`now()`).notNull(),
 });
 
+export const sellerProfiles = pgTable("seller_profiles", {
+  userId: text("user_id").primaryKey(),
+  icp: text("icp"),
+  avgDealSize: text("avg_deal_size"),
+  salesCycle: text("sales_cycle"),
+  winThemes: text("win_themes"),
+  lossPatterns: text("loss_patterns"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`now()`),
+});
+
 export const dealDocuments = pgTable("deal_documents", {
   id: serial("id").primaryKey(),
   dealId: integer("deal_id").notNull(),

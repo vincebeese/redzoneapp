@@ -58,6 +58,12 @@ export default function Account() {
   const [editingName, setEditingName] = useState(false);
   const [displayName, setDisplayName] = useState('');
 
+  const [sellerProfile, setSellerProfile] = useState(null);
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileDraft, setProfileDraft] = useState({ icp: '', avg_deal_size: '', sales_cycle: '', win_themes: '', loss_patterns: '' });
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileError, setProfileError] = useState(null);
+
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ current: '', next: '', confirm: '' });
 
@@ -77,16 +83,60 @@ export default function Account() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/users/me', { credentials: 'include' })
-      .then((r) => r.json())
-      .then((data) => {
-        setUser(data);
-        setDisplayName(data.display_name || '');
-        setUsage(data.usage);
+    Promise.all([
+      fetch('/api/users/me', { credentials: 'include' }).then((r) => r.json()),
+      fetch('/api/users/profile', { credentials: 'include' }).then((r) => r.json()),
+    ])
+      .then(([userData, profileData]) => {
+        setUser(userData);
+        setDisplayName(userData.display_name || '');
+        setUsage(userData.usage);
+        setSellerProfile(profileData);
+        setProfileDraft({
+          icp: profileData.icp || '',
+          avg_deal_size: profileData.avg_deal_size || '',
+          sales_cycle: profileData.sales_cycle || '',
+          win_themes: profileData.win_themes || '',
+          loss_patterns: profileData.loss_patterns || '',
+        });
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  async function saveProfile() {
+    setProfileSaving(true);
+    setProfileError(null);
+    try {
+      const res = await fetch('/api/users/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(profileDraft),
+      });
+      const data = await res.json();
+      if (!res.ok) return setProfileError(data.error || 'Failed to save');
+      setSellerProfile(data);
+      setEditingProfile(false);
+      showSuccess('Seller profile saved');
+    } catch {
+      setProfileError('Failed to save');
+    } finally {
+      setProfileSaving(false);
+    }
+  }
+
+  function cancelProfile() {
+    setEditingProfile(false);
+    setProfileError(null);
+    setProfileDraft({
+      icp: sellerProfile?.icp || '',
+      avg_deal_size: sellerProfile?.avg_deal_size || '',
+      sales_cycle: sellerProfile?.sales_cycle || '',
+      win_themes: sellerProfile?.win_themes || '',
+      loss_patterns: sellerProfile?.loss_patterns || '',
+    });
+  }
 
   async function saveName() {
     setSaving(true);
@@ -319,7 +369,81 @@ export default function Account() {
         </div>
       </section>
 
-      {/* SECTION 2 — Subscription */}
+      {/* SECTION 2 — Seller Profile */}
+      {(() => {
+        const fields = [
+          { key: 'icp', label: 'ICP', placeholder: 'Industry, company size, buyer persona (e.g. Mid-market SaaS, 100-500 employees, VP Sales)' },
+          { key: 'avg_deal_size', label: 'Average deal size', placeholder: 'e.g. $75K ARR' },
+          { key: 'sales_cycle', label: 'Sales cycle length', placeholder: 'e.g. 90 days' },
+          { key: 'win_themes', label: 'Top win themes', placeholder: 'Why do you usually win? (e.g. Strong ROI story, executive alignment, technical fit)' },
+          { key: 'loss_patterns', label: 'Top loss patterns', placeholder: 'Why do you usually lose? (e.g. Single-threaded, budget unconfirmed early, slow to multi-thread)' },
+        ];
+        const filledCount = fields.filter(f => sellerProfile?.[f.key]).length;
+        const isComplete = filledCount === fields.length;
+
+        return (
+          <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-rzs-charcoal">Seller Profile</h2>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Used by the AI coach across all three modes to personalize every response.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isComplete ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                  {filledCount}/{fields.length} complete
+                </span>
+                {!editingProfile && (
+                  <button onClick={() => setEditingProfile(true)} className="text-sm text-rzs-red hover:underline">
+                    {filledCount === 0 ? 'Set up' : 'Edit'}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {!editingProfile ? (
+              <div className="space-y-3">
+                {fields.map(f => (
+                  <div key={f.key} className="border-t border-gray-100 pt-3 first:border-t-0 first:pt-0">
+                    <p className="text-xs font-medium text-gray-500 mb-0.5">{f.label}</p>
+                    <p className="text-sm text-rzs-charcoal">
+                      {sellerProfile?.[f.key] || <span className="italic text-gray-300">Not set</span>}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {fields.map(f => (
+                  <div key={f.key}>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">{f.label}</label>
+                    <textarea
+                      value={profileDraft[f.key]}
+                      onChange={(e) => setProfileDraft((d) => ({ ...d, [f.key]: e.target.value }))}
+                      placeholder={f.placeholder}
+                      rows={f.key === 'icp' || f.key === 'win_themes' || f.key === 'loss_patterns' ? 2 : 1}
+                      maxLength={1000}
+                      className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-rzs-charcoal placeholder-gray-300 focus:outline-none focus:border-gray-400 resize-none"
+                    />
+                  </div>
+                ))}
+                {profileError && <p className="text-xs" style={{ color: '#C62828' }}>{profileError}</p>}
+                <div className="flex gap-2">
+                  <button onClick={saveProfile} disabled={profileSaving} className="btn-primary text-sm py-1.5 px-4">
+                    {profileSaving ? 'Saving...' : 'Save profile'}
+                  </button>
+                  <button onClick={cancelProfile} className="text-sm text-gray-500 hover:text-gray-700">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </section>
+        );
+      })()}
+
+      {/* SECTION 3 — Subscription */}
       <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
         <h2 className="text-lg font-semibold text-rzs-charcoal">Subscription</h2>
 
