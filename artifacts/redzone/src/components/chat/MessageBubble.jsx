@@ -6,6 +6,14 @@ import ArtifactOffer, { parseArtifactOffer } from '../artifacts/ArtifactOffer';
 import ArtifactCard from '../artifacts/ArtifactCard';
 import { parseArtifactContent } from '../artifacts/artifactUtils';
 
+const markdownComponents = {
+  a: ({ href, children }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  ),
+};
+
 function cleanContent(text) {
   return text
     .replace(/\u2014/g, '-')
@@ -70,7 +78,7 @@ export default function MessageBubble({
           <div className="flex justify-start mb-2">
             <div className="max-w-[85%] lg:max-w-[70%] rounded-lg px-4 py-3 bg-gray-100 text-rzs-charcoal">
               <div className="text-sm prose prose-sm max-w-none [&_p]:mt-2 [&_p]:mb-3 prose-headings:text-rzs-charcoal prose-headings:font-semibold [&_p:first-child]:mt-0 [&_p:last-child]:mb-0">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {cleanContent(artifactData.cleanContent)}
                 </ReactMarkdown>
               </div>
@@ -103,7 +111,7 @@ export default function MessageBubble({
           <p className="text-sm whitespace-pre-wrap">{content}</p>
         ) : (
           <div className="text-sm prose prose-sm max-w-none [&_p]:mt-2 [&_p]:mb-3 prose-headings:text-rzs-charcoal prose-headings:font-semibold prose-headings:mt-4 prose-headings:mb-2 prose-strong:text-rzs-charcoal prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 [&_p:first-child]:mt-0 [&_p:last-child]:mb-0">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
               {cleanContent(displayContent)}
             </ReactMarkdown>
             {isStreaming && <StreamingIndicator />}
