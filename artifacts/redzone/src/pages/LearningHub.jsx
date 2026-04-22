@@ -56,6 +56,20 @@ const STATIC_CONTENT = {
       description: 'The mental game and tactical execution of closing high-stakes enterprise deals.',
       url: null,
     },
+    {
+      id: 'm3',
+      code: 'M3',
+      name: 'The Cost of Doing Nothing',
+      description: "Why urgency is your most powerful tool — and how to reveal the real cost of inaction for your buyer.",
+      url: 'https://youtu.be/SsgWhltNF70',
+    },
+    {
+      id: 'm4',
+      code: 'M4',
+      name: '3 Non-Negotiables to Win Big Deals',
+      description: 'The three things elite sellers never compromise on when pursuing and closing enterprise deals.',
+      url: 'https://youtu.be/0KH06spCk7Q',
+    },
   ],
 };
 
