@@ -117,6 +117,15 @@ export default function Sidebar() {
             <span className="mr-3">💬</span>
             Slack Community
           </a>
+          <a
+            href="/faq.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center px-4 py-3 rounded-lg transition-colors text-gray-300 hover:bg-gray-700"
+          >
+            <span className="mr-3">❓</span>
+            Beta FAQ
+          </a>
         </div>
       </nav>
 
