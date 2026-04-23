@@ -1,12 +1,22 @@
 import { useState, useMemo } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const SECTION_CONFIG = {
-  courses: {
-    label: '🎓 Courses',
-    tagline: 'Structured learning paths grounded in the Red Zone Selling framework',
+  'being-curious': {
+    label: '📖 Being Curious',
+    tagline: 'The Power of Inquisitive Selling — A Red Zone Coaching Short Course',
     bg: '#E3F2FD',
     codeBg: '#E3F2FD',
     codeText: '#1565C0',
+    gated: false,
+  },
+  'companion-course': {
+    label: '🏈 Red Zone Ready',
+    tagline: 'Companion Course — The Foundation Course for Mastering the Red Zone Selling Framework',
+    bg: '#FEE2E2',
+    codeBg: '#FEE2E2',
+    codeText: '#991B1B',
+    gated: true,
   },
   masterclasses: {
     label: '🎬 Masterclasses',
@@ -14,31 +24,83 @@ const SECTION_CONFIG = {
     bg: '#FFF3E0',
     codeBg: '#FFF3E0',
     codeText: '#E65100',
+    gated: false,
   },
 };
 
 const STATIC_CONTENT = {
-  courses: [
+  'being-curious': [
     {
-      id: 'c1',
-      code: 'C1',
-      name: 'Red Zone Selling Foundations',
-      description: 'The full RZS framework from Yellow to Red Zone. Qualification, momentum, and closing.',
-      url: null,
+      id: 'bc1',
+      code: 'L1',
+      name: 'Can Curiosity be Taught?',
+      description: 'The case for curiosity as a learnable skill — and why most reps stop asking too soon.',
+      url: 'https://youtu.be/jFthJeP1gHY',
     },
     {
-      id: 'c2',
-      code: 'C2',
-      name: 'The 4F Deal Filter',
-      description: 'Master the Fit / Friction / Funding / Forecast filter. Never advance a bad deal again.',
-      url: null,
+      id: 'bc2',
+      code: 'L2',
+      name: 'What Inquisitive Selling Looks Like',
+      description: 'Real examples of curiosity in action — the questions that open deals and the ones that close them down.',
+      url: 'https://youtu.be/WC89FMioVPo',
     },
     {
-      id: 'c3',
-      code: 'C3',
-      name: 'Champion Development',
-      description: 'How to build, activate, and coach your champion to win internal deals for you.',
-      url: null,
+      id: 'bc3',
+      code: 'L3',
+      name: 'How to Train Your Curiosity',
+      description: 'Practical drills and habits to sharpen your inquisitive instinct before every call.',
+      url: 'https://youtu.be/UQs9GO4feu0',
+    },
+    {
+      id: 'bc4',
+      code: 'L4',
+      name: 'Recap & Challenge',
+      description: 'Key takeaways from the course and a hands-on challenge to put inquisitive selling to work immediately.',
+      url: 'https://youtu.be/-rtRGX44rSA',
+    },
+  ],
+  'companion-course': [
+    {
+      id: 'cc1',
+      code: 'L1',
+      name: 'Kick Off — Let\'s Go',
+      description: 'Course overview and what you\'ll walk away with after mastering the Red Zone Selling framework.',
+      url: 'https://youtu.be/riaUeq_B9Qw',
+    },
+    {
+      id: 'cc2',
+      code: 'L2',
+      name: 'Close More Deals, Make More Money',
+      description: 'The mindset shift that separates elite closers from average reps — and how to adopt it immediately.',
+      url: 'https://youtu.be/Q0Mm2XZJchw',
+    },
+    {
+      id: 'cc3',
+      code: 'L3',
+      name: 'Yellow Zone — Qualify Like a Champion',
+      description: 'How to qualify ruthlessly, filter bad deals early, and only advance opportunities worth your time.',
+      url: 'https://youtu.be/HzhUJoGfKFU',
+    },
+    {
+      id: 'cc4',
+      code: 'L4',
+      name: 'Green Zone — Keep the Chains Moving',
+      description: 'Building momentum, advancing the deal, and securing the commitments that move you toward close.',
+      url: 'https://youtu.be/9k-1dmLgQ8g',
+    },
+    {
+      id: 'cc5',
+      code: 'L5',
+      name: 'Red Zone — Finish Like a Closer',
+      description: 'The plays, the language, and the mindset you need when the deal is on the line.',
+      url: 'https://youtu.be/3IV7G10mVys',
+    },
+    {
+      id: 'cc6',
+      code: 'L6',
+      name: 'Putting Red Zone Selling to Work for You',
+      description: 'How to apply the full framework to your current pipeline starting today.',
+      url: 'https://youtu.be/5tiKwroa1NI',
     },
   ],
   masterclasses: [
@@ -46,7 +108,7 @@ const STATIC_CONTENT = {
       id: 'm3',
       code: 'M3',
       name: 'The Cost of Doing Nothing',
-      description: "Why urgency is your most powerful tool — and how to reveal the real cost of inaction for your buyer.",
+      description: 'Why urgency is your most powerful tool — and how to reveal the real cost of inaction for your buyer.',
       url: 'https://youtu.be/SsgWhltNF70',
     },
     {
@@ -63,30 +125,31 @@ function getLinkLabel(url) {
   if (!url) return null;
   if (url.includes('youtube.com') || url.includes('youtu.be')) return '▶ Watch on YouTube';
   if (url.includes('vimeo.com')) return '▶ Watch on Vimeo';
-  if (url.includes('docs.google.com')) return '↗ Open in Google Docs';
   return '↗ Open resource';
 }
 
-function ContentCard({ item, sectionKey }) {
+function ContentCard({ item, sectionKey, isAdmin, isGated }) {
   const cfg = SECTION_CONFIG[sectionKey];
   const [showTip, setShowTip] = useState(false);
   const linkLabel = getLinkLabel(item.url);
-  const clickable = !!item.url;
+  const locked = isGated && !isAdmin;
 
   function handleClick() {
-    if (!item.url) {
+    if (locked) {
       setShowTip(true);
-      setTimeout(() => setShowTip(false), 1800);
+      setTimeout(() => setShowTip(false), 3000);
       return;
     }
-    window.open(item.url, '_blank', 'noopener,noreferrer');
+    if (item.url) {
+      window.open(item.url, '_blank', 'noopener,noreferrer');
+    }
   }
 
   return (
     <div
       onClick={handleClick}
       className={`relative flex gap-3 px-4 py-3 bg-white transition-colors ${
-        clickable ? 'cursor-pointer hover:bg-gray-50' : 'cursor-default'
+        locked ? 'cursor-not-allowed opacity-75' : 'cursor-pointer hover:bg-gray-50'
       }`}
     >
       <span
@@ -95,25 +158,28 @@ function ContentCard({ item, sectionKey }) {
       >
         {item.code}
       </span>
-      <div className="min-w-0">
-        <p className="text-xs font-semibold text-gray-900 leading-snug">{item.name}</p>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start gap-1.5">
+          <p className="text-xs font-semibold text-gray-900 leading-snug flex-1">{item.name}</p>
+          {locked && <span className="flex-shrink-0 text-[10px]">🔒</span>}
+        </div>
         <p className="text-[11px] text-gray-500 leading-[1.4] mt-0.5 line-clamp-2">{item.description}</p>
-        {linkLabel ? (
-          <p className="text-[10px] font-medium mt-1" style={{ color: '#C62828' }}>{linkLabel}</p>
+        {locked ? (
+          <p className="text-[10px] font-medium mt-1 text-gray-400">Members only</p>
         ) : (
-          <p className="text-[10px] font-medium mt-1 text-amber-500">Coming soon</p>
+          <p className="text-[10px] font-medium mt-1" style={{ color: '#C62828' }}>{linkLabel}</p>
         )}
       </div>
       {showTip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-800 text-white text-[10px] rounded whitespace-nowrap z-10">
-          Coming soon
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1.5 bg-gray-800 text-white text-[10px] rounded whitespace-nowrap z-10 text-center leading-snug">
+          Members only — email vince@vincebeese.com to get access
         </div>
       )}
     </div>
   );
 }
 
-function Section({ sectionKey, items, search }) {
+function Section({ sectionKey, items, search, isAdmin }) {
   const cfg = SECTION_CONFIG[sectionKey];
   const [collapsed, setCollapsed] = useState(false);
 
@@ -134,13 +200,23 @@ function Section({ sectionKey, items, search }) {
         className="w-full flex items-center justify-between px-4 py-3 text-left"
         style={{ background: cfg.bg }}
       >
-        <div>
+        <div className="flex items-center gap-2 min-w-0">
           <span className="text-sm font-semibold text-gray-900">{cfg.label}</span>
-          <span className="ml-2 text-[11px] text-gray-500">{cfg.tagline}</span>
+          {cfg.gated && !isAdmin && (
+            <span className="text-[10px] font-semibold bg-gray-800 text-white px-1.5 py-0.5 rounded flex-shrink-0">
+              MEMBERS
+            </span>
+          )}
+          {cfg.gated && isAdmin && (
+            <span className="text-[10px] font-semibold bg-green-600 text-white px-1.5 py-0.5 rounded flex-shrink-0">
+              ADMIN ACCESS
+            </span>
+          )}
+          <span className="ml-1 text-[11px] text-gray-500 hidden sm:inline truncate">{cfg.tagline}</span>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="text-xs bg-white/60 px-2 py-0.5 rounded-full text-gray-600 font-medium">
-            {filtered.length} {filtered.length !== 1 ? 'items' : 'item'}
+            {filtered.length} {filtered.length !== 1 ? 'lessons' : 'lesson'}
           </span>
           <svg
             className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${collapsed ? '-rotate-90' : ''}`}
@@ -157,7 +233,13 @@ function Section({ sectionKey, items, search }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gray-200">
           {filtered.length > 0 ? (
             filtered.map((item) => (
-              <ContentCard key={item.id} item={item} sectionKey={sectionKey} />
+              <ContentCard
+                key={item.id}
+                item={item}
+                sectionKey={sectionKey}
+                isAdmin={isAdmin}
+                isGated={cfg.gated}
+              />
             ))
           ) : (
             <div className="bg-white col-span-2 px-4 py-6 text-center text-xs text-gray-400">
@@ -171,11 +253,15 @@ function Section({ sectionKey, items, search }) {
 }
 
 export default function LearningHub() {
+  const { user } = useAuth();
+  const isAdmin = !!user?.is_admin;
   const [search, setSearch] = useState('');
+
+  const totalAll = Object.values(STATIC_CONTENT).flat().length;
 
   const totalItems = useMemo(() => {
     const q = search.toLowerCase();
-    if (!q) return Object.values(STATIC_CONTENT).flat().length;
+    if (!q) return totalAll;
     return Object.values(STATIC_CONTENT)
       .flat()
       .filter(
@@ -184,8 +270,6 @@ export default function LearningHub() {
           (item.description || '').toLowerCase().includes(q)
       ).length;
   }, [search]);
-
-  const totalAll = Object.values(STATIC_CONTENT).flat().length;
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-gray-50">
@@ -196,7 +280,7 @@ export default function LearningHub() {
         <div className="flex-1 min-w-0">
           <h1 className="text-white font-bold text-base leading-tight">Learning Hub</h1>
           <p className="text-gray-400 text-[11px] mt-0.5">
-            {totalAll} items · Courses · Masterclasses
+            {totalAll} lessons · Courses · Masterclasses
           </p>
         </div>
         <div className="relative flex-shrink-0 w-full sm:w-56">
@@ -229,6 +313,7 @@ export default function LearningHub() {
             sectionKey={sectionKey}
             items={STATIC_CONTENT[sectionKey] || []}
             search={search}
+            isAdmin={isAdmin}
           />
         ))}
       </div>
