@@ -1,0 +1,55 @@
+Here's the Replit prompt:
+
+---
+
+Create a Node.js script that uses the Stripe API to create coaching products and prices. Use the Stripe secret key from environment variables as `STRIPE_SECRET_KEY`.
+
+Create the following products and prices:
+
+**Product 1**
+- Name: RZS Coaching — Starter
+- Description: Live 1:1 coaching with Vince Beese — Red Zone Selling framework
+- Category: training
+- Price 1: $100.00 USD recurring monthly
+- Price 2: $1,000.00 USD recurring yearly
+
+**Product 2**
+- Name: RZS Coaching — Playmaker
+- Description: Live 1:1 coaching with Vince Beese — Red Zone Selling framework
+- Category: training
+- Price 1: $500.00 USD recurring monthly
+- Price 2: $4,800.00 USD recurring yearly
+
+**Product 3**
+- Name: RZS Coaching — MVP
+- Description: Live 1:1 coaching with Vince Beese — Red Zone Selling framework
+- Category: training
+- Price 1: $1,250.00 USD recurring monthly
+- Price 2: $12,000.00 USD recurring yearly
+
+**Product 4**
+- Name: RZS Coaching — Leader
+- Description: Live coaching for sales leaders, founders, and CEOs managing a team or org — Red Zone Selling framework
+- Category: training
+- Price 1: $2,500.00 USD recurring monthly
+- Price 2: $27,500.00 USD recurring yearly
+
+**Product 5**
+- Name: RZS Coaching — Team
+- Description: Live team coaching with Vince Beese — Red Zone Selling framework
+- Category: training
+- Price 1: $5,000.00 USD recurring monthly — nickname "Team Small (up to 10 reps)"
+- Price 2: $55,000.00 USD recurring yearly — nickname "Team Small (up to 10 reps) Annual"
+- Price 3: $10,000.00 USD recurring monthly — nickname "Team Large (up to 25 reps)"
+- Price 4: $110,000.00 USD recurring yearly — nickname "Team Large (up to 25 reps) Annual"
+
+For each product, log the product ID and all price IDs to the console after creation so I have a record of what was created. Use async/await and handle errors cleanly. Install the `stripe` npm package.
+
+---
+
+Two things before you run it:
+
+1. Add your Stripe **secret key** as a Replit Secret named `STRIPE_SECRET_KEY` — never hardcode it in the script
+2. Make sure you're using your **live** secret key if you want these live, or **test** key to verify it works first before going live
+
+Run it in test mode first. Want me to also draft the member notification email while you get this set up?
