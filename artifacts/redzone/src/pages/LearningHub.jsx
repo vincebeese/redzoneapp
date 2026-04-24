@@ -3,14 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const SECTION_CONFIG = {
-  'being-curious': {
-    label: '📖 Being Curious',
-    tagline: 'The Power of Inquisitive Selling — A Red Zone Coaching Short Course',
-    bg: '#E3F2FD',
-    codeBg: '#E3F2FD',
-    codeText: '#1565C0',
-    gated: false,
-  },
   'companion-course': {
     label: '🏈 Red Zone Ready',
     tagline: 'Companion Course — The Foundation Course for Mastering the Red Zone Selling Framework',
@@ -18,6 +10,16 @@ const SECTION_CONFIG = {
     codeBg: '#FEE2E2',
     codeText: '#991B1B',
     gated: true,
+    defaultCollapsed: true,
+  },
+  'being-curious': {
+    label: '📖 Being Curious',
+    tagline: 'The Power of Inquisitive Selling — A Red Zone Coaching Short Course',
+    bg: '#E3F2FD',
+    codeBg: '#E3F2FD',
+    codeText: '#1565C0',
+    gated: false,
+    defaultCollapsed: true,
   },
   masterclasses: {
     label: '🎬 Masterclasses',
@@ -26,6 +28,7 @@ const SECTION_CONFIG = {
     codeBg: '#FFF3E0',
     codeText: '#E65100',
     gated: false,
+    defaultCollapsed: false,
   },
 };
 
@@ -178,7 +181,7 @@ function ContentCard({ item, sectionKey, locked }) {
 
 function Section({ sectionKey, items, search, hasAccess, onUnlock, unlocking }) {
   const cfg = SECTION_CONFIG[sectionKey];
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(cfg.defaultCollapsed);
   const locked = cfg.gated && !hasAccess;
 
   const filtered = useMemo(() => {
