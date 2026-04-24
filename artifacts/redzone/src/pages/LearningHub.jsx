@@ -271,7 +271,7 @@ export default function LearningHub() {
   const [search, setSearch] = useState('');
   const [unlocking, setUnlocking] = useState(false);
 
-  const hasCompanionCourse = !!(user?.has_companion_course || user?.is_admin);
+  const hasCompanionCourse = !!user?.has_companion_course;
 
   const totalAll = Object.values(STATIC_CONTENT).flat().length;
 
