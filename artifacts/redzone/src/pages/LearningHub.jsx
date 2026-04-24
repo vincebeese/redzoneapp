@@ -201,9 +201,14 @@ function Section({ sectionKey, items, search, hasAccess, onUnlock, unlocking }) 
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-sm font-semibold text-gray-900">{cfg.label}</span>
           {locked && (
-            <span className="text-[10px] font-semibold bg-rzs-red text-white px-1.5 py-0.5 rounded flex-shrink-0">
-              PREMIUM
-            </span>
+            <>
+              <span className="text-[10px] font-semibold bg-rzs-red text-white px-1.5 py-0.5 rounded flex-shrink-0">
+                PREMIUM
+              </span>
+              <span className="text-[10px] text-gray-600 flex-shrink-0">
+                Use code <span className="font-mono font-semibold text-rzs-red">Companion20</span> for 20% off
+              </span>
+            </>
           )}
           {cfg.gated && !locked && (
             <span className="text-[10px] font-semibold bg-green-600 text-white px-1.5 py-0.5 rounded flex-shrink-0">
