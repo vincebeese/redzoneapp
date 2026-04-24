@@ -7,6 +7,8 @@ import { logEvent } from '../services/analytics.js';
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+const COMPANION_COURSE_PRICE_ID = 'price_1TPlNBAD6A0v3Wn8Ch7flZYc'; // Red Zone Ready Companion Course $199
+
 const FOUNDING_PRICE_IDS = [
   'price_1TKjiqAD6A0v3Wn8YMAsDWRB', // monthly $39
   'price_1TKjiqAD6A0v3Wn8oLoY0Gpl', // annual $390
@@ -118,6 +120,14 @@ router.post('/webhook', async (req, res) => {
           logEvent(session.metadata.userId, 'session_pack_purchased', { bonus: 25 });
           console.log(`Session pack (+25) applied to user ${session.metadata.userId}`);
         }
+        if (session.metadata?.type === 'companion_course' && session.metadata?.userId) {
+          await query(
+            `UPDATE users SET has_companion_course = true WHERE id = $1`,
+            [session.metadata.userId]
+          );
+          logEvent(session.metadata.userId, 'companion_course_purchased', {});
+          console.log(`Companion course access granted to user ${session.metadata.userId}`);
+        }
         break;
       }
 
@@ -218,6 +228,38 @@ router.post('/session-pack', ensureUser, async (req, res) => {
   } catch (error) {
     console.error('Session pack checkout error:', error);
     res.status(500).json({ error: 'Failed to create session pack checkout' });
+  }
+});
+
+// Purchase the Red Zone Ready Companion Course (one-time, with promo code support)
+router.post('/companion-course-checkout', ensureUser, async (req, res) => {
+  try {
+    let customerId = req.user.stripe_customer_id;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: req.user.email,
+        name: req.user.display_name || undefined,
+        metadata: { userId: req.user.id },
+      });
+      customerId = customer.id;
+      await query(`UPDATE users SET stripe_customer_id = $1 WHERE id = $2`, [customerId, req.user.id]);
+    }
+
+    const baseUrl = process.env.APP_URL || 'https://redzoneselling.co';
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      line_items: [{ price: COMPANION_COURSE_PRICE_ID, quantity: 1 }],
+      mode: 'payment',
+      allow_promotion_codes: true,
+      success_url: `${baseUrl}/learning?course_unlocked=true`,
+      cancel_url: `${baseUrl}/learning`,
+      metadata: { userId: req.user.id, type: 'companion_course' },
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Companion course checkout error:', error);
+    res.status(500).json({ error: 'Failed to create checkout session' });
   }
 });
 

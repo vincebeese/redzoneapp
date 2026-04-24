@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const SECTION_CONFIG = {
@@ -63,8 +64,8 @@ const STATIC_CONTENT = {
     {
       id: 'cc1',
       code: 'L1',
-      name: 'Kick Off — Let\'s Go',
-      description: 'Course overview and what you\'ll walk away with after mastering the Red Zone Selling framework.',
+      name: "Kick Off — Let's Go",
+      description: "Course overview and what you'll walk away with after mastering the Red Zone Selling framework.",
       url: 'https://youtu.be/riaUeq_B9Qw',
     },
     {
@@ -128,28 +129,24 @@ function getLinkLabel(url) {
   return '↗ Open resource';
 }
 
-function ContentCard({ item, sectionKey, isAdmin, isGated }) {
+function ContentCard({ item, sectionKey, locked }) {
   const cfg = SECTION_CONFIG[sectionKey];
   const [showTip, setShowTip] = useState(false);
-  const linkLabel = getLinkLabel(item.url);
-  const locked = isGated && !isAdmin;
 
   function handleClick() {
     if (locked) {
       setShowTip(true);
-      setTimeout(() => setShowTip(false), 3000);
+      setTimeout(() => setShowTip(false), 2500);
       return;
     }
-    if (item.url) {
-      window.open(item.url, '_blank', 'noopener,noreferrer');
-    }
+    if (item.url) window.open(item.url, '_blank', 'noopener,noreferrer');
   }
 
   return (
     <div
       onClick={handleClick}
       className={`relative flex gap-3 px-4 py-3 bg-white transition-colors ${
-        locked ? 'cursor-not-allowed opacity-75' : 'cursor-pointer hover:bg-gray-50'
+        locked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-gray-50'
       }`}
     >
       <span
@@ -165,23 +162,24 @@ function ContentCard({ item, sectionKey, isAdmin, isGated }) {
         </div>
         <p className="text-[11px] text-gray-500 leading-[1.4] mt-0.5 line-clamp-2">{item.description}</p>
         {locked ? (
-          <p className="text-[10px] font-medium mt-1 text-gray-400">Members only</p>
+          <p className="text-[10px] font-medium mt-1 text-gray-400">Unlock to watch</p>
         ) : (
-          <p className="text-[10px] font-medium mt-1" style={{ color: '#C62828' }}>{linkLabel}</p>
+          <p className="text-[10px] font-medium mt-1" style={{ color: '#C62828' }}>{getLinkLabel(item.url)}</p>
         )}
       </div>
       {showTip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1.5 bg-gray-800 text-white text-[10px] rounded whitespace-nowrap z-10 text-center leading-snug">
-          Members only — email vince@vincebeese.com to get access
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1.5 bg-gray-800 text-white text-[10px] rounded whitespace-nowrap z-10">
+          Unlock the course to watch
         </div>
       )}
     </div>
   );
 }
 
-function Section({ sectionKey, items, search, isAdmin }) {
+function Section({ sectionKey, items, search, hasAccess, onUnlock, unlocking }) {
   const cfg = SECTION_CONFIG[sectionKey];
   const [collapsed, setCollapsed] = useState(false);
+  const locked = cfg.gated && !hasAccess;
 
   const filtered = useMemo(() => {
     if (!search) return items;
@@ -202,14 +200,14 @@ function Section({ sectionKey, items, search, isAdmin }) {
       >
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-sm font-semibold text-gray-900">{cfg.label}</span>
-          {cfg.gated && !isAdmin && (
-            <span className="text-[10px] font-semibold bg-gray-800 text-white px-1.5 py-0.5 rounded flex-shrink-0">
-              MEMBERS
+          {locked && (
+            <span className="text-[10px] font-semibold bg-rzs-red text-white px-1.5 py-0.5 rounded flex-shrink-0">
+              PREMIUM
             </span>
           )}
-          {cfg.gated && isAdmin && (
+          {cfg.gated && !locked && (
             <span className="text-[10px] font-semibold bg-green-600 text-white px-1.5 py-0.5 rounded flex-shrink-0">
-              ADMIN ACCESS
+              Premium Offer
             </span>
           )}
           <span className="ml-1 text-[11px] text-gray-500 hidden sm:inline truncate">{cfg.tagline}</span>
@@ -220,9 +218,7 @@ function Section({ sectionKey, items, search, isAdmin }) {
           </span>
           <svg
             className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${collapsed ? '-rotate-90' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
@@ -230,32 +226,52 @@ function Section({ sectionKey, items, search, isAdmin }) {
       </button>
 
       {!collapsed && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gray-200">
-          {filtered.length > 0 ? (
-            filtered.map((item) => (
-              <ContentCard
-                key={item.id}
-                item={item}
-                sectionKey={sectionKey}
-                isAdmin={isAdmin}
-                isGated={cfg.gated}
-              />
-            ))
-          ) : (
-            <div className="bg-white col-span-2 px-4 py-6 text-center text-xs text-gray-400">
-              No items match your search
+        <>
+          {locked && (
+            <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-gray-800">Get full access to this course</p>
+                <p className="text-[11px] text-gray-500 mt-0.5">6 lessons · One-time purchase · Use code <span className="font-mono font-semibold text-rzs-red">Companion20</span> for 20% off</p>
+              </div>
+              <button
+                onClick={onUnlock}
+                disabled={unlocking}
+                className="flex-shrink-0 bg-rzs-red text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
+              >
+                {unlocking ? 'Loading…' : 'Unlock Course →'}
+              </button>
             </div>
           )}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gray-200">
+            {filtered.length > 0 ? (
+              filtered.map((item) => (
+                <ContentCard
+                  key={item.id}
+                  item={item}
+                  sectionKey={sectionKey}
+                  locked={locked}
+                />
+              ))
+            ) : (
+              <div className="bg-white col-span-2 px-4 py-6 text-center text-xs text-gray-400">
+                No items match your search
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
 }
 
 export default function LearningHub() {
-  const { user } = useAuth();
-  const isAdmin = !!user?.is_admin;
+  const { user, refreshUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [search, setSearch] = useState('');
+  const [unlocking, setUnlocking] = useState(false);
+
+  const hasCompanionCourse = !!(user?.has_companion_course || user?.is_admin);
 
   const totalAll = Object.values(STATIC_CONTENT).flat().length;
 
@@ -270,6 +286,33 @@ export default function LearningHub() {
           (item.description || '').toLowerCase().includes(q)
       ).length;
   }, [search]);
+
+  // Refresh user after successful purchase redirect
+  useMemo(() => {
+    if (location.search.includes('course_unlocked=true')) {
+      refreshUser();
+    }
+  }, []);
+
+  async function handleUnlock() {
+    setUnlocking(true);
+    try {
+      const res = await fetch('/api/stripe/companion-course-checkout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Could not start checkout. Please try again.');
+      }
+    } catch {
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setUnlocking(false);
+    }
+  }
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-gray-50">
@@ -313,7 +356,9 @@ export default function LearningHub() {
             sectionKey={sectionKey}
             items={STATIC_CONTENT[sectionKey] || []}
             search={search}
-            isAdmin={isAdmin}
+            hasAccess={sectionKey === 'companion-course' ? hasCompanionCourse : true}
+            onUnlock={handleUnlock}
+            unlocking={unlocking}
           />
         ))}
       </div>

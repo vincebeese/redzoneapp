@@ -36,6 +36,7 @@ router.get('/me', ensureUser, async (req, res) => {
       beta_expires_at: req.user.beta_expires_at,
       subscription_status: req.user.subscription_status,
       subscription_ends_at: req.user.subscription_ends_at,
+      has_companion_course: req.user.has_companion_course ?? false,
       created_at: req.user.created_at,
       usage: {
         active_deals: activeDealsResult.rows[0].count,

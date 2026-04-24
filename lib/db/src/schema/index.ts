@@ -26,6 +26,7 @@ export const users = pgTable("users", {
   lastEventAt: timestamp("last_event_at", { withTimezone: true }),
   sessionBonus: integer("session_bonus").default(0).notNull(),
   sessionVersion: integer("session_version").default(1).notNull(),
+  hasCompanionCourse: boolean("has_companion_course").default(false),
 });
 
 export const modes = pgTable("modes", {
