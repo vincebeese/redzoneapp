@@ -317,6 +317,72 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
   return data;
 }
 
+export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
+  const { client, fromEmail } = await getResendClient();
+  const appUrl = process.env.APP_URL || 'https://redzoneselling.co';
+  const firstName = displayName?.split(' ')[0] || 'there';
+
+  const configs = {
+    expired_1day: {
+      subject: 'Your Red Zone Selling Coach trial has ended',
+      headline: 'Your trial has ended',
+      body: `Your 14-day beta trial of Red Zone Selling Coach™ ended yesterday.<br /><br />
+        Your deals, coaching sessions, and history are still saved — but your access is currently paused. To get back in and keep everything, you'll need to subscribe to a plan.<br /><br />
+        If we don't hear from you, <strong>your data will be deleted in 4 days.</strong>`,
+      cta: 'View Plans &amp; Subscribe',
+    },
+    expired_5day: {
+      subject: 'Final notice — your Red Zone data will be deleted today',
+      headline: 'Final notice — your data will be deleted today',
+      body: `This is your final notice. Your Red Zone Selling Coach™ trial expired 5 days ago, and <strong>your data will be permanently deleted today</strong> unless you subscribe.<br /><br />
+        All your deals, coaching turns, and session history will be gone and cannot be recovered.<br /><br />
+        If you want to keep your data and get back to coaching, subscribe now — it takes less than 2 minutes.`,
+      cta: 'Subscribe Now &amp; Save Your Data',
+    },
+  };
+
+  const config = configs[type];
+  if (!config) throw new Error(`Unknown expired email type: ${type}`);
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: config.subject,
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Trial Update</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
+
+        <h2 style="font-size: 20px; color: #1a1a2e; margin-bottom: 8px;">${config.headline}</h2>
+
+        <p style="font-size: 15px; line-height: 1.6;">${config.body}</p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${appUrl}/paywall"
+             style="background-color: #c8102e; color: #ffffff; text-decoration: none;
+                    padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
+            ${config.cta}
+          </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          Questions? Reply to this email or reach out to <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center;">REDZONESELLING.CO</p>
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send trial expired email: ${error.message}`);
+  return data;
+}
+
 export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
   const { client, fromEmail } = await getResendClient();
 

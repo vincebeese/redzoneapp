@@ -1,16 +1,16 @@
 import { query } from '../db/index.js';
-import { sendTrialWarningEmail } from './email.js';
+import { sendTrialWarningEmail, sendTrialExpiredEmail } from './email.js';
 
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // every 6 hours
 
-async function sendIfNotSent(userId, type, toEmail, displayName, extra = {}) {
+async function sendIfNotSent(userId, type, toEmail, displayName, extra = {}, emailFn = sendTrialWarningEmail) {
   try {
     await query(
       `INSERT INTO trial_notifications (user_id, notification_type) VALUES ($1, $2)`,
       [userId, type]
     );
     // Insert succeeded — not sent before, so send now
-    await sendTrialWarningEmail({ toEmail, displayName, type, ...extra });
+    await emailFn({ toEmail, displayName, type, ...extra });
     console.log(`Trial notification [${type}] sent to ${toEmail}`);
   } catch (err) {
     if (err.code === '23505') {
@@ -45,8 +45,16 @@ export async function runTrialCheck() {
       const daysLeft = msLeft / (1000 * 60 * 60 * 24);
       const sessions = user.session_count || 0;
 
-      // Skip users whose trial has already ended (paywall shown in-app instead)
-      if (msLeft <= 0) continue;
+      // Post-expiry emails
+      if (msLeft <= 0) {
+        const daysExpired = Math.abs(msLeft) / (1000 * 60 * 60 * 24);
+        if (daysExpired >= 5) {
+          await sendIfNotSent(user.id, 'expired_5day', user.email, user.display_name, {}, sendTrialExpiredEmail);
+        } else if (daysExpired >= 1) {
+          await sendIfNotSent(user.id, 'expired_1day', user.email, user.display_name, {}, sendTrialExpiredEmail);
+        }
+        continue;
+      }
 
       // Time-based warnings
       if (daysLeft <= 7 && daysLeft > 2) {
