@@ -332,7 +332,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">RZS AI Coach Modes</span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl lg:text-4xl font-bold mb-3">Three modes. Every selling situation covered.</h2>
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-2xl lg:text-3xl font-bold mb-3 whitespace-nowrap">Three modes. Every selling situation covered.</h2>
             <p className="text-gray-400 text-base">Each mode is built for a different moment. Use one, use all three. The coach is ready when you are. Start a session, step away, and pick up right where you left off.</p>
           </div>
 
