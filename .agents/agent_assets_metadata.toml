@@ -1,5 +1,10 @@
 uploads = []
-generated = []
+
+[[generated]]
+id = "xGeIBBCVbeWb7N48s2c-s"
+uri = "file://artifacts/mockup-sandbox/public/images/rzs-hero-bg.png"
+type = "image"
+title = "Dark red gradient texture"
 
 [[outputs]]
 id = "jU73xFKaMYMNd0QJfLMJJ"
