@@ -1299,6 +1299,7 @@ function UsersTab({ onInvite }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [expanded, setExpanded] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [saving, setSaving] = useState(null);
@@ -1408,11 +1409,29 @@ function UsersTab({ onInvite }) {
     return 3;
   }
 
+  function matchesStatusFilter(u) {
+    if (statusFilter === 'all')      return true;
+    if (statusFilter === 'admin')    return u.is_admin;
+    if (statusFilter === 'active')   return u.subscription_status === 'active' && !u.is_admin;
+    if (statusFilter === 'beta')     return u.has_beta_access && !u.is_admin && u.subscription_status !== 'active';
+    if (statusFilter === 'inactive') return !u.is_admin && !u.has_beta_access && u.subscription_status !== 'active';
+    return true;
+  }
+
+  const counts = {
+    all:      users.length,
+    admin:    users.filter(u => u.is_admin).length,
+    active:   users.filter(u => u.subscription_status === 'active' && !u.is_admin).length,
+    beta:     users.filter(u => u.has_beta_access && !u.is_admin && u.subscription_status !== 'active').length,
+    inactive: users.filter(u => !u.is_admin && !u.has_beta_access && u.subscription_status !== 'active').length,
+  };
+
   const filtered = users
-    .filter(u =>
-      !search || u.email?.toLowerCase().includes(search.toLowerCase()) ||
-      (u.display_name || '').toLowerCase().includes(search.toLowerCase())
-    )
+    .filter(u => {
+      const matchSearch = !search || u.email?.toLowerCase().includes(search.toLowerCase()) ||
+        (u.display_name || '').toLowerCase().includes(search.toLowerCase());
+      return matchSearch && matchesStatusFilter(u);
+    })
     .sort((a, b) => statusRank(a) - statusRank(b));
 
   return (
@@ -1427,6 +1446,31 @@ function UsersTab({ onInvite }) {
         />
         <button onClick={onInvite} className="btn-primary text-sm">+ Invite user</button>
         <button onClick={exportCSV} className="btn-secondary text-sm">Export CSV</button>
+      </div>
+
+      <div className="flex gap-2 flex-wrap">
+        {[
+          { key: 'all',      label: 'All' },
+          { key: 'beta',     label: 'Beta' },
+          { key: 'active',   label: 'Active' },
+          { key: 'inactive', label: 'Inactive' },
+          { key: 'admin',    label: 'Admin' },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setStatusFilter(key)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+              statusFilter === key
+                ? 'bg-rzs-red text-white border-rzs-red'
+                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+            }`}
+          >
+            {label}
+            <span className={`ml-1.5 ${statusFilter === key ? 'text-red-200' : 'text-gray-400'}`}>
+              {counts[key]}
+            </span>
+          </button>
+        ))}
       </div>
 
       {loading ? <p className="text-gray-500 text-sm">Loading...</p> : (
