@@ -13,7 +13,7 @@ export function LandingPage() {
       {/* 2. Beta Status Bar */}
       <div className="bg-[#1A1A1A] text-white py-2 px-4 text-sm flex justify-center items-center gap-4 relative z-50">
         <p>🚀 Red Zone Selling Coach is in active beta — limited spots available.</p>
-        <a href="#pricing" className="text-[#C0392B] font-medium hover:underline flex items-center">
+        <a href="https://oe8gn.share.hsforms.com/2pzn1m9yJS9uYej-9kaZvBA" target="_blank" rel="noopener noreferrer" className="text-[#C0392B] font-medium hover:underline flex items-center">
           Join Waitlist <ArrowRight className="ml-1 w-3 h-3" />
         </a>
       </div>
