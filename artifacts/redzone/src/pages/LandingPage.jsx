@@ -139,12 +139,23 @@ export default function LandingPage() {
                   <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-[#C0392B] hover:underline font-medium">Red Zone Selling on Amazon →</a>
                 </div>
               </div>
-              <blockquote className="border-l-4 border-[#C0392B] pl-5">
+              <blockquote className="border-l-4 border-[#C0392B] pl-5 mb-8">
                 <p style={{ fontFamily: "'Playfair Display', serif" }} className="text-lg italic text-[#1A1A1A] mb-2">
                   "Most sellers aren't struggling because they don't work hard enough. They're struggling because nobody ever showed them a system."
                 </p>
                 <footer className="text-sm font-medium text-gray-500">Vince Beese</footer>
               </blockquote>
+
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">Worked with teams at</p>
+                <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
+                  {['Meta', 'AT&T', 'Experian', 'Kustomer', 'LivePerson', 'True Fit'].map(name => (
+                    <span key={name} className="text-sm font-semibold text-gray-400 tracking-tight hover:text-gray-600 transition-colors">
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
