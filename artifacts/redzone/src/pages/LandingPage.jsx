@@ -32,7 +32,7 @@ export default function LandingPage() {
           <img src="/logo.png" alt="Red Zone Selling Coach" style={{ height: '64px', width: 'auto' }} />
 
           <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
-            <button onClick={() => scrollTo('coaching')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Coaching</button>
+            <button onClick={() => scrollTo('coaching')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Offerings</button>
             <button onClick={() => scrollTo('ai-coach')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">AI Coach</button>
             <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-base text-gray-500 hover:text-gray-900 transition-colors">Book</a>
             <button onClick={() => scrollTo('about')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">About</button>
@@ -70,7 +70,7 @@ export default function LandingPage() {
 
         {mobileMenuOpen && (
           <div className="sm:hidden border-t border-gray-100 px-6 py-4 flex flex-col gap-3 bg-white">
-            <button onClick={() => scrollTo('coaching')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Coaching</button>
+            <button onClick={() => scrollTo('coaching')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Offerings</button>
             <button onClick={() => scrollTo('ai-coach')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">AI Coach</button>
             <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 py-1 hover:text-gray-900">Book</a>
             <button onClick={() => scrollTo('about')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">About</button>
@@ -83,7 +83,7 @@ export default function LandingPage() {
       <section className="bg-[#F9F6F0] pt-16 pb-16 overflow-hidden">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-5xl lg:text-6xl font-bold leading-tight mb-3 text-[#1A1A1A]">
-            Sellers with structured coaching programs win <span className="text-[#C0392B]">28% more deals.</span>
+            Sellers with structured coaching programs win <span className="text-[#C0392B] whitespace-nowrap">28% more deals.</span>
           </h1>
           <p className="text-sm text-gray-500 mb-5 italic">Most sellers get none. Source: CSO Insights</p>
           <p className="text-lg text-gray-700 mb-8 leading-relaxed max-w-2xl mx-auto">
@@ -105,6 +105,11 @@ export default function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
             <div>
+              <img
+                src="/vince-headshot.jpg"
+                alt="Vince Beese"
+                className="w-40 h-40 rounded-full object-cover object-top mb-6 shadow-md border-4 border-white"
+              />
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-5 leading-snug">
                 Most sellers don't lose deals because they can't sell.
               </h2>
