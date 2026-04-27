@@ -945,19 +945,19 @@ router.get('/analytics', async (req, res) => {
         COUNT(*) AS total_sessions
         FROM analytics_events
         WHERE created_at > NOW() - INTERVAL '7 days'
-        AND event = 'app_session_start'`),
+        AND event_type = 'app_session_start'`),
 
       // 3. WAU (prior 7 days)
       query(`SELECT COUNT(DISTINCT user_id) AS wau
         FROM analytics_events
         WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days'
-        AND event = 'app_session_start'`),
+        AND event_type = 'app_session_start'`),
 
       // 4. Total coaching turns (current period)
       query(`SELECT COUNT(*) AS total,
         COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days') AS this_week,
         COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days') AS last_week
-        FROM analytics_events WHERE event = 'coaching_turn'`),
+        FROM analytics_events WHERE event_type = 'coaching_turn'`),
 
       // 5. (merged into #4)
       query(`SELECT 1 AS dummy`),
@@ -971,39 +971,39 @@ router.get('/analytics', async (req, res) => {
       // 7. Coaching turns series
       query(`SELECT DATE(created_at) AS date, COUNT(*) AS count
         FROM analytics_events
-        WHERE event = 'coaching_turn'
+        WHERE event_type = 'coaching_turn'
         AND created_at > NOW() - INTERVAL '${period} days'
         GROUP BY DATE(created_at) ORDER BY date ASC`),
 
       // 8. Mode sessions
       query(`SELECT properties->>'mode' AS mode, COUNT(*) AS sessions
         FROM analytics_events
-        WHERE event = 'mode_entered'
+        WHERE event_type = 'mode_entered'
         GROUP BY properties->>'mode'`),
 
       // 9. Mode avg turns (coaching_turn has mode in properties)
       query(`SELECT properties->>'mode' AS mode, COUNT(*) AS turns
         FROM analytics_events
-        WHERE event = 'coaching_turn'
+        WHERE event_type = 'coaching_turn'
         GROUP BY properties->>'mode'`),
 
       // 10. Artifact performance
       query(`SELECT
         properties->>'type' AS artifact_type,
-        COUNT(*) FILTER (WHERE event = 'artifact_offered') AS offered,
-        COUNT(*) FILTER (WHERE event = 'artifact_accepted') AS accepted,
-        COUNT(*) FILTER (WHERE event = 'artifact_dismissed') AS dismissed
+        COUNT(*) FILTER (WHERE event_type = 'artifact_offered') AS offered,
+        COUNT(*) FILTER (WHERE event_type = 'artifact_accepted') AS accepted,
+        COUNT(*) FILTER (WHERE event_type = 'artifact_dismissed') AS dismissed
         FROM analytics_events
-        WHERE event IN ('artifact_offered','artifact_accepted','artifact_dismissed')
+        WHERE event_type IN ('artifact_offered','artifact_accepted','artifact_dismissed')
         GROUP BY properties->>'type'
         ORDER BY offered DESC`),
 
       // 11. Feature adoption
       query(`SELECT
-        COUNT(DISTINCT user_id) FILTER (WHERE event = 'transcript_uploaded') AS transcript_users,
-        COUNT(DISTINCT user_id) FILTER (WHERE event = 'document_uploaded') AS document_users,
-        COUNT(DISTINCT user_id) FILTER (WHERE event = 'resource_viewed') AS resource_users,
-        COUNT(DISTINCT user_id) FILTER (WHERE event = 'artifact_accepted') AS artifact_users
+        COUNT(DISTINCT user_id) FILTER (WHERE event_type = 'transcript_uploaded') AS transcript_users,
+        COUNT(DISTINCT user_id) FILTER (WHERE event_type = 'document_uploaded') AS document_users,
+        COUNT(DISTINCT user_id) FILTER (WHERE event_type = 'resource_viewed') AS resource_users,
+        COUNT(DISTINCT user_id) FILTER (WHERE event_type = 'artifact_accepted') AS artifact_users
         FROM analytics_events`),
 
       // 12. Retention cohorts (last 8 weeks)
@@ -1019,7 +1019,7 @@ router.get('/analytics', async (req, res) => {
           user_id,
           DATE_TRUNC('week', created_at) AS session_week
         FROM analytics_events
-        WHERE event = 'app_session_start'
+        WHERE event_type = 'app_session_start'
       )
       SELECT
         c.cohort_week,
