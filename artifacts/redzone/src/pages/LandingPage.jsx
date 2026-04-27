@@ -82,14 +82,12 @@ export default function LandingPage() {
       {/* Section 1 — Hero */}
       <section className="bg-[#F9F6F0] pt-16 pb-16 overflow-hidden">
         <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-5xl lg:text-6xl font-bold leading-tight mb-4 text-[#1A1A1A]">
-            A complete selling system.
+          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-5xl lg:text-6xl font-bold leading-tight mb-3 text-[#1A1A1A]">
+            Sellers with structured coaching programs win <span className="text-[#C0392B]">28% more deals.</span>
           </h1>
-          <p className="text-lg text-gray-700 mb-3 leading-relaxed max-w-2xl mx-auto">
-            Red Zone Selling is a structured coaching system for sellers and sales leaders built by someone who's been in the deal, closed it, and coached hundreds of others to do the same.
-          </p>
-          <p className="text-sm text-gray-500 mb-8 font-medium">
-            One system. Six ways to work together. Built for sellers who want to win more and leaders who want to build teams that do.
+          <p className="text-sm text-gray-500 mb-5 italic">Most sellers get none. Source: CSO Insights</p>
+          <p className="text-lg text-gray-700 mb-8 leading-relaxed max-w-2xl mx-auto">
+            Red Zone Selling changes that. A complete selling system for sellers and sales leaders — built by someone who's been in the deal, closed it, and coached hundreds of others to do the same.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button onClick={() => scrollTo('coaching')} className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
