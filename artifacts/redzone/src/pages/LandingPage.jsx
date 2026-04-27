@@ -208,7 +208,7 @@ export default function LandingPage() {
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">Ways to Work Together</span>
             <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-2">One system. Every format. Find the right fit for where you are.</h2>
-            <p className="text-gray-600 text-base">Whether you're an individual seller, a sales leader, or building a team from the ground up, there's a way to work together.</p>
+            <p className="text-gray-600 text-base">Whether you're an individual seller, a sales leader, or a founder building a team from the ground up, there's a way to work together.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto mb-6">
@@ -275,7 +275,7 @@ export default function LandingPage() {
               </div>
               <div className="px-5 pt-5 pb-3 flex-1">
                 <h3 className="text-lg font-semibold mb-2">GTM &amp; Sales System</h3>
-                <p className="text-gray-600 text-sm mb-4">Fractional CRO or system architect. Pipeline, process, and Red Zone plays installed across your org.</p>
+                <p className="text-gray-600 text-sm mb-4">Fractional CRO or system architect. Pipeline, process, and Red Zone system installed across your org.</p>
                 <button onClick={() => scrollTo('contact')} className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
                   Start a Conversation →
                 </button>
@@ -491,9 +491,9 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <blockquote className="max-w-2xl mx-auto text-center border-t border-gray-100 pt-8">
+          <blockquote className="max-w-4xl mx-auto text-center border-t border-gray-100 pt-8">
             <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-lg text-gray-700 mb-2">
-              "There's no magic close. There's no secret script. There's just knowing where you are, what play to run, and having the discipline to execute it. That's what we build here."
+              "There's no magic close. There's no secret script.<br />There's just knowing where you are, what play to run, and having the discipline to execute it. That's what we build here."
             </p>
             <footer className="text-sm font-medium text-gray-500">Vince Beese, Sales Strength Coach</footer>
           </blockquote>
@@ -517,6 +517,15 @@ export default function LandingPage() {
                   <div>
                     <p className="font-medium text-sm">Email</p>
                     <a href="mailto:vince@vincebeese.com" className="text-sm text-gray-600 hover:text-[#C0392B] transition-colors">vince@vincebeese.com</a>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-gray-700">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 text-[#C0392B]">
+                    in
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">LinkedIn</p>
+                    <a href="https://www.linkedin.com/in/vbeese/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-[#C0392B] transition-colors">linkedin.com/in/vbeese</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-gray-700">
@@ -549,14 +558,14 @@ export default function LandingPage() {
       <footer className="relative px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
         <img src="/logo.png" alt="Red Zone Selling" style={{ height: '36px', width: 'auto' }} />
         <div className="absolute left-1/2 -translate-x-1/2 flex flex-wrap gap-4">
-          <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
-          <button onClick={() => scrollTo('coaching')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Coaching</button>
+          <button onClick={() => scrollTo('coaching')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Offerings</button>
           <button onClick={() => scrollTo('ai-coach')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">AI Coach</button>
+          <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
           <button onClick={() => scrollTo('about')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">About</button>
           <button onClick={() => scrollTo('contact')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Contact</button>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400">© 2026 Red Zone Selling</span>
+          <span className="text-xs text-gray-400">© 2026 Red Zone Selling™</span>
           {user ? (
             <Link to="/dashboard" className="text-xs font-medium text-white rounded px-2.5 py-1 hover:opacity-90" style={{ background: '#C62828' }}>Go to App</Link>
           ) : null}
