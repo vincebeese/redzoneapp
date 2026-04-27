@@ -11,7 +11,7 @@ const WAITLIST_URL = 'https://oe8gn.share.hsforms.com/2pzn1m9yJS9uYej-9kaZvBA';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-white font-['Inter'] text-[#1A1A1A] selection:bg-[#C0392B] selection:text-white">
+    <div className="min-h-screen bg-white font-['Inter'] text-[#1A1A1A] selection:bg-[#C0392B] selection:text-white" style={{ minWidth: '1280px' }}>
 
       {/* Beta Status Bar */}
       <div className="bg-[#1A1A1A] text-white py-2 px-4 text-sm flex justify-center items-center gap-4 relative z-50">
