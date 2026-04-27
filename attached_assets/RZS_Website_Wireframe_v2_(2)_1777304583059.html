@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RZS Website Wireframe v2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 32px 16px; }
+  .wf { width: 100%; max-width: 900px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+
+  /* NAV */
+  .nav { background: #f5f5f5; border-bottom: 1px solid #ddd; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-size: 14px; font-weight: bold; color: #1a1a1a; }
+  .nav-links { display: flex; gap: 16px; align-items: center; }
+  .nav-link { font-size: 12px; color: #666; }
+  .nav-cta { font-size: 12px; background: #C0392B; color: #fff; padding: 5px 12px; border-radius: 5px; }
+
+  /* BETA BAR */
+  .beta-bar { background: #1a1a1a; padding: 8px 24px; text-align: center; }
+  .beta-bar p { font-size: 12px; color: #aaa; }
+  .beta-bar a { color: #C0392B; }
+
+  /* SECTIONS */
+  .section { padding: 32px 32px; border-bottom: 1px solid #eee; }
+  .section:last-child { border-bottom: none; }
+  .section.alt { background: #f9f9f9; }
+  .section.dark { background: #1a1a1a; }
+
+  /* SECTION LABELS */
+  .section-label { font-size: 10px; font-weight: bold; color: #C0392B; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .dev-note { font-size: 11px; color: #7D6608; background: #FFF8E1; border-left: 3px solid #E2B93B; padding: 6px 10px; border-radius: 0 4px 4px 0; margin: 8px 0 16px; }
+
+  /* TYPOGRAPHY */
+  .stat-bar { background: #f5f5f5; border-left: 4px solid #C0392B; padding: 12px 16px; border-radius: 0 5px 5px 0; margin-bottom: 16px; }
+  .stat-bar h2 { font-size: 18px; font-weight: bold; color: #1a1a1a; line-height: 1.4; }
+  .stat-bar p { font-size: 11px; color: #aaa; margin-top: 4px; }
+  h1 { font-size: 22px; font-weight: bold; color: #1a1a1a; line-height: 1.4; margin-bottom: 8px; }
+  h2 { font-size: 18px; font-weight: bold; color: #1a1a1a; line-height: 1.4; margin-bottom: 8px; }
+  h3 { font-size: 14px; font-weight: bold; color: #1a1a1a; margin-bottom: 4px; }
+  p { font-size: 13px; color: #444; line-height: 1.6; margin-bottom: 8px; }
+  .muted { font-size: 12px; color: #888; font-style: italic; }
+
+  /* BUTTONS */
+  .btn-primary { display: inline-block; background: #C0392B; color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 5px; margin-right: 8px; }
+  .btn-ghost { display: inline-block; border: 1px solid #ccc; color: #555; font-size: 13px; padding: 10px 20px; border-radius: 5px; }
+  .btn-link { font-size: 12px; color: #C0392B; display: block; margin-top: 10px; }
+
+  /* QUOTE */
+  .quote-box { border-left: 4px solid #C0392B; padding: 12px 16px; background: #f9f9f9; border-radius: 0 5px 5px 0; margin: 16px 0; }
+  .quote-box p { font-style: italic; color: #1a1a1a; margin: 0 0 4px; }
+  .quote-box .attr { font-size: 11px; color: #888; font-style: normal; }
+
+  /* CREDENTIAL STRIP */
+  .cred-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .cred-pill { font-size: 11px; background: #f0f0f0; border: 1px solid #ddd; padding: 4px 10px; border-radius: 20px; color: #555; }
+
+  /* BOOK CALLOUT */
+  .book-callout { display: flex; align-items: center; justify-content: space-between; background: #f5f5f5; border: 1px solid #ddd; border-radius: 5px; padding: 10px 14px; margin: 12px 0; }
+  .book-callout p { font-size: 12px; color: #1a1a1a; font-style: italic; margin: 0; }
+  .book-callout a { font-size: 12px; color: #C0392B; white-space: nowrap; margin-left: 16px; }
+
+  /* ZONE CARDS */
+  .zone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .zone-card { padding: 14px 16px; border-radius: 5px; border: 1px solid #eee; }
+  .zone-y { border-left: 4px solid #E2B93B; }
+  .zone-g { border-left: 4px solid #27AE60; }
+  .zone-r { border-left: 4px solid #C0392B; }
+  .zone-card h3 { font-size: 13px; margin-bottom: 6px; }
+  .zone-card p { font-size: 12px; color: #666; margin: 0; }
+
+  /* OFFERING GRID */
+  .offering-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+  .offering-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px; }
+  .offering-card.featured { border: 2px solid #C0392B; }
+  .offering-badge { font-size: 10px; background: #f0f0f0; border: 1px solid #ddd; padding: 2px 8px; border-radius: 10px; color: #888; margin-bottom: 8px; display: inline-block; }
+  .offering-badge.red { background: #C0392B; color: #fff; border-color: #C0392B; }
+  .offering-card h3 { font-size: 13px; margin-bottom: 4px; }
+  .offering-card p { font-size: 11px; color: #666; margin: 0; }
+
+  /* MODE CARDS */
+  .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .mode-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px; }
+  .mode-tag { font-size: 10px; color: #C0392B; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .mode-card h3 { font-size: 13px; margin-bottom: 6px; }
+  .mode-card p { font-size: 11px; color: #666; margin: 0 0 6px; }
+  .mode-outcome { font-size: 11px; color: #444; font-style: italic; background: #fdf2f2; padding: 6px 8px; border-radius: 4px; }
+
+  /* PRICING */
+  .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+  .price-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+  .price-card.featured { border: 2px solid #C0392B; }
+  .price-badge { font-size: 10px; display: inline-block; padding: 3px 10px; border-radius: 10px; margin-bottom: 10px; }
+  .price-badge.red { background: #C0392B; color: #fff; }
+  .price-badge.gray { background: #f0f0f0; color: #888; border: 1px solid #ddd; }
+  .price-name { font-size: 14px; font-weight: bold; color: #1a1a1a; margin-bottom: 2px; }
+  .price-amount { font-size: 28px; font-weight: bold; color: #1a1a1a; margin-bottom: 2px; }
+  .price-amount span { font-size: 14px; font-weight: normal; color: #888; }
+  .price-tagline { font-size: 11px; color: #888; margin-bottom: 12px; }
+  .price-divider { border: none; border-top: 1px solid #eee; margin: 10px 0; }
+  .price-feature { font-size: 12px; color: #444; line-height: 2; }
+  .price-note { font-size: 10px; color: #888; font-style: italic; margin-top: 8px; }
+
+  /* CALLOUT / HIGHLIGHT BOX */
+  .callout { background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; padding: 14px 18px; margin: 12px 0; }
+  .callout h3 { font-size: 13px; margin-bottom: 4px; }
+  .callout p { font-size: 12px; color: #666; margin: 0; }
+  .callout.flex { display: flex; align-items: center; justify-content: space-between; }
+
+  /* PATH GRID */
+  .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .path-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; text-align: center; }
+  .path-card h3 { font-size: 13px; margin-bottom: 6px; }
+  .path-card p { font-size: 11px; color: #666; margin-bottom: 8px; }
+
+  /* FORM PLACEHOLDER */
+  .form-placeholder { background: #fff; border: 1px dashed #ccc; border-radius: 8px; padding: 16px; text-align: center; color: #aaa; font-size: 12px; font-style: italic; margin-top: 12px; }
+
+  /* FOOTER */
+  .footer { background: #1a1a1a; padding: 20px 24px; text-align: center; }
+  .footer p { font-size: 11px; color: #666; margin-bottom: 4px; }
+
+  /* MISC */
+  .spacer { height: 16px; }
+  .inline-book { display: flex; align-items: center; justify-content: space-between; background: #f9f9f9; border: 1px solid #eee; border-radius: 5px; padding: 10px 14px; margin-top: 12px; }
+  .inline-book p { font-size: 12px; font-style: italic; color: #1a1a1a; margin: 0; }
+  .inline-book a { font-size: 12px; color: #C0392B; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div class="wf">
+
+  <!-- NAV -->
+  <div class="nav">
+    <span class="nav-brand">Red Zone Selling</span>
+    <div class="nav-links">
+      <span class="nav-link">Coaching</span>
+      <span class="nav-link">AI Coach</span>
+      <span class="nav-link">Book</span>
+      <span class="nav-link">About</span>
+      <span class="nav-link">Contact</span>
+      <span class="nav-cta">Go to App</span>
+    </div>
+  </div>
+
+  <!-- BETA BAR -->
+  <div class="beta-bar">
+    <p>RZS AI Coach Beta is live and locked. &nbsp;<a href="#">Join the waitlist for the next cohort →</a></p>
+  </div>
+
+  <!-- SECTION 1: HERO -->
+  <div class="section">
+    <div class="section-label">Section 1 — Hero</div>
+    <div class="dev-note">Full-width hero. White background. Centered content. Stat bar leads — no image needed.</div>
+
+    <div class="stat-bar">
+      <h2>Sellers with structured coaching programs win 28% more deals. Most sellers get none.</h2>
+      <p>Source: CSO Insights</p>
+    </div>
+
+    <p>Red Zone Selling changes that. A complete coaching system for sellers and sales leaders — built by someone who's been in the deal, closed it, and coached hundreds of others to do the same.</p>
+
+    <div class="spacer"></div>
+    <span class="btn-ghost">See how it works ↓</span>
+    <div class="dev-note">Ghost/outline button. Scrolls to Section 3. Not a form trigger.</div>
+
+    <div class="spacer"></div>
+    <p class="muted">One system. Six ways to work together. Built for sellers who want to win more and leaders who want to build teams that do.</p>
+  </div>
+
+  <!-- SECTION 2: VINCE -->
+  <div class="section alt">
+    <div class="section-label">Section 2 — Vince & the Problem</div>
+    <div class="dev-note">Light gray background. Optional: Vince photo floated right of text block.</div>
+
+    <h2>Most sellers don't lose deals because they can't sell.</h2>
+    <h2>They lose because they don't know where they are in the deal — or what to do next.</h2>
+    <div class="spacer"></div>
+
+    <p>That's the gap Vince Beese spent 25 years solving — first as a rep, then as a CRO, now as a Sales Strength Coach.</p>
+    <p>He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it.</p>
+
+    <div class="cred-strip">
+      <span class="cred-pill">25+ Years in Sales</span>
+      <span class="cred-pill">Five Exits</span>
+      <span class="cred-pill">$1B+ Revenue Generated</span>
+      <span class="cred-pill">Coach</span>
+      <span class="cred-pill">Speaker</span>
+    </div>
+
+    <div class="book-callout">
+      <p>Author · Red Zone Selling — The Ultimate Playbook for High-Performing Enterprise Sellers</p>
+      <a href="#">Get it on Amazon →</a>
+    </div>
+
+    <div class="quote-box">
+      <p>"Most sellers aren't struggling because they don't work hard enough. They're struggling because nobody ever showed them a system."</p>
+      <span class="attr">— Vince Beese</span>
+    </div>
+  </div>
+
+  <!-- SECTION 3: THE SYSTEM -->
+  <div class="section">
+    <div class="section-label">Section 3 — The System</div>
+    <div class="dev-note">White background. Three zone cards side by side with left-border color coding.</div>
+
+    <h2>Every deal lives in one of three zones.</h2>
+    <h2>Most sellers don't know which one they're in.</h2>
+    <div class="spacer"></div>
+    <p>Three zones. 69 plays. Built for sellers who want to qualify harder, build momentum faster, and close with confidence.</p>
+
+    <div class="zone-grid">
+      <div class="zone-card zone-y">
+        <h3>Yellow Zone — Qualify</h3>
+        <p>Is this real? Is it worth your time? Qualify hard, disqualify fast, and protect your pipeline.</p>
+      </div>
+      <div class="zone-card zone-g">
+        <h3>Green Zone — Momentum</h3>
+        <p>The deal is alive. Multi-thread, build a business case, and prevent ghosting and stalls.</p>
+      </div>
+      <div class="zone-card zone-r">
+        <h3>Red Zone — Close</h3>
+        <p>Final stretch. Flush friction, activate your champion, close with confidence — not desperation.</p>
+      </div>
+    </div>
+
+    <div class="quote-box">
+      <p>"The zone tells you where you are. The play tells you what to do. That's the whole system."</p>
+      <span class="attr">— Vince Beese</span>
+    </div>
+
+    <div class="inline-book">
+      <p>Want the full system? It's all in the book.</p>
+      <a href="#">Get Red Zone Selling on Amazon →</a>
+    </div>
+  </div>
+
+  <!-- SECTION 4: OFFERINGS -->
+  <div class="section alt">
+    <div class="section-label">Section 4 — Ways to Work Together</div>
+    <div class="dev-note">Light gray background. 3x2 card grid. RZS AI Coach card has red border and red badge. All others standard gray.</div>
+
+    <h2>One system. Every format.</h2>
+    <h2>Find the right fit for where you are.</h2>
+    <div class="spacer"></div>
+    <p>Whether you're an individual seller, a sales leader, or building a team from the ground up — there's a way to work together.</p>
+
+    <div class="offering-grid">
+      <div class="offering-card featured">
+        <span class="offering-badge red">Always on · Beta</span>
+        <h3>RZS AI Coach</h3>
+        <p>24/7 on-demand coaching. Three modes — Deal, Coach, and Mindset. Available the moment you need it.</p>
+        <a class="btn-link" href="#">Join Waitlist →</a>
+      </div>
+      <div class="offering-card">
+        <span class="offering-badge">Live</span>
+        <h3>1:1 Coaching</h3>
+        <p>Private coaching with Vince. For sellers working live deals and leaders who want to elevate close rates.</p>
+        <a class="btn-link" href="#">Work With Vince →</a>
+      </div>
+      <div class="offering-card">
+        <span class="offering-badge">Live · Teams</span>
+        <h3>Team Coaching</h3>
+        <p>Red Zone Selling coaching for your entire team. Reps and leaders together. Compounds over time.</p>
+        <a class="btn-link" href="#">Start a Conversation →</a>
+      </div>
+      <div class="offering-card">
+        <span class="offering-badge">Live · Events</span>
+        <h3>Workshops & Speaking</h3>
+        <p>SKOs, QBRs, offsites, keynotes. A working session your team uses Monday morning.</p>
+        <a class="btn-link" href="#">Book a Workshop →</a>
+      </div>
+      <div class="offering-card">
+        <span class="offering-badge">Live · Orgs</span>
+        <h3>GTM & Sales System</h3>
+        <p>Fractional CRO or system architect. Pipeline, process, and Red Zone plays installed across your org.</p>
+        <a class="btn-link" href="#">Start a Conversation →</a>
+      </div>
+      <div class="offering-card">
+        <span class="offering-badge">The Book</span>
+        <h3>Red Zone Selling</h3>
+        <p>Three zones, 69 plays. The foundation of the system. Live on Amazon.</p>
+        <a class="btn-link" href="#">Get the Book →</a>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h3>Many clients use both</h3>
+      <p>The RZS AI Coach and 1:1 coaching are the most common combination — always-on coaching between live sessions with Vince.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5: AI COACH MODES -->
+  <div class="section">
+    <div class="section-label">Section 5 — RZS AI Coach Modes</div>
+    <div class="dev-note">White background. Three cards side by side. Each has a mode tag, trigger headline, description, and outcome.</div>
+
+    <h2>Three modes. Every selling situation covered.</h2>
+    <div class="spacer"></div>
+    <p>Each mode is built for a different moment. Use one, use all three — the coach is ready when you are.</p>
+    <p class="muted">Start a session, step away, and pick up right where you left off.</p>
+
+    <div class="mode-grid">
+      <div class="mode-card">
+        <div class="mode-tag">Deal Mode</div>
+        <h3>You're stuck on a deal</h3>
+        <p>Drop in the situation. Get a Red Zone diagnosis — which zone you're in, what's at risk, and the exact play to run next.</p>
+        <div class="mode-outcome">You leave with a named play and a time-bound next action.</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-tag">Coach Mode</div>
+        <h3>You need strategic guidance</h3>
+        <p>Ask anything about your pipeline, your process, or how to handle a specific selling scenario. Direct answers grounded in the system.</p>
+        <div class="mode-outcome">You leave with clarity and a concrete next step.</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-tag">Mindset Mode</div>
+        <h3>The pressure is real</h3>
+        <p>You lost a deal. You're in a slump. You're walking into the biggest close of the quarter. Get your head right before the moment arrives.</p>
+        <div class="mode-outcome">You leave grounded, refocused, and ready to compete.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>One session = one message in, one coach response out. &nbsp;|&nbsp; 14 days or 100 sessions — full access to all three modes. No credit card required.</p>
+    </div>
+
+    <div class="spacer"></div>
+    <span class="btn-primary">Join the Waitlist</span>
+    <div class="dev-note">First hard CTA after user understands the product. Links to waitlist form.</div>
+  </div>
+
+  <!-- SECTION 6: PRICING -->
+  <div class="section alt">
+    <div class="section-label">Section 6 — RZS AI Coach Pricing</div>
+    <div class="dev-note">Light gray background. Two cards side by side. Founding Member card has red border. Section is explicitly labeled for RZS AI Coach only.</div>
+
+    <h2>RZS AI Coach — Simple Pricing. No Surprises.</h2>
+    <div class="spacer"></div>
+    <p>Every new RZS AI Coach user starts with a free trial — 14 days or 100 sessions, whichever comes first. Full access to all three modes. No credit card required.</p>
+
+    <div class="price-grid">
+      <div class="price-card featured">
+        <span class="price-badge red">Founding Member · 50 spots only</span>
+        <div class="price-name">Founding Member</div>
+        <div class="price-amount">$39<span>/mo</span></div>
+        <div class="price-tagline">Locked in for life at this rate</div>
+        <hr class="price-divider">
+        <div class="price-feature">
+          ✓ 100 sessions/month<br>
+          ✓ All three coaching modes<br>
+          ✓ Founding Member badge<br>
+          ✓ Priority access to new features<br>
+          ✓ Direct feedback line to Vince
+        </div>
+        <p class="price-note">Reserved for beta users and waitlist members. Capped at 50 total.</p>
+      </div>
+      <div class="price-card">
+        <span class="price-badge gray">Always available</span>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">$79<span>/mo</span></div>
+        <div class="price-tagline">Full access, room to run</div>
+        <hr class="price-divider">
+        <div class="price-feature">
+          ✓ 200 sessions/month<br>
+          ✓ All three coaching modes<br>
+          ✓ New features as they ship
+        </div>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-top: 8px;">One session = one message in, one coach response out. Cancel anytime. No contracts.</p>
+
+    <div class="callout flex" style="margin-top: 12px;">
+      <div>
+        <h3>Need team access?</h3>
+        <p>Team pricing available for sales orgs.</p>
+      </div>
+      <span class="btn-ghost" style="font-size: 12px; padding: 7px 14px;">Start a Conversation →</span>
+    </div>
+
+    <div class="spacer"></div>
+    <span class="btn-primary">Join the Waitlist</span>
+    <p class="muted" style="margin-top: 8px;">Beta is live and locked. Founding Member spots are limited. Get on the waitlist before they're gone.</p>
+  </div>
+
+  <!-- SECTION 7: CLOSING CTA -->
+  <div class="section">
+    <div class="section-label">Section 7 — Closing CTA</div>
+    <div class="dev-note">White or dark background option. Three-path cards. Existing contact form drops in below — no rebuild needed.</div>
+
+    <h2>Whatever you're working on — there's a way in.</h2>
+    <div class="spacer"></div>
+    <p>Whether you're a seller trying to close a deal, a leader building a team that wins consistently, or an org that needs a system — Red Zone Selling has a starting point for you.</p>
+
+    <div class="path-grid">
+      <div class="path-card">
+        <h3>Start on your own</h3>
+        <p>The book and RZS AI Coach are your fastest entry points. Learn the system, apply it immediately.</p>
+        <a class="btn-link" href="#">Get the Book →</a>
+        <a class="btn-link" href="#">Join the AI Coach Waitlist →</a>
+      </div>
+      <div class="path-card">
+        <h3>Work with Vince</h3>
+        <p>1:1 coaching, workshops, speaking, and fractional CRO engagements. Built around your situation.</p>
+        <a class="btn-link" href="#">Start a Conversation →</a>
+      </div>
+      <div class="path-card">
+        <h3>Build your team</h3>
+        <p>Coaching, workshops, system installation, and team AI access. Red Zone Selling across your whole org.</p>
+        <a class="btn-link" href="#">Start a Conversation →</a>
+      </div>
+    </div>
+
+    <div class="quote-box" style="margin-top: 20px;">
+      <p>"There's no magic close. There's no secret script. There's just knowing where you are, what play to run, and having the discipline to execute it. That's what we build here."</p>
+      <span class="attr">— Vince Beese, Sales Strength Coach</span>
+    </div>
+
+    <div class="form-placeholder">
+      ← Existing contact form drops in here ·  Fields: Name · Company · LinkedIn · Email · Phone · No rebuild needed
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Red Zone Selling &nbsp;·&nbsp; Coaching &nbsp;·&nbsp; AI Coach &nbsp;·&nbsp; Book &nbsp;·&nbsp; About &nbsp;·&nbsp; Contact</p>
+    <p>© 2026 Red Zone Selling™ &nbsp;|&nbsp; Built by Vince Beese &nbsp;|&nbsp; redzoneselling.co</p>
+  </div>
+
+</div>
+</body>
+</html>
