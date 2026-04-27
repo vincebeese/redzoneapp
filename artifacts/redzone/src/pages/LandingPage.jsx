@@ -149,7 +149,7 @@ export default function LandingPage() {
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">Worked with teams at</p>
                 <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
-                  {['Meta', 'AT&T', 'Experian', 'Kustomer', 'LivePerson', 'True Fit'].map(name => (
+                  {['Meta', 'AT&T', 'Experian', 'Kustomer', 'LivePerson', 'True Fit', 'Shipt', 'BlueSnap', 'Covenant', 'Built', 'Trackforce', 'Implan'].map(name => (
                     <span key={name} className="text-sm font-semibold text-gray-400 tracking-tight hover:text-gray-600 transition-colors">
                       {name}
                     </span>
@@ -306,9 +306,24 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <p className="text-center text-sm text-gray-500 max-w-xl mx-auto">
+          <p className="text-center text-sm text-gray-500 max-w-xl mx-auto mb-10">
             Many clients use both. The RZS AI Coach and 1:1 coaching are the most common combination: always-on coaching between live sessions with Vince.
           </p>
+
+          <figure className="max-w-2xl mx-auto bg-white border border-gray-200 rounded-xl px-8 py-7 shadow-sm">
+            <blockquote>
+              <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 text-lg leading-relaxed mb-4">
+                "Vince ran an interactive workshop with our team that provided actionable plays we could use immediately. The team left motivated and more importantly, armed with new tools to close deals."
+              </p>
+            </blockquote>
+            <figcaption className="flex items-center gap-3">
+              <div className="w-px h-8 bg-[#C0392B]"></div>
+              <div>
+                <p className="text-sm font-semibold text-[#1A1A1A]">Joe Twer</p>
+                <p className="text-xs text-gray-500">Global Head of Sales, BlueSnap</p>
+              </div>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
