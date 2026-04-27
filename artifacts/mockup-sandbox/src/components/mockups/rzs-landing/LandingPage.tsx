@@ -118,10 +118,10 @@ export function LandingPage() {
                 Most sellers don't lose deals because they can't sell.
               </h2>
               <p className="text-gray-700 text-lg leading-relaxed mb-5">
-                They lose because they don't know where they are in the deal — or what to do next.
+                They lose because they don't know where they are in the deal, or what to do next.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                That's the gap Vince Beese spent 25 years solving — first as a rep, then as a CRO, now as a Sales Strength Coach. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it.
+                That's the gap Vince Beese spent 25 years solving. First as a rep, then as a CRO, now as a Sales Strength Coach. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it. Then he wrote the book — Red Zone Selling.
               </p>
             </div>
             <div>
@@ -147,7 +147,7 @@ export function LandingPage() {
                 <p className="text-lg font-['Playfair_Display'] italic text-[#1A1A1A] mb-2">
                   "Most sellers aren't struggling because they don't work hard enough. They're struggling because nobody ever showed them a system."
                 </p>
-                <footer className="text-sm font-medium text-gray-500">— Vince Beese</footer>
+                <footer className="text-sm font-medium text-gray-500">Vince Beese</footer>
               </blockquote>
             </div>
           </div>
@@ -170,7 +170,7 @@ export function LandingPage() {
               <div className="absolute top-0 left-0 w-full h-1 bg-yellow-400"></div>
               <CardHeader className="pb-2 pt-5">
                 <Badge variant="secondary" className="bg-yellow-50 text-yellow-700 border border-yellow-200 w-fit mb-2 text-xs">Top of Funnel</Badge>
-                <CardTitle className="text-lg">Yellow Zone — Qualify</CardTitle>
+                <CardTitle className="text-lg">Yellow Zone: Qualify</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 text-sm">Is this real? Is it worth your time? Qualify hard, disqualify fast, and protect your pipeline.</p>
@@ -182,7 +182,7 @@ export function LandingPage() {
               <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
               <CardHeader className="pb-2 pt-5">
                 <Badge variant="secondary" className="bg-green-50 text-green-700 border border-green-200 w-fit mb-2 text-xs">Mid Funnel</Badge>
-                <CardTitle className="text-lg">Green Zone — Momentum</CardTitle>
+                <CardTitle className="text-lg">Green Zone: Momentum</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 text-sm">The deal is alive. Multi-thread, build a business case, and prevent ghosting and stalls.</p>
@@ -194,19 +194,19 @@ export function LandingPage() {
               <div className="absolute top-0 left-0 w-full h-1 bg-[#C0392B]"></div>
               <CardHeader className="pb-2 pt-5">
                 <Badge className="bg-[#C0392B] text-white w-fit mb-2 text-xs">Bottom of Funnel</Badge>
-                <CardTitle className="text-lg text-[#C0392B]">Red Zone — Close</CardTitle>
+                <CardTitle className="text-lg text-[#C0392B]">Red Zone: Close</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-sm">Final stretch. Flush friction, activate your champion, close with confidence — not desperation.</p>
+                <p className="text-gray-600 text-sm">Final stretch. Flush friction, activate your champion, close with confidence, not desperation.</p>
               </CardContent>
             </Card>
           </div>
 
-          <div className="text-center max-w-xl mx-auto">
-            <blockquote className="text-gray-700 italic mb-2 text-base">
+          <div className="text-center max-w-4xl mx-auto">
+            <blockquote className="text-gray-700 italic mb-1 text-sm whitespace-nowrap">
               "The zone tells you where you are. The play tells you what to do. That's the whole system."
             </blockquote>
-            <p className="text-sm text-gray-500 mb-4">— Vince Beese</p>
+            <p className="text-sm text-gray-500 mb-4">Vince Beese</p>
             <p className="text-sm text-gray-600">Want the full system? It's all in the book. <a href="#" className="text-[#C0392B] font-medium hover:underline">Get Red Zone Selling on Amazon →</a></p>
           </div>
         </div>
@@ -216,8 +216,9 @@ export function LandingPage() {
       <section className="bg-gray-50 py-14" id="coaching">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">Ways to Work Together</span>
             <h2 className="font-['Playfair_Display'] text-3xl font-bold mb-2">One system. Every format. Find the right fit for where you are.</h2>
-            <p className="text-gray-600 text-base">Whether you're an individual seller, a sales leader, or building a team from the ground up — there's a way to work together.</p>
+            <p className="text-gray-600 text-base">Whether you're an individual seller, a sales leader, or building a team from the ground up, there's a way to work together.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto mb-6">
@@ -230,7 +231,7 @@ export function LandingPage() {
                 <CardTitle className="text-lg">RZS AI Coach</CardTitle>
               </CardHeader>
               <CardContent className="pb-3">
-                <p className="text-gray-600 text-sm mb-4">24/7 on-demand coaching. Three modes — Deal, Coach, and Mindset. Available the moment you need it.</p>
+                <p className="text-gray-600 text-sm mb-4">24/7 on-demand coaching. Three modes: Deal, Coach, and Mindset. Available the moment you need it.</p>
                 <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] font-semibold text-sm hover:underline flex items-center gap-1">
                   Join Waitlist <ArrowRight className="w-3 h-3" />
                 </a>
@@ -317,7 +318,7 @@ export function LandingPage() {
           </div>
 
           <p className="text-center text-sm text-gray-500 max-w-xl mx-auto">
-            Many clients use both — The RZS AI Coach and 1:1 coaching are the most common combination — always-on coaching between live sessions with Vince.
+            Many clients use both. The RZS AI Coach and 1:1 coaching are the most common combination: always-on coaching between live sessions with Vince.
           </p>
         </div>
       </section>
@@ -326,8 +327,9 @@ export function LandingPage() {
       <section className="bg-[#1A1A1A] text-white py-14" id="ai-coach">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">RZS AI Coach Modes</span>
             <h2 className="font-['Playfair_Display'] text-3xl lg:text-4xl font-bold mb-3">Three modes. Every selling situation covered.</h2>
-            <p className="text-gray-400 text-base">Each mode is built for a different moment. Use one, use all three — the coach is ready when you are. Start a session, step away, and pick up right where you left off.</p>
+            <p className="text-gray-400 text-base">Each mode is built for a different moment. Use one, use all three. The coach is ready when you are. Start a session, step away, and pick up right where you left off.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-10">
@@ -493,7 +495,7 @@ export function LandingPage() {
             <p className="font-['Playfair_Display'] italic text-lg text-gray-700 mb-2">
               "There's no magic close. There's no secret script. There's just knowing where you are, what play to run, and having the discipline to execute it. That's what we build here."
             </p>
-            <footer className="text-sm font-medium text-gray-500">— Vince Beese, Sales Strength Coach</footer>
+            <footer className="text-sm font-medium text-gray-500">Vince Beese, Sales Strength Coach</footer>
           </blockquote>
         </div>
       </section>
