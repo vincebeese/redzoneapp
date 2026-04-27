@@ -491,8 +491,8 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <blockquote className="max-w-4xl mx-auto text-center border-t border-gray-100 pt-8">
-            <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-lg text-gray-700 mb-2">
+          <blockquote className="max-w-5xl mx-auto text-center border-t border-gray-100 pt-8">
+            <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-base text-gray-700 mb-2">
               "There's no magic close. There's no secret script.<br />There's just knowing where you are, what play to run, and having the discipline to execute it. That's what we build here."
             </p>
             <footer className="text-sm font-medium text-gray-500">Vince Beese, Sales Strength Coach</footer>
@@ -565,7 +565,7 @@ export default function LandingPage() {
           <button onClick={() => scrollTo('contact')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Contact</button>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400">© 2026 Red Zone Selling™</span>
+          <span className="text-xs text-gray-400">2026 Red Zone Selling™</span>
           {user ? (
             <Link to="/dashboard" className="text-xs font-medium text-white rounded px-2.5 py-1 hover:opacity-90" style={{ background: '#C62828' }}>Go to App</Link>
           ) : null}
