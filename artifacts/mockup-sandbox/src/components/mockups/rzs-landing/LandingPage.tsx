@@ -516,7 +516,7 @@ export function LandingPage() {
                   </div>
                   <div>
                     <p className="font-medium text-sm">Email</p>
-                    <a href="mailto:vince@redzoneselling.com" className="text-sm text-gray-600 hover:text-[#C0392B] transition-colors">vince@redzoneselling.com</a>
+                    <a href="mailto:vince@vincebeese.com" className="text-sm text-gray-600 hover:text-[#C0392B] transition-colors">vince@vincebeese.com</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-gray-700">
@@ -575,7 +575,6 @@ export function LandingPage() {
               <a href="#about" className="hover:text-white transition-colors">About</a>
               <a href="#contact" className="hover:text-white transition-colors">Contact</a>
             </nav>
-            <Button size="sm" className="bg-[#C0392B] hover:bg-[#A93226] text-white">Go to App</Button>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-500">
