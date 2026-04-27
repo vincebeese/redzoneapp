@@ -81,68 +81,23 @@ export default function LandingPage() {
 
       {/* Section 1 — Hero */}
       <section className="bg-[#F9F6F0] pt-16 pb-16 overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
-            <div className="max-w-2xl">
-              <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-5xl lg:text-6xl font-bold leading-tight mb-3 text-[#1A1A1A]">
-                Sellers with structured coaching programs win <span className="text-[#C0392B]">28% more deals.</span>
-              </h1>
-              <p className="text-sm text-gray-500 mb-5 italic">Most sellers get none. Source: CSO Insights</p>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                Red Zone Selling changes that. A complete coaching system for sellers and sales leaders built by someone who's been in the deal, closed it, and coached hundreds of others to do the same.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                <button onClick={() => scrollTo('coaching')} className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
-                  See how it works ↓
-                </button>
-              </div>
-              <p className="text-sm text-gray-500 mt-4 font-medium border-t border-gray-200 pt-4">
-                One system. Six ways to work together. Built for sellers who want to win more and leaders who want to build teams that do.
-              </p>
-            </div>
-
-            <div className="relative lg:ml-auto w-full max-w-md">
-              <div className="bg-[#1A1A1A] text-white rounded-xl border border-gray-800 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-1" style={{ background: 'linear-gradient(to right, #C0392B, #f97316)' }}></div>
-                <div className="border-b border-gray-800 px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C0392B, #7f1d1d)' }}>
-                      <span className="font-bold text-[9px]">RZS</span>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium flex items-center gap-2">
-                        RZS AI Coach
-                        <span className="flex h-2 w-2 relative">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C0392B]"></span>
-                        </span>
-                      </div>
-                      <p className="text-gray-400 text-xs">Active now</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-5 py-4 space-y-4">
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-gray-800 flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">RZS</div>
-                    <div className="bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-200">
-                      Walk me through your last deal that stalled. What happened at the presentation stage?
-                    </div>
-                  </div>
-                  <div className="flex gap-3 flex-row-reverse">
-                    <div className="w-6 h-6 rounded-full bg-[#C0392B] flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">You</div>
-                    <div className="bg-[#C0392B]/20 border border-[#C0392B]/30 rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white">
-                      They loved the demo but went quiet after I sent the proposal...
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-gray-800 flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">RZS</div>
-                    <div className="bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-200 border border-gray-700">
-                      Classic Red Zone stall. Let's run a deal autopsy. I'll show you exactly where and why it stalled.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="container mx-auto px-6 max-w-4xl text-center">
+          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-5xl lg:text-6xl font-bold leading-tight mb-4 text-[#1A1A1A]">
+            A complete selling system.
+          </h1>
+          <p className="text-lg text-gray-700 mb-3 leading-relaxed max-w-2xl mx-auto">
+            Red Zone Selling is a structured coaching system for sellers and sales leaders built by someone who's been in the deal, closed it, and coached hundreds of others to do the same.
+          </p>
+          <p className="text-sm text-gray-500 mb-8 font-medium">
+            One system. Six ways to work together. Built for sellers who want to win more and leaders who want to build teams that do.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onClick={() => scrollTo('coaching')} className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
+              See how it works ↓
+            </button>
+            <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-100 text-base h-12 px-7 rounded font-medium transition-colors">
+              Join the AI Coach Waitlist
+            </a>
           </div>
         </div>
       </section>
@@ -375,8 +330,52 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="text-center text-sm text-gray-400 mb-6">
+          <div className="text-center text-sm text-gray-400 mb-10">
             One session = one message in, one coach response out. &nbsp;|&nbsp; 14 days or 100 sessions — full access to all three modes. No credit card required.
+          </div>
+
+          {/* AI Coach Chat Demo */}
+          <div className="max-w-md mx-auto mb-10">
+            <div className="bg-[#111111] text-white rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-1" style={{ background: 'linear-gradient(to right, #C0392B, #f97316)' }}></div>
+              <div className="border-b border-white/10 px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C0392B, #7f1d1d)' }}>
+                    <span className="font-bold text-[9px]">RZS</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium flex items-center gap-2">
+                      RZS AI Coach
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C0392B]"></span>
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-xs">Active now</p>
+                  </div>
+                </div>
+              </div>
+              <div className="px-5 py-4 space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gray-800 flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">RZS</div>
+                  <div className="bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-200">
+                    Walk me through your last deal that stalled. What happened at the presentation stage?
+                  </div>
+                </div>
+                <div className="flex gap-3 flex-row-reverse">
+                  <div className="w-6 h-6 rounded-full bg-[#C0392B] flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">You</div>
+                  <div className="bg-[#C0392B]/20 border border-[#C0392B]/30 rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white">
+                    They loved the demo but went quiet after I sent the proposal...
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gray-800 flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">RZS</div>
+                  <div className="bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-200 border border-gray-700">
+                    Classic Red Zone stall. Let's run a deal autopsy. I'll show you exactly where and why it stalled.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="text-center">
@@ -544,25 +543,20 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#1A1A1A] text-white py-10">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 border-b border-gray-800 pb-8">
-            <img src="/logo.png" alt="Red Zone Selling" style={{ height: '36px', width: 'auto' }} />
-            <nav className="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-400">
-              <button onClick={() => scrollTo('coaching')} className="hover:text-white transition-colors">Coaching</button>
-              <button onClick={() => scrollTo('ai-coach')} className="hover:text-white transition-colors">AI Coach</button>
-              <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Book</a>
-              <button onClick={() => scrollTo('about')} className="hover:text-white transition-colors">About</button>
-              <button onClick={() => scrollTo('contact')} className="hover:text-white transition-colors">Contact</button>
-            </nav>
-          </div>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-500">
-            <p>© 2026 Red Zone Selling™ | Built by Vince Beese | redzoneselling.co</p>
-            <div className="flex gap-5">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-            </div>
-          </div>
+      <footer className="relative px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+        <img src="/logo.png" alt="Red Zone Selling" style={{ height: '36px', width: 'auto' }} />
+        <div className="absolute left-1/2 -translate-x-1/2 flex flex-wrap gap-4">
+          <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
+          <button onClick={() => scrollTo('coaching')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Coaching</button>
+          <button onClick={() => scrollTo('ai-coach')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">AI Coach</button>
+          <button onClick={() => scrollTo('about')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">About</button>
+          <button onClick={() => scrollTo('contact')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Contact</button>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-400">© 2026 Red Zone Selling</span>
+          {user ? (
+            <Link to="/dashboard" className="text-xs font-medium text-white rounded px-2.5 py-1 hover:opacity-90" style={{ background: '#C62828' }}>Go to App</Link>
+          ) : null}
         </div>
       </footer>
 
