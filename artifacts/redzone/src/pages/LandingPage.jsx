@@ -638,6 +638,7 @@ export default function LandingPage() {
             <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
             <button onClick={() => scrollTo('about')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">About</button>
             <button onClick={() => scrollTo('contact-form')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Contact</button>
+          <a href="https://vbeese.substack.com/" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Subscribe</a>
           </div>
           <p className="text-xs text-gray-400">© {new Date().getFullYear()} Red Zone Selling</p>
         </div>
