@@ -18,6 +18,7 @@ import resourceCenterRouter from "./routes/resourceCenter.js";
 import analyticsRouter from "./routes/analytics.js";
 import { startTrialChecker } from "./services/trialChecker.js";
 import { runSchemaCheck } from "./db/schemaCheck.js";
+import { runMigrations } from "./db/migrate.js";
 
 const app: Express = express();
 
@@ -89,6 +90,7 @@ app.use((err: Error & { status?: number }, _req: express.Request, res: express.R
   });
 });
 
+runMigrations().catch(err => console.error('Startup migration error:', err));
 startTrialChecker();
 runSchemaCheck();
 

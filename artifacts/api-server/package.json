@@ -8,7 +8,7 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "migrate": "node src/db/migrate.js",
+    "migrate": "node src/db/migrate-cli.js",
     "seed": "node src/db/seed.js"
   },
   "dependencies": {

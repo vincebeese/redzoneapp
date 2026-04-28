@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { build as esbuild } from "esbuild";
-import { rm } from "node:fs/promises";
+import { rm, cp } from "node:fs/promises";
 
 globalThis.require = createRequire(import.meta.url);
 
@@ -111,7 +111,15 @@ globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
   });
 }
 
-buildAll().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+async function copyMigrations() {
+  const src = path.resolve(artifactDir, "src/db/migrations");
+  const dest = path.resolve(artifactDir, "dist/migrations");
+  await cp(src, dest, { recursive: true });
+}
+
+buildAll()
+  .then(copyMigrations)
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

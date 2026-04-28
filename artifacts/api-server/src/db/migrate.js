@@ -21,80 +21,74 @@ const SECURITY_BLOCKED_MIGRATIONS = new Set([
   '019_reset_admin_password.sql',
 ]);
 
-async function migrate() {
+/**
+ * Run all pending migrations using the given pool (does NOT close the pool).
+ * Safe to call at server startup alongside other startup tasks.
+ */
+export async function runMigrations(dbPool = pool) {
   console.log('Running database migrations...');
 
-  try {
-    // Create migrations tracking table if it doesn't exist
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS _migrations (
-        id SERIAL PRIMARY KEY,
-        filename TEXT UNIQUE NOT NULL,
-        applied_at TIMESTAMPTZ DEFAULT NOW()
-      )
-    `);
+  // Create migrations tracking table if it doesn't exist
+  await dbPool.query(`
+    CREATE TABLE IF NOT EXISTS _migrations (
+      id SERIAL PRIMARY KEY,
+      filename TEXT UNIQUE NOT NULL,
+      applied_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
 
-    const migrationsDir = path.join(__dirname, 'migrations');
-    const files = fs.readdirSync(migrationsDir).sort().filter(f => f.endsWith('.sql'));
+  const migrationsDir = path.join(__dirname, 'migrations');
+  const files = fs.readdirSync(migrationsDir).sort().filter(f => f.endsWith('.sql'));
 
-    // Get already-applied migrations
-    const applied = await pool.query('SELECT filename FROM _migrations');
-    const appliedSet = new Set(applied.rows.map(r => r.filename));
+  // Get already-applied migrations
+  const applied = await dbPool.query('SELECT filename FROM _migrations');
+  const appliedSet = new Set(applied.rows.map(r => r.filename));
 
-    for (const file of files) {
-      if (SECURITY_BLOCKED_MIGRATIONS.has(file)) {
-        // Mark as applied so they can never be re-introduced accidentally
-        await pool.query(
-          'INSERT INTO _migrations (filename) VALUES ($1) ON CONFLICT (filename) DO NOTHING',
-          [file]
-        );
-        console.log(`Skipped (security-blocked): ${file}`);
-        continue;
-      }
-
-      if (DEV_ONLY_MIGRATIONS.has(file)) {
-        // Mark as applied so they never run in any environment
-        await pool.query(
-          'INSERT INTO _migrations (filename) VALUES ($1) ON CONFLICT (filename) DO NOTHING',
-          [file]
-        );
-        console.log(`Skipped (dev-only): ${file}`);
-        continue;
-      }
-
-      if (appliedSet.has(file)) {
-        console.log(`Already applied: ${file}`);
-        continue;
-      }
-
-      console.log(`Applying migration: ${file}`);
-      const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
-
-      const client = await pool.connect();
-      try {
-        await client.query('BEGIN');
-        await client.query(sql);
-        await client.query(
-          'INSERT INTO _migrations (filename) VALUES ($1) ON CONFLICT (filename) DO NOTHING',
-          [file]
-        );
-        await client.query('COMMIT');
-        console.log(`Migration ${file} applied successfully`);
-      } catch (err) {
-        await client.query('ROLLBACK');
-        throw new Error(`Migration ${file} failed: ${err.message}`);
-      } finally {
-        client.release();
-      }
+  for (const file of files) {
+    if (SECURITY_BLOCKED_MIGRATIONS.has(file)) {
+      await dbPool.query(
+        'INSERT INTO _migrations (filename) VALUES ($1) ON CONFLICT (filename) DO NOTHING',
+        [file]
+      );
+      console.log(`Skipped (security-blocked): ${file}`);
+      continue;
     }
 
-    console.log('All migrations completed successfully');
-  } catch (error) {
-    console.error('Migration failed:', error);
-    process.exit(1);
-  } finally {
-    await pool.end();
+    if (DEV_ONLY_MIGRATIONS.has(file)) {
+      await dbPool.query(
+        'INSERT INTO _migrations (filename) VALUES ($1) ON CONFLICT (filename) DO NOTHING',
+        [file]
+      );
+      console.log(`Skipped (dev-only): ${file}`);
+      continue;
+    }
+
+    if (appliedSet.has(file)) {
+      console.log(`Already applied: ${file}`);
+      continue;
+    }
+
+    console.log(`Applying migration: ${file}`);
+    const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
+
+    const client = await dbPool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(sql);
+      await client.query(
+        'INSERT INTO _migrations (filename) VALUES ($1) ON CONFLICT (filename) DO NOTHING',
+        [file]
+      );
+      await client.query('COMMIT');
+      console.log(`Migration ${file} applied successfully`);
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw new Error(`Migration ${file} failed: ${err.message}`);
+    } finally {
+      client.release();
+    }
   }
+
+  console.log('All migrations completed successfully');
 }
 
-migrate();
