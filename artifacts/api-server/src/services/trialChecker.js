@@ -5,19 +5,21 @@ const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // every 6 hours
 
 async function sendIfNotSent(userId, type, toEmail, displayName, extra = {}, emailFn = sendTrialWarningEmail) {
   try {
+    // Check first — prevents duplicates without relying on a database constraint
+    const { rows } = await query(
+      `SELECT id FROM trial_notifications WHERE user_id = $1 AND notification_type = $2`,
+      [userId, type]
+    );
+    if (rows.length > 0) return; // Already sent, skip silently
+
     await query(
       `INSERT INTO trial_notifications (user_id, notification_type) VALUES ($1, $2)`,
       [userId, type]
     );
-    // Insert succeeded — not sent before, so send now
     await emailFn({ toEmail, displayName, type, ...extra });
     console.log(`Trial notification [${type}] sent to ${toEmail}`);
   } catch (err) {
-    if (err.code === '23505') {
-      // Unique constraint violation — already sent, skip silently
-    } else {
-      console.error(`Trial notification [${type}] failed for ${toEmail}:`, err.message);
-    }
+    console.error(`Trial notification [${type}] failed for ${toEmail}:`, err.message);
   }
 }
 
