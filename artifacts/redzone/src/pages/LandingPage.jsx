@@ -30,6 +30,7 @@ export default function LandingPage() {
             <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-base text-gray-500 hover:text-gray-900 transition-colors">Book</a>
             <button onClick={() => scrollTo('about')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">About</button>
             <button onClick={() => scrollTo('contact-form')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Contact</button>
+            <a href="https://vbeese.substack.com/" target="_blank" rel="noopener noreferrer" className="text-base text-gray-500 hover:text-gray-900 transition-colors">Subscribe</a>
           </div>
 
           {/* Desktop Go to App — right */}
@@ -87,6 +88,7 @@ export default function LandingPage() {
             <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Book</a>
             <button onClick={() => scrollTo('about')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">About</button>
             <button onClick={() => scrollTo('contact-form')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Contact</button>
+            <a href="https://vbeese.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 py-1 hover:text-gray-900">Subscribe</a>
           </div>
         )}
       </nav>
