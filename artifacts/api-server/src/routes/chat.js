@@ -52,6 +52,7 @@ function extractSignals(fullText) {
   let cleanText = fullText;
   let artifactOffer = null;
   let transcriptPrompt = null;
+  let profileUpdate = null;
 
   // Extract ARTIFACT_OFFER signal (JSON format)
   const aoJsonRegex = /\n?\[ARTIFACT_OFFER:(\{.*?\})\]/s;
@@ -83,7 +84,17 @@ function extractSignals(fullText) {
     cleanText = cleanText.replace(tpRegex, '').trim();
   }
 
-  return { cleanText, artifactOffer, transcriptPrompt };
+  // Extract PROFILE_UPDATE signal — emitted when onboarding answers are collected
+  const puRegex = /\n?\[PROFILE_UPDATE:(\{.*?\})\]/s;
+  const puMatch = cleanText.match(puRegex);
+  if (puMatch) {
+    try { profileUpdate = JSON.parse(puMatch[1]); } catch (e) {
+      console.warn('Profile update JSON parse failed:', e.message);
+    }
+    cleanText = cleanText.replace(puRegex, '').trim();
+  }
+
+  return { cleanText, artifactOffer, transcriptPrompt, profileUpdate };
 }
 
 // Chat endpoint with SSE streaming
@@ -245,7 +256,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
 
     // Save assistant response for deal mode (strip signals, send complete event)
     if (mode === 'deal' && dealId) {
-      const { cleanText, artifactOffer, transcriptPrompt } = extractSignals(fullResponse);
+      const { cleanText, artifactOffer, transcriptPrompt, profileUpdate } = extractSignals(fullResponse);
 
       const savedMsg = await query(
         `INSERT INTO messages (user_id, deal_id, mode_slug, role, content)
@@ -255,11 +266,34 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       );
       const messageId = savedMsg.rows[0]?.id || null;
 
+      // Auto-save seller profile if onboarding answers were collected
+      if (profileUpdate && Object.keys(profileUpdate).length > 0) {
+        try {
+          await query(
+            `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns, updated_at)
+             VALUES ($1, $2, $3, $4, $5, $6, NOW())
+             ON CONFLICT (user_id) DO UPDATE SET
+               icp = COALESCE(EXCLUDED.icp, seller_profiles.icp),
+               avg_deal_size = COALESCE(EXCLUDED.avg_deal_size, seller_profiles.avg_deal_size),
+               sales_cycle = COALESCE(EXCLUDED.sales_cycle, seller_profiles.sales_cycle),
+               win_themes = COALESCE(EXCLUDED.win_themes, seller_profiles.win_themes),
+               loss_patterns = COALESCE(EXCLUDED.loss_patterns, seller_profiles.loss_patterns),
+               updated_at = NOW()`,
+            [req.user.id, profileUpdate.icp || null, profileUpdate.avg_deal_size || null,
+             profileUpdate.sales_cycle || null, profileUpdate.win_themes || null, profileUpdate.loss_patterns || null]
+          );
+          console.log(`Seller profile auto-saved for user ${req.user.id}`);
+        } catch (err) {
+          console.warn('Could not auto-save seller profile:', err.message);
+        }
+      }
+
       res.write(`data: ${JSON.stringify({
         type: 'complete',
         message_id: messageId,
         artifact_offer: artifactOffer,
         transcript_prompt: transcriptPrompt,
+        profile_saved: !!profileUpdate,
       })}\n\n`);
 
       logEvent(req.user.id, 'coaching_turn', {
@@ -347,7 +381,38 @@ router.post('/deal/opening', ensureUser, requireSubscription, async (req, res) =
       return res.end();
     }
 
-    const openingPrompt = `A new deal has just been opened.
+    // Check if user has a seller profile — determines whether to run onboarding or deal coaching
+    let systemPrompt = modeConfig.system_prompt;
+    let openingPrompt;
+
+    try {
+      const profileResult = await query(
+        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
+        [req.user.id]
+      );
+      const p = profileResult.rows[0];
+      const hasProfile = p && (p.icp || p.avg_deal_size || p.win_themes);
+
+      if (!hasProfile) {
+        // No seller profile — trigger onboarding sequence before deal coaching
+        openingPrompt = `This is a new user's first Deal Mode session. They have just created their first deal:
+Company: ${company || 'Not specified'}
+Zone: ${zone.toUpperCase()} ZONE
+
+Run the NEW USER ONBOARDING sequence exactly as described in your instructions. Begin with the introduction and ask the first onboarding question only. Do not start deal coaching yet.`;
+      } else {
+        // Has profile — inject it and go straight to deal coaching
+        const lines = [];
+        if (p.icp) lines.push(`ICP: ${p.icp}`);
+        if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
+        if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
+        if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
+        if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
+        if (lines.length > 0) {
+          systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/5 fields on file — apply silently to all coaching)\n` + lines.join('\n');
+        }
+
+        openingPrompt = `A new deal has just been opened.
 Company: ${company || 'Not specified'}
 Zone: ${zone.toUpperCase()} ZONE
 
@@ -357,11 +422,25 @@ Provide an opening coaching message appropriate for this zone.
 - If Red Zone: Focus on what's needed to close
 
 Be concise but set the right tone for coaching this deal.`;
+      }
+    } catch (err) {
+      console.warn('Could not check seller profile for opening:', err.message);
+      openingPrompt = `A new deal has just been opened.
+Company: ${company || 'Not specified'}
+Zone: ${zone.toUpperCase()} ZONE
+
+Provide an opening coaching message appropriate for this zone.
+- If Yellow Zone: Start with qualification questions
+- If Green Zone: Ask about momentum and next steps
+- If Red Zone: Focus on what's needed to close
+
+Be concise but set the right tone for coaching this deal.`;
+    }
 
     let fullResponse = '';
 
     await streamChat({
-      systemPrompt: modeConfig.system_prompt,
+      systemPrompt,
       messages: [{ role: 'user', content: openingPrompt }],
       maxTokens: modeConfig.max_tokens,
       userId: req.user.id,
