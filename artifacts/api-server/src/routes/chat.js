@@ -94,7 +94,77 @@ function extractSignals(fullText) {
     cleanText = cleanText.replace(puRegex, '').trim();
   }
 
-  return { cleanText, artifactOffer, transcriptPrompt, profileUpdate };
+  // Extract ONBOARDING_SKIP signal — emitted when user opts out permanently
+  let onboardingSkip = false;
+  if (cleanText.includes('[ONBOARDING_SKIP]')) {
+    onboardingSkip = true;
+    cleanText = cleanText.replace(/\n?\[ONBOARDING_SKIP\]/g, '').trim();
+  }
+
+  return { cleanText, artifactOffer, transcriptPrompt, profileUpdate, onboardingSkip };
+}
+
+/**
+ * Onboarding block injected into the system prompt when a user has no seller profile.
+ * Applies to all modes. The AI collects 5 answers then emits PROFILE_UPDATE.
+ * If the user declines, it emits ONBOARDING_SKIP so they are never asked again.
+ */
+const ONBOARDING_BLOCK = `
+
+---
+
+# SELLER ONBOARDING (NEW USER — FIRST SESSION)
+
+This user has not yet completed their seller profile. At the start of this session, before providing any coaching, run the onboarding sequence below.
+
+Open with this introduction (adapt the wording naturally):
+"Before we dive in, I want to get a quick read on how you sell — five questions, takes about two minutes. It makes every coaching session sharper from here on out."
+
+Then ask the following questions ONE AT A TIME — never stack them:
+1. Who do you sell to? Describe your ideal customer: industry, company size, and the main buyer or decision-maker.
+2. What's your average deal size?
+3. How long is your typical sales cycle — from first conversation to signed contract?
+4. When you win, why do you win? Give me your top two or three themes.
+5. When you lose, what's usually the reason?
+
+Rules:
+- Ask one question. Wait for the answer. Then ask the next.
+- Keep the tone conversational — this is a coach asking, not a form.
+- If the user says they want to skip, don't want to answer, or never want to be asked this again, respect that immediately. Say something like "Got it — I won't ask again." Then emit the skip signal below and continue with whatever they came to do.
+- Once all five answers are collected, emit the profile update signal below, then transition directly into coaching.
+
+SKIP SIGNAL (emit on a new line at the end of your response, only if user opts out):
+[ONBOARDING_SKIP]
+
+PROFILE UPDATE SIGNAL (emit on a new line at the end of your response, only after all 5 answers are collected):
+[PROFILE_UPDATE:{"icp":"<answer>","avg_deal_size":"<answer>","sales_cycle":"<answer>","win_themes":"<answer>","loss_patterns":"<answer>"}]
+
+Both signals are invisible to the user. Never reference or explain them in your response text.`;
+
+/**
+ * Upsert a seller profile from collected onboarding answers.
+ */
+async function saveProfileUpdate(userId, profileUpdate) {
+  await query(
+    `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, NOW())
+     ON CONFLICT (user_id) DO UPDATE SET
+       icp = COALESCE(EXCLUDED.icp, seller_profiles.icp),
+       avg_deal_size = COALESCE(EXCLUDED.avg_deal_size, seller_profiles.avg_deal_size),
+       sales_cycle = COALESCE(EXCLUDED.sales_cycle, seller_profiles.sales_cycle),
+       win_themes = COALESCE(EXCLUDED.win_themes, seller_profiles.win_themes),
+       loss_patterns = COALESCE(EXCLUDED.loss_patterns, seller_profiles.loss_patterns),
+       updated_at = NOW()`,
+    [userId, profileUpdate.icp || null, profileUpdate.avg_deal_size || null,
+     profileUpdate.sales_cycle || null, profileUpdate.win_themes || null, profileUpdate.loss_patterns || null]
+  );
+}
+
+/**
+ * Set onboarding_skipped = true on the users table.
+ */
+async function saveOnboardingSkip(userId) {
+  await query(`UPDATE users SET onboarding_skipped = true WHERE id = $1`, [userId]);
 }
 
 // Chat endpoint with SSE streaming
@@ -150,15 +220,21 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       if (rcBlock) systemPrompt += rcBlock;
     }
 
-    // Inject seller profile for all modes (silent — applied by the AI per prompt instructions)
+    // Inject seller profile or onboarding block depending on user state
     try {
-      const profileResult = await query(
-        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns
-         FROM seller_profiles WHERE user_id = $1`,
-        [req.user.id]
-      );
+      const [profileResult, userResult] = await Promise.all([
+        query(
+          `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
+          [req.user.id]
+        ),
+        query(`SELECT onboarding_skipped FROM users WHERE id = $1`, [req.user.id]),
+      ]);
       const p = profileResult.rows[0];
-      if (p) {
+      const hasProfile = p && (p.icp || p.avg_deal_size || p.win_themes);
+      const isSkipped = userResult.rows[0]?.onboarding_skipped === true;
+
+      if (hasProfile) {
+        // Inject profile for AI context
         const lines = [];
         if (p.icp) lines.push(`ICP: ${p.icp}`);
         if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
@@ -169,6 +245,14 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           const total = 5;
           const filled = lines.length;
           systemPrompt += `\n\n# SELLER PROFILE (${filled}/${total} fields on file — apply silently to all coaching)\n` + lines.join('\n');
+        }
+      } else if (!isSkipped) {
+        // No profile, not skipped — inject onboarding instructions on the first message of a session
+        // For deal mode: the opening endpoint handles it; here we keep instructions active for follow-up turns
+        // For coach/mindset: only inject on first message (history was empty before we added the new message)
+        const isFirstMessage = mode === 'deal' || messages.length <= 1;
+        if (isFirstMessage) {
+          systemPrompt += ONBOARDING_BLOCK;
         }
       }
     } catch (err) {
@@ -269,22 +353,19 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       // Auto-save seller profile if onboarding answers were collected
       if (profileUpdate && Object.keys(profileUpdate).length > 0) {
         try {
-          await query(
-            `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns, updated_at)
-             VALUES ($1, $2, $3, $4, $5, $6, NOW())
-             ON CONFLICT (user_id) DO UPDATE SET
-               icp = COALESCE(EXCLUDED.icp, seller_profiles.icp),
-               avg_deal_size = COALESCE(EXCLUDED.avg_deal_size, seller_profiles.avg_deal_size),
-               sales_cycle = COALESCE(EXCLUDED.sales_cycle, seller_profiles.sales_cycle),
-               win_themes = COALESCE(EXCLUDED.win_themes, seller_profiles.win_themes),
-               loss_patterns = COALESCE(EXCLUDED.loss_patterns, seller_profiles.loss_patterns),
-               updated_at = NOW()`,
-            [req.user.id, profileUpdate.icp || null, profileUpdate.avg_deal_size || null,
-             profileUpdate.sales_cycle || null, profileUpdate.win_themes || null, profileUpdate.loss_patterns || null]
-          );
+          await saveProfileUpdate(req.user.id, profileUpdate);
           console.log(`Seller profile auto-saved for user ${req.user.id}`);
         } catch (err) {
           console.warn('Could not auto-save seller profile:', err.message);
+        }
+      }
+
+      // Record opt-out if user declined onboarding
+      if (onboardingSkip) {
+        try {
+          await saveOnboardingSkip(req.user.id);
+        } catch (err) {
+          console.warn('Could not save onboarding skip:', err.message);
         }
       }
 
@@ -320,14 +401,36 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
     } else {
       // Save assistant response and bump updated_at for all non-deal modes
       if (mode !== 'deal' && session_id) {
+        const { cleanText: nonDealClean, profileUpdate: nonDealProfile, onboardingSkip: nonDealSkip } = extractSignals(fullResponse);
+
         await query(
           `INSERT INTO session_messages (session_id, role, content) VALUES ($1, 'assistant', $2)`,
-          [session_id, fullResponse]
+          [session_id, nonDealClean]
         );
         await query(
           `UPDATE sessions SET updated_at = NOW() WHERE id = $1`,
           [session_id]
         );
+
+        // Auto-save seller profile if onboarding answers were collected
+        if (nonDealProfile && Object.keys(nonDealProfile).length > 0) {
+          try {
+            await saveProfileUpdate(req.user.id, nonDealProfile);
+            console.log(`Seller profile auto-saved (${mode}) for user ${req.user.id}`);
+          } catch (err) {
+            console.warn('Could not auto-save seller profile:', err.message);
+          }
+        }
+
+        // Record opt-out if user declined onboarding
+        if (nonDealSkip) {
+          try {
+            await saveOnboardingSkip(req.user.id);
+          } catch (err) {
+            console.warn('Could not save onboarding skip:', err.message);
+          }
+        }
+
         logEvent(req.user.id, 'coaching_turn', {
           mode,
           deal_id: null,
@@ -381,37 +484,43 @@ router.post('/deal/opening', ensureUser, requireSubscription, async (req, res) =
       return res.end();
     }
 
-    // Check if user has a seller profile — determines whether to run onboarding or deal coaching
+    // Determine whether to run onboarding or go straight to deal coaching
     let systemPrompt = modeConfig.system_prompt;
     let openingPrompt;
 
     try {
-      const profileResult = await query(
-        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
-        [req.user.id]
-      );
+      const [profileResult, userResult] = await Promise.all([
+        query(
+          `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
+          [req.user.id]
+        ),
+        query(`SELECT onboarding_skipped FROM users WHERE id = $1`, [req.user.id]),
+      ]);
       const p = profileResult.rows[0];
       const hasProfile = p && (p.icp || p.avg_deal_size || p.win_themes);
+      const isSkipped = userResult.rows[0]?.onboarding_skipped === true;
 
-      if (!hasProfile) {
-        // No seller profile — trigger onboarding sequence before deal coaching
-        openingPrompt = `This is a new user's first Deal Mode session. They have just created their first deal:
+      if (!hasProfile && !isSkipped) {
+        // New user, not skipped — run onboarding first
+        systemPrompt += ONBOARDING_BLOCK;
+        openingPrompt = `The user has just created their first deal in Deal Mode:
 Company: ${company || 'Not specified'}
 Zone: ${zone.toUpperCase()} ZONE
 
-Run the NEW USER ONBOARDING sequence exactly as described in your instructions. Begin with the introduction and ask the first onboarding question only. Do not start deal coaching yet.`;
+Run the onboarding sequence exactly as described in your instructions. Begin with the introduction and ask the first question only.`;
       } else {
-        // Has profile — inject it and go straight to deal coaching
-        const lines = [];
-        if (p.icp) lines.push(`ICP: ${p.icp}`);
-        if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
-        if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
-        if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
-        if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
-        if (lines.length > 0) {
-          systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/5 fields on file — apply silently to all coaching)\n` + lines.join('\n');
+        // Has profile or skipped — inject profile if available and go straight to coaching
+        if (hasProfile) {
+          const lines = [];
+          if (p.icp) lines.push(`ICP: ${p.icp}`);
+          if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
+          if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
+          if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
+          if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
+          if (lines.length > 0) {
+            systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/5 fields on file — apply silently to all coaching)\n` + lines.join('\n');
+          }
         }
-
         openingPrompt = `A new deal has just been opened.
 Company: ${company || 'Not specified'}
 Zone: ${zone.toUpperCase()} ZONE
@@ -451,11 +560,28 @@ Be concise but set the right tone for coaching this deal.`;
       },
     });
 
-    // Save the opening message
+    // Strip signals and save the opening message
+    const { cleanText: openingClean, profileUpdate: openingProfile, onboardingSkip: openingSkip } = extractSignals(fullResponse);
+
+    if (openingProfile && Object.keys(openingProfile).length > 0) {
+      try {
+        await saveProfileUpdate(req.user.id, openingProfile);
+      } catch (err) {
+        console.warn('Could not save profile from opening:', err.message);
+      }
+    }
+    if (openingSkip) {
+      try {
+        await saveOnboardingSkip(req.user.id);
+      } catch (err) {
+        console.warn('Could not save onboarding skip from opening:', err.message);
+      }
+    }
+
     await query(
       `INSERT INTO messages (user_id, deal_id, mode_slug, role, content)
        VALUES ($1, $2, 'deal', 'assistant', $3)`,
-      [req.user.id, dealId, fullResponse]
+      [req.user.id, dealId, openingClean]
     );
 
     res.write('data: [DONE]\n\n');
