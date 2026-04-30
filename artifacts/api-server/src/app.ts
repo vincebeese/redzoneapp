@@ -17,6 +17,7 @@ import documentsRouter from "./routes/documents.js";
 import resourceCenterRouter from "./routes/resourceCenter.js";
 import analyticsRouter from "./routes/analytics.js";
 import { startTrialChecker } from "./services/trialChecker.js";
+import { startBackupScheduler } from "./services/backupService.js";
 import { runSchemaCheck } from "./db/schemaCheck.js";
 import { runMigrations } from "./db/migrate.js";
 
@@ -92,6 +93,7 @@ app.use((err: Error & { status?: number }, _req: express.Request, res: express.R
 
 runMigrations().catch(err => console.error('Startup migration error:', err));
 startTrialChecker();
+startBackupScheduler();
 runSchemaCheck();
 
 export default app;
