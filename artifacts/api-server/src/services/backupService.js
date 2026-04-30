@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import { query } from '../db/index.js';
 import { sendBackupEmail } from './email.js';
 
-const BACKUP_EMAIL = 'vince@salesatscale.com';
+const BACKUP_EMAIL = 'vince@vincebeese.com';
 
 const TABLES = [
   'users',
