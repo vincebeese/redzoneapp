@@ -383,6 +383,63 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
   return data;
 }
 
+export async function sendBackupEmail({ toEmail, dateStr, tableResults, attachments }) {
+  const { client, fromEmail } = await getResendClient();
+
+  const successRows = tableResults.filter(t => t.success);
+  const failedRows = tableResults.filter(t => !t.success);
+
+  const tableHtml = tableResults.map(t => `
+    <tr>
+      <td style="padding: 7px 12px; border: 1px solid #eee;">${t.table}</td>
+      <td style="padding: 7px 12px; border: 1px solid #eee; text-align: right;">${t.success ? t.rows.toLocaleString() : '—'}</td>
+      <td style="padding: 7px 12px; border: 1px solid #eee; color: ${t.success ? '#2d7a2d' : '#c8102e'}; font-weight: 600;">${t.success ? 'OK' : 'Failed'}</td>
+    </tr>
+  `).join('');
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: `Weekly Database Backup — ${dateStr}`,
+    attachments,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Weekly Database Backup</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.6;">
+          Your weekly backup completed on <strong>${dateStr}</strong>.<br />
+          ${successRows.length} of ${tableResults.length} tables exported successfully.
+          ${failedRows.length > 0 ? `<span style="color:#c8102e"> ${failedRows.length} table(s) failed.</span>` : ''}
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+          <thead>
+            <tr style="background: #f5f5f5;">
+              <th style="padding: 8px 12px; border: 1px solid #eee; text-align: left;">Table</th>
+              <th style="padding: 8px 12px; border: 1px solid #eee; text-align: right;">Rows</th>
+              <th style="padding: 8px 12px; border: 1px solid #eee; text-align: left;">Status</th>
+            </tr>
+          </thead>
+          <tbody>${tableHtml}</tbody>
+        </table>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          Each table is attached as a CSV file. Save them to Google Drive to complete your backup.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center;">REDZONESELLING.CO</p>
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send backup email: ${error.message}`);
+  return data;
+}
+
 export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
   const { client, fromEmail } = await getResendClient();
 

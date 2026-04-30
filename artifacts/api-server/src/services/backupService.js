@@ -1,6 +1,9 @@
 import { Storage } from '@google-cloud/storage';
 import cron from 'node-cron';
 import { query } from '../db/index.js';
+import { sendBackupEmail } from './email.js';
+
+const BACKUP_EMAIL = 'vince@salesatscale.com';
 
 const TABLES = [
   'users',
@@ -56,29 +59,41 @@ async function runBackup() {
 
   console.log(`Starting database backup for ${dateStr}...`);
 
-  let exported = 0;
-  let failed = 0;
+  const tableResults = [];
+  const emailAttachments = [];
 
   for (const table of TABLES) {
     try {
       const { rows } = await query(`SELECT * FROM ${table}`);
       const csv = rowsToCsv(rows);
-      const file = bucket.file(`${folderPrefix}${table}.csv`);
-      await file.save(csv, { contentType: 'text/csv', resumable: false });
+
+      // Save to cloud storage
+      await bucket
+        .file(`${folderPrefix}${table}.csv`)
+        .save(csv, { contentType: 'text/csv', resumable: false });
+
+      // Queue as email attachment (only non-empty tables)
+      if (rows.length > 0) {
+        emailAttachments.push({
+          filename: `${table}.csv`,
+          content: Buffer.from(csv).toString('base64'),
+        });
+      }
+
+      tableResults.push({ table, success: true, rows: rows.length });
       console.log(`  Backed up: ${table} (${rows.length} rows)`);
-      exported++;
     } catch (err) {
+      tableResults.push({ table, success: false, rows: 0 });
       console.error(`  Failed to back up table ${table}:`, err.message);
-      failed++;
     }
   }
 
-  // Write a manifest file with metadata
+  // Write manifest to cloud storage
   const manifest = {
     date: dateStr,
     tables: TABLES,
-    exported,
-    failed,
+    exported: tableResults.filter(t => t.success).length,
+    failed: tableResults.filter(t => !t.success).length,
     createdAt: new Date().toISOString(),
   };
   try {
@@ -89,7 +104,22 @@ async function runBackup() {
     console.error('  Failed to write backup manifest:', err.message);
   }
 
+  const exported = tableResults.filter(t => t.success).length;
+  const failed = tableResults.filter(t => !t.success).length;
   console.log(`Backup complete: ${exported} tables exported, ${failed} failed.`);
+
+  // Send email with CSVs attached
+  try {
+    await sendBackupEmail({
+      toEmail: BACKUP_EMAIL,
+      dateStr,
+      tableResults,
+      attachments: emailAttachments,
+    });
+    console.log(`Backup email sent to ${BACKUP_EMAIL}`);
+  } catch (err) {
+    console.error('Failed to send backup email:', err.message);
+  }
 
   // Prune backups older than KEEP_WEEKS weeks
   await pruneOldBackups(bucket);
@@ -104,7 +134,6 @@ async function pruneOldBackups(bucket) {
     const deleted = new Set();
 
     for (const file of files) {
-      // Extract date from path: backups/YYYY-MM-DD/table.csv
       const match = file.name.match(/^backups\/(\d{4}-\d{2}-\d{2})\//);
       if (!match) continue;
       const backupDate = new Date(match[1]);
