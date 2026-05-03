@@ -158,12 +158,12 @@ async function pruneOldBackups(bucket) {
 }
 
 export function startBackupScheduler() {
-  // Run every Sunday at midnight UTC
+  // Run every Sunday at midnight Eastern Time
   cron.schedule('0 0 * * 0', () => {
     runBackup().catch((err) => console.error('Backup job error:', err));
-  }, { timezone: 'UTC' });
+  }, { timezone: 'America/New_York' });
 
-  console.log('Database backup scheduler started (weekly, Sundays at midnight UTC).');
+  console.log('Database backup scheduler started (weekly, Sundays at midnight ET).');
 }
 
 export { runBackup };
