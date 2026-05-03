@@ -63,28 +63,34 @@ async function runBackup() {
   const emailAttachments = [];
 
   for (const table of TABLES) {
+    // Step 1: Export from database — this determines success/failure
+    let rows, csv;
     try {
-      const { rows } = await query(`SELECT * FROM ${table}`);
-      const csv = rowsToCsv(rows);
+      ({ rows } = await query(`SELECT * FROM ${table}`));
+      csv = rowsToCsv(rows);
+    } catch (err) {
+      tableResults.push({ table, success: false, rows: 0 });
+      console.error(`  Failed to export table ${table} from DB:`, err.message);
+      continue;
+    }
 
-      // Save to cloud storage
+    // DB export succeeded — queue for email regardless of GCS outcome
+    tableResults.push({ table, success: true, rows: rows.length });
+    if (rows.length > 0) {
+      emailAttachments.push({
+        filename: `${table}.csv`,
+        content: Buffer.from(csv).toString('base64'),
+      });
+    }
+    console.log(`  Exported: ${table} (${rows.length} rows)`);
+
+    // Step 2: Save to cloud storage — failures are logged but don't affect table status
+    try {
       await bucket
         .file(`${folderPrefix}${table}.csv`)
         .save(csv, { contentType: 'text/csv', resumable: false });
-
-      // Queue as email attachment (only non-empty tables)
-      if (rows.length > 0) {
-        emailAttachments.push({
-          filename: `${table}.csv`,
-          content: Buffer.from(csv).toString('base64'),
-        });
-      }
-
-      tableResults.push({ table, success: true, rows: rows.length });
-      console.log(`  Backed up: ${table} (${rows.length} rows)`);
     } catch (err) {
-      tableResults.push({ table, success: false, rows: 0 });
-      console.error(`  Failed to back up table ${table}:`, err.message);
+      console.warn(`  GCS upload failed for ${table} (email backup still included):`, err.message);
     }
   }
 
