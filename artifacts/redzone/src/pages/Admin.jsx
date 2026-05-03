@@ -2444,6 +2444,7 @@ function SystemTab() {
   const [flushConfirm, setFlushConfirm] = useState(false);
   const [resetInput, setResetInput] = useState('');
   const [busy, setBusy] = useState(false);
+  const [backupBusy, setBackupBusy] = useState(false);
 
   useEffect(() => { fetchSystem(); }, []);
 
@@ -2468,6 +2469,16 @@ function SystemTab() {
       setFlushConfirm(false);
     } catch { showFlash('error', 'Failed to flush sessions'); }
     finally { setBusy(false); }
+  }
+
+  async function runBackupNow() {
+    setBackupBusy(true);
+    try {
+      const r = await fetch('/api/admin/backup/run', { method: 'POST', credentials: 'include' });
+      if (!r.ok) { const d = await r.json(); showFlash('error', d.error || 'Backup failed'); return; }
+      showFlash('success', 'Backup started — results will be emailed to vince@vincebeese.com in ~30 seconds');
+    } catch { showFlash('error', 'Failed to trigger backup'); }
+    finally { setBackupBusy(false); }
   }
 
   async function resetBeta() {
@@ -2591,6 +2602,22 @@ function SystemTab() {
             </p>
           </>
         )}
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+          <h3 className="font-medium text-rzs-charcoal text-sm">Database backup</h3>
+        </div>
+        <div className="px-4 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-rzs-charcoal">Run backup now</p>
+            <p className="text-xs text-gray-500 mt-0.5">Exports all 17 tables and emails CSVs to vince@vincebeese.com. Normally runs automatically every Sunday at midnight UTC.</p>
+          </div>
+          <button onClick={runBackupNow} disabled={backupBusy}
+            className="btn-secondary text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+            {backupBusy ? 'Starting…' : 'Run backup'}
+          </button>
+        </div>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">

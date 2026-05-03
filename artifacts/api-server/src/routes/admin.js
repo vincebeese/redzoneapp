@@ -9,6 +9,7 @@ import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import adminOnly from '../middleware/adminOnly.js';
 import { sendInviteEmail, sendBetaApprovedEmail } from '../services/email.js';
+import { runBackup } from '../services/backupService.js';
 import { count as sseCount } from '../services/sseCounter.js';
 import { bustRCCache } from '../services/resourceCenter.js';
 
@@ -1197,6 +1198,13 @@ router.delete('/beta-flags', async (req, res) => {
     console.error('Error resetting beta flags:', error);
     res.status(500).json({ error: 'Failed to reset beta flags' });
   }
+});
+
+// === MANUAL BACKUP TRIGGER ===
+
+router.post('/backup/run', async (req, res) => {
+  res.json({ ok: true, message: 'Backup started — results will be emailed to vince@vincebeese.com' });
+  runBackup().catch((err) => console.error('Manual backup error:', err));
 });
 
 export default router;
