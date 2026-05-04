@@ -296,7 +296,7 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
         <p style="font-size: 15px; line-height: 1.6;">${bodies[type] || 'Your trial is ending soon. Upgrade to keep access.'}</p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${appUrl}/app/paywall"
+          <a href="${appUrl}/paywall"
              style="background-color: #c8102e; color: #ffffff; text-decoration: none;
                     padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
             View Plans &amp; Subscribe
@@ -362,7 +362,7 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
         <p style="font-size: 15px; line-height: 1.6;">${config.body}</p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${appUrl}/app/paywall"
+          <a href="${appUrl}/paywall"
              style="background-color: #c8102e; color: #ffffff; text-decoration: none;
                     padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
             ${config.cta}

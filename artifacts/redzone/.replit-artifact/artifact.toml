@@ -21,6 +21,7 @@ run = "pnpm --filter @workspace/redzone run dev"
 build = [ "pnpm", "--filter", "@workspace/redzone", "run", "build" ]
 serve = "static"
 publicDir = "artifacts/redzone/dist/public"
+fallback = "index.html"
 
 [services.env]
 PORT = "19987"
