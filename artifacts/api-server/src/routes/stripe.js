@@ -110,6 +110,33 @@ router.post('/webhook', async (req, res) => {
         break;
       }
 
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object;
+        const customerId = invoice.customer;
+        if (invoice.subscription) {
+          await query(
+            `UPDATE users SET subscription_status = 'active' WHERE stripe_customer_id = $1`,
+            [customerId]
+          );
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const failedInvoice = event.data.object;
+        const customerId = failedInvoice.customer;
+        if (failedInvoice.subscription) {
+          await query(
+            `UPDATE users SET subscription_status = 'past_due' WHERE stripe_customer_id = $1`,
+            [customerId]
+          );
+          const userRes = await query(`SELECT id FROM users WHERE stripe_customer_id = $1`, [customerId]);
+          const userId = userRes.rows[0]?.id;
+          if (userId) logEvent(userId, 'payment_failed', { invoice_id: failedInvoice.id });
+        }
+        break;
+      }
+
       case 'checkout.session.completed': {
         const session = event.data.object;
         if (session.metadata?.type === 'session_pack' && session.metadata?.userId) {
