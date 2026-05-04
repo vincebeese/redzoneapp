@@ -296,7 +296,7 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
         <p style="font-size: 15px; line-height: 1.6;">${bodies[type] || 'Your trial is ending soon. Upgrade to keep access.'}</p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${appUrl}/paywall"
+          <a href="${appUrl}/app/paywall"
              style="background-color: #c8102e; color: #ffffff; text-decoration: none;
                     padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
             View Plans &amp; Subscribe
@@ -304,7 +304,7 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
         </div>
 
         <p style="font-size: 13px; color: #888; line-height: 1.5;">
-          Questions? Reply to this email or reach out to <a href="mailto:vince@redzoneselling.co" style="color: #c8102e;">vince@redzoneselling.co</a>
+          Questions? Reply to this email or reach out to <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
         </p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -362,7 +362,7 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
         <p style="font-size: 15px; line-height: 1.6;">${config.body}</p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${appUrl}/paywall"
+          <a href="${appUrl}/app/paywall"
              style="background-color: #c8102e; color: #ffffff; text-decoration: none;
                     padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
             ${config.cta}
