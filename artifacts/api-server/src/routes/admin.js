@@ -440,7 +440,9 @@ router.get('/system', async (req, res) => {
 
   // Anthropic check (cached 60s)
   let anthropic = { status: 'error', model: null };
-  if (Date.now() - anthropicCache.ts < 60_000 && anthropicCache.status) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    anthropic = { status: 'not_configured', model: null };
+  } else if (Date.now() - anthropicCache.ts < 60_000 && anthropicCache.status) {
     anthropic = { status: anthropicCache.status, model: anthropicCache.model };
   } else {
     try {
@@ -458,7 +460,7 @@ router.get('/system', async (req, res) => {
   }
 
   // Stripe check
-  let stripeStatus = { status: 'error', mode: null };
+  let stripeStatus = { status: 'not_configured', mode: null };
   if (stripe) {
     try {
       const balance = await stripe.balance.retrieve();
@@ -466,7 +468,7 @@ router.get('/system', async (req, res) => {
         status: balance.livemode ? 'ok' : 'test_mode',
         mode: balance.livemode ? 'live' : 'test',
       };
-    } catch { /* already errored */ }
+    } catch { stripeStatus = { status: 'error', mode: null }; }
   }
 
   // Spend log (current month)

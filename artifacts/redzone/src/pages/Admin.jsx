@@ -2495,7 +2495,7 @@ function SystemTab() {
   }
 
   function Dot({ status }) {
-    const colors = { ok: 'bg-green-500', error: 'bg-red-500', test_mode: 'bg-amber-400' };
+    const colors = { ok: 'bg-green-500', error: 'bg-red-500', test_mode: 'bg-amber-400', not_configured: 'bg-gray-300' };
     return <span className={`inline-block w-2 h-2 rounded-full ${colors[status] || 'bg-gray-400'} mr-2`} />;
   }
 
@@ -2534,6 +2534,8 @@ function SystemTab() {
                 status: data?.anthropic?.status,
                 detail: data?.anthropic?.status === 'ok'
                   ? `Reachable · ${data.anthropic.model}`
+                  : data?.anthropic?.status === 'not_configured'
+                  ? 'API key not configured'
                   : 'API key invalid or unreachable',
               },
               {
@@ -2541,6 +2543,7 @@ function SystemTab() {
                 status: data?.stripe?.status,
                 detail: data?.stripe?.status === 'ok' ? 'Connected · live mode'
                   : data?.stripe?.status === 'test_mode' ? 'Connected · test mode'
+                  : data?.stripe?.status === 'not_configured' ? 'Secret key not configured'
                   : 'Unreachable',
               },
               {
