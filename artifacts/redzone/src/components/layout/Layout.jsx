@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import MobileNav from './MobileNav';
 
 const PATH_TO_MODE = {
-  '/deal': 'deal',
+  '/deals': 'deal',
   '/coach': 'coach',
   '/mindset': 'mindset',
   '/resources': 'resources',
