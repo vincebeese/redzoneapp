@@ -88,8 +88,11 @@ export default function LandingPage() {
             Sellers with structured coaching programs win <span className="text-[#C0392B] whitespace-nowrap">28% more deals.</span>
           </h1>
           <p className="text-sm text-gray-500 mb-5 italic">Most sellers get none. Source: CSO Insights</p>
+          <p className="text-lg text-gray-700 mb-4 leading-relaxed max-w-2xl mx-auto">
+            Most sellers don't lose deals because they can't sell. They lose because nobody ever taught them a system.
+          </p>
           <p className="text-lg text-gray-700 mb-8 leading-relaxed max-w-2xl mx-auto">
-            Vince Beese spent 25 years closing real deals and leading real teams before he ever started teaching it. Now he's packaged everything into one system — Red Zone Selling — so B2B sellers and sales leaders always know where they are in the deal and exactly what to do next. 1:1 coaching, team programs, AI Coach, and workshops. One system, every format.
+            Red Zone Selling changes that. Three zones. 69 plays. A complete system for B2B sellers and sales leaders who want to qualify harder, build momentum, and close enterprise deals with confidence — not desperation.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button onClick={() => scrollTo('coaching')} className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
@@ -115,11 +118,8 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-5 leading-snug">
                 Most sellers don't lose deals because they can't sell.
               </h2>
-              <p className="text-gray-700 text-lg leading-relaxed mb-5">
-                They lose because they don't know where they are in the deal, or what to do next.
-              </p>
               <p className="text-gray-600 leading-relaxed">
-                That's the gap Vince Beese spent 25 years solving. First as a rep, then as a CRO, now as a Sales Strength Coach. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it. Then he wrote the book — <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] hover:underline font-medium">Red Zone Selling</a>.
+                Vince Beese spent 25+ years, first as a rep, then as a CRO, now as a Sales Strength Coach. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it. Then he wrote the book — <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] hover:underline font-medium">Red Zone Selling</a>.
               </p>
             </div>
             <div>
