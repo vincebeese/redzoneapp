@@ -89,7 +89,7 @@ export default function LandingPage() {
           </h1>
           <p className="text-sm text-gray-500 mb-5 italic">Most sellers get none. Source: CSO Insights</p>
           <p className="text-lg text-gray-700 mb-8 leading-relaxed max-w-2xl mx-auto">
-            Red Zone Selling changes that. A complete selling system for sellers and sales leaders — built by someone who's been in the deal, closed it, and coached hundreds of others to do the same.
+            Vince Beese spent 25 years closing real deals and leading real teams before he ever started teaching it. Now he's packaged everything into one system — Red Zone Selling — so B2B sellers and sales leaders always know where they are in the deal and exactly what to do next. 1:1 coaching, team programs, AI Coach, and workshops. One system, every format.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button onClick={() => scrollTo('coaching')} className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
