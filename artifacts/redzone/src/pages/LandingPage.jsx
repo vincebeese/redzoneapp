@@ -87,7 +87,7 @@ export default function LandingPage() {
           <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-5xl lg:text-6xl font-bold leading-tight mb-3 text-[#1A1A1A]">
             Sellers with structured coaching programs win <span className="text-[#C0392B] whitespace-nowrap">28% more deals.</span>
           </h1>
-          <p className="text-sm text-gray-500 mb-5 italic">Most sellers get none. Source: CSO Insights</p>
+          <p className="text-sm text-gray-500 mb-5 italic">Source: CSO Insights</p>
           <p className="text-lg text-gray-700 mb-4 leading-relaxed max-w-2xl mx-auto">
             Most sellers don't lose deals because they can't sell. They lose because nobody ever taught them a system.
           </p>
@@ -116,7 +116,7 @@ export default function LandingPage() {
                 className="w-40 h-40 rounded-full object-cover object-top mb-6 shadow-md border-4 border-white"
               />
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-5 leading-snug">
-                Most sellers don't lose deals because they can't sell.
+                Most sales coaches teach what they've read. Vince teaches what he's lived.
               </h2>
               <p className="text-gray-600 leading-relaxed">
                 Vince Beese spent 25+ years, first as a rep, then as a CRO, now as a Sales Strength Coach. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it. Then he wrote the book — <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] hover:underline font-medium">Red Zone Selling</a>.
