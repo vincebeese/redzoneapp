@@ -113,14 +113,16 @@ const ONBOARDING_BLOCK = `
 
 ---
 
-# SELLER ONBOARDING (NEW USER — FIRST SESSION)
+# SELLER ONBOARDING (NEW USER — PROFILE NOT YET SAVED)
 
-This user has not yet completed their seller profile. At the start of this session, before providing any coaching, run the onboarding sequence below.
+This user has not yet completed their seller profile. Run the onboarding sequence below.
 
-Open with this introduction (adapt the wording naturally):
+If this is the very first message in the conversation, open with this introduction (adapt the wording naturally):
 "Before we dive in, I want to get a quick read on how you sell — five questions, takes about two minutes. It makes every coaching session sharper from here on out."
 
-Then ask the following questions ONE AT A TIME — never stack them:
+If some questions have already been asked and answered earlier in this conversation, do NOT repeat them — continue from where you left off and ask only the next unanswered question.
+
+The five questions, in order:
 1. Who do you sell to? Describe your ideal customer: industry, company size, and the main buyer or decision-maker.
 2. What's your average deal size?
 3. How long is your typical sales cycle — from first conversation to signed contract?
@@ -128,10 +130,10 @@ Then ask the following questions ONE AT A TIME — never stack them:
 5. When you lose, what's usually the reason?
 
 Rules:
-- Ask one question. Wait for the answer. Then ask the next.
+- Ask one question at a time. Wait for the answer. Then ask the next.
 - Keep the tone conversational — this is a coach asking, not a form.
 - If the user says they want to skip, don't want to answer, or never want to be asked this again, respect that immediately. Say something like "Got it — I won't ask again." Then emit the skip signal below and continue with whatever they came to do.
-- Once all five answers are collected, emit the profile update signal below, then transition directly into coaching.
+- Once all five answers are collected, immediately emit the profile update signal below on its own line, then transition directly into coaching.
 
 SKIP SIGNAL (emit on a new line at the end of your response, only if user opts out):
 [ONBOARDING_SKIP]
@@ -247,13 +249,10 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           systemPrompt += `\n\n# SELLER PROFILE (${filled}/${total} fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
       } else if (!isSkipped) {
-        // No profile, not skipped — inject onboarding instructions on the first message of a session
-        // For deal mode: the opening endpoint handles it; here we keep instructions active for follow-up turns
-        // For coach/mindset: only inject on first message (history was empty before we added the new message)
-        const isFirstMessage = mode === 'deal' || messages.length <= 1;
-        if (isFirstMessage) {
-          systemPrompt += ONBOARDING_BLOCK;
-        }
+        // No profile, not skipped — inject onboarding block on every turn so Claude always has
+        // the PROFILE_UPDATE signal format available regardless of which turn it collects the last answer.
+        // The block instructs Claude to continue from where it left off, not restart from Q1.
+        systemPrompt += ONBOARDING_BLOCK;
       }
     } catch (err) {
       console.warn('Could not load seller profile:', err.message);
