@@ -250,7 +250,7 @@ router.get('/users', async (req, res) => {
     const [usersResult, countResult] = await Promise.all([
       query(`
         SELECT u.id, u.email, u.display_name, u.is_admin, u.has_beta_access,
-               u.beta_expires_at, u.subscription_status, u.created_at,
+               u.beta_expires_at, u.subscription_status, u.created_at, u.onboarding_skipped,
                COUNT(d.id) FILTER (WHERE d.status = 'active') AS deal_count,
                COALESCE(SUM(d.turn_count), 0)::int AS total_turns
         FROM users u
@@ -275,7 +275,7 @@ router.get('/users', async (req, res) => {
 router.patch('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { has_beta_access, beta_expires_at, is_admin, subscription_status } = req.body;
+    const { has_beta_access, beta_expires_at, is_admin, subscription_status, onboarding_skipped } = req.body;
 
     // Prevent self-lockout
     if (is_admin !== undefined && id === req.user.id) {
@@ -307,6 +307,7 @@ router.patch('/users/:id', async (req, res) => {
 
     if (is_admin !== undefined) { updates.push(`is_admin = $${i++}`); values.push(is_admin); }
     if (subscription_status !== undefined) { updates.push(`subscription_status = $${i++}`); values.push(subscription_status); }
+    if (onboarding_skipped !== undefined) { updates.push(`onboarding_skipped = $${i++}`); values.push(onboarding_skipped); }
 
     if (updates.length === 0) return res.status(400).json({ error: 'No fields to update' });
 

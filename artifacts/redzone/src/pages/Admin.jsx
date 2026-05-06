@@ -1376,6 +1376,38 @@ function UsersTab({ onInvite }) {
     finally { setSaving(null); }
   }
 
+  async function resetOnboarding(userId) {
+    setSaving(userId);
+    try {
+      const r = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ onboarding_skipped: false }),
+      });
+      if (!r.ok) { const d = await r.json(); showFlash('error', d.error); return; }
+      showFlash('success', 'Onboarding reset — user will be asked profile questions again');
+      await fetchUsers();
+    } catch { showFlash('error', 'Failed'); }
+    finally { setSaving(null); }
+  }
+
+  async function skipOnboarding(userId) {
+    setSaving(userId);
+    try {
+      const r = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ onboarding_skipped: true }),
+      });
+      if (!r.ok) { const d = await r.json(); showFlash('error', d.error); return; }
+      showFlash('success', 'Onboarding marked complete — user won\'t be asked profile questions');
+      await fetchUsers();
+    } catch { showFlash('error', 'Failed'); }
+    finally { setSaving(null); }
+  }
+
   async function deleteUser(userId) {
     try {
       const r = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE', credentials: 'include' });
@@ -1513,6 +1545,17 @@ function UsersTab({ onInvite }) {
                           <button onClick={() => revokeBeta(u.id)} disabled={saving === u.id}
                             className="text-xs text-orange-600 hover:underline disabled:opacity-50">
                             Revoke beta
+                          </button>
+                        )}
+                        {!u.onboarding_skipped ? (
+                          <button onClick={() => skipOnboarding(u.id)} disabled={saving === u.id}
+                            className="text-xs text-gray-400 hover:text-blue-600 disabled:opacity-50">
+                            Skip onboarding
+                          </button>
+                        ) : (
+                          <button onClick={() => resetOnboarding(u.id)} disabled={saving === u.id}
+                            className="text-xs text-gray-400 hover:text-blue-600 disabled:opacity-50">
+                            Reset onboarding
                           </button>
                         )}
                         {u.id !== me?.id && (
