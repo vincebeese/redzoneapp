@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import { logEvent } from '../services/analytics.js';
+import { sendSubscriptionConfirmationEmail } from '../services/email.js';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -80,8 +81,15 @@ router.post('/webhook', async (req, res) => {
            WHERE stripe_customer_id = $3`,
           [status, periodEnd, customerId]
         );
-        if (event.type === 'customer.subscription.created' && subUserId) {
+        if (event.type === 'customer.subscription.created' && subUserId && status === 'active') {
           logEvent(subUserId, 'subscription_started', { plan: subscription.items?.data?.[0]?.price?.id || 'default' });
+          const userRow = await query(`SELECT email, display_name FROM users WHERE id = $1`, [subUserId]);
+          if (userRow.rows[0]) {
+            sendSubscriptionConfirmationEmail({
+              toEmail: userRow.rows[0].email,
+              displayName: userRow.rows[0].display_name,
+            }).catch(err => console.error('Subscription confirmation email failed:', err.message));
+          }
         }
         // Invalidate seat count cache when subscriptions change
         _seatCountCache = null;

@@ -323,21 +323,36 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
   const firstName = displayName?.split(' ')[0] || 'there';
 
   const configs = {
-    expired_1day: {
-      subject: 'Your Red Zone Selling Coach trial has ended',
-      headline: 'Your trial has ended',
-      body: `Your 14-day beta trial of Red Zone Selling Coach™ ended yesterday.<br /><br />
-        Your deals, coaching sessions, and history are still saved — but your access is currently paused. To get back in and keep everything, you'll need to subscribe to a plan.<br /><br />
-        If we don't hear from you, <strong>your data will be deleted in 4 days.</strong>`,
+    expired_day0: {
+      subject: 'Your Red Zone Selling AI Coach beta has ended — here\'s how to keep going',
+      headline: 'Your beta access has ended',
+      body: `Your 14-day beta trial ended today. Your access is paused, but everything is still there — your deals, coaching sessions, and history are all saved and waiting.<br /><br />
+        When you're ready to get back in, subscribing takes less than 2 minutes.`,
       cta: 'View Plans &amp; Subscribe',
     },
-    expired_5day: {
-      subject: 'Final notice — your Red Zone data will be deleted today',
-      headline: 'Final notice — your data will be deleted today',
-      body: `This is your final notice. Your Red Zone Selling Coach™ trial expired 5 days ago, and <strong>your data will be permanently deleted today</strong> unless you subscribe.<br /><br />
-        All your deals, coaching turns, and session history will be gone and cannot be recovered.<br /><br />
-        If you want to keep your data and get back to coaching, subscribe now — it takes less than 2 minutes.`,
-      cta: 'Subscribe Now &amp; Save Your Data',
+    expired_day3: {
+      subject: 'Still thinking? Here\'s what\'s waiting for you',
+      headline: 'Your account is still here',
+      body: `Your Red Zone Selling AI Coach account is still here, and so is everything in it.<br /><br />
+        A lot of sellers try a few tools during a trial and never go deep enough to feel the difference. If that was you — no problem. But if you got value from the coaching, this is worth finishing.<br /><br />
+        Founding Member rate is <strong>$39/month</strong> and locks in for life. Once 50 seats are gone, it's gone.`,
+      cta: 'Claim Your Spot',
+    },
+    expired_day7: {
+      subject: 'Still time to keep your Red Zone Selling AI Coach account',
+      headline: 'Still time to get back in',
+      body: `Your trial expired a week ago. Your data is still saved, but it won't be forever.<br /><br />
+        If you got value from the coaching, this is an easy decision. If you're not sure, reply and tell us what held you back — Vince reads these.`,
+      cta: 'Subscribe and Keep Your Data',
+    },
+    expired_day14: {
+      subject: 'Last chance — your Red Zone Selling AI Coach data will be deleted tomorrow',
+      headline: 'Final notice — your data will be deleted tomorrow',
+      body: `This is the last email we'll send.<br /><br />
+        Your Red Zone Selling AI Coach account has been inactive for 14 days. Tomorrow, your deals, coaching sessions, and history will be permanently deleted and cannot be recovered.<br /><br />
+        If you want to keep everything and get back to work, subscribe now — it takes less than 2 minutes.<br /><br />
+        If you've decided this isn't for you, no hard feelings. We hope the beta gave you something useful.`,
+      cta: 'Subscribe Now — Save My Data',
     },
   };
 
@@ -350,7 +365,7 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
     subject: config.subject,
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Trial Update</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -380,6 +395,52 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
   });
 
   if (error) throw new Error(`Failed to send trial expired email: ${error.message}`);
+  return data;
+}
+
+export async function sendSubscriptionConfirmationEmail({ toEmail, displayName }) {
+  const { client, fromEmail } = await getResendClient();
+  const appUrl = process.env.APP_URL || 'https://redzoneselling.co';
+  const firstName = displayName?.split(' ')[0] || 'there';
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: "You're in — welcome to Red Zone Selling AI Coach",
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Subscription Confirmed</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
+
+        <h2 style="font-size: 20px; color: #1a1a2e; margin-bottom: 8px;">Your subscription is confirmed.</h2>
+
+        <p style="font-size: 15px; line-height: 1.6;">
+          You're back in with full access. Everything is exactly where you left it — your deals, your sessions, your history. Pick up right where you stopped.
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${appUrl}"
+             style="background-color: #c8102e; color: #ffffff; text-decoration: none;
+                    padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
+            Open Red Zone Selling AI Coach
+          </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          Questions at any time — reply here or reach Vince at <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center;">REDZONESELLING.CO</p>
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send subscription confirmation email: ${error.message}`);
   return data;
 }
 

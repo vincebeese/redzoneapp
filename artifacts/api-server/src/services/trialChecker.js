@@ -47,14 +47,19 @@ export async function runTrialCheck() {
       const daysLeft = msLeft / (1000 * 60 * 60 * 24);
       const sessions = user.session_count || 0;
 
-      // Post-expiry emails
+      // Post-expiry emails — each fires once at its threshold, deduplication handled by sendIfNotSent
       if (msLeft <= 0) {
         const daysExpired = Math.abs(msLeft) / (1000 * 60 * 60 * 24);
-        if (daysExpired >= 5) {
-          await sendIfNotSent(user.id, 'expired_5day', user.email, user.display_name, {}, sendTrialExpiredEmail);
-        } else if (daysExpired >= 1) {
-          await sendIfNotSent(user.id, 'expired_1day', user.email, user.display_name, {}, sendTrialExpiredEmail);
+        if (daysExpired >= 14) {
+          await sendIfNotSent(user.id, 'expired_day14', user.email, user.display_name, {}, sendTrialExpiredEmail);
         }
+        if (daysExpired >= 7) {
+          await sendIfNotSent(user.id, 'expired_day7', user.email, user.display_name, {}, sendTrialExpiredEmail);
+        }
+        if (daysExpired >= 3) {
+          await sendIfNotSent(user.id, 'expired_day3', user.email, user.display_name, {}, sendTrialExpiredEmail);
+        }
+        await sendIfNotSent(user.id, 'expired_day0', user.email, user.display_name, {}, sendTrialExpiredEmail);
         continue;
       }
 
