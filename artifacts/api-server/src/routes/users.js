@@ -37,6 +37,7 @@ router.get('/me', ensureUser, async (req, res) => {
       subscription_status: req.user.subscription_status,
       subscription_ends_at: req.user.subscription_ends_at,
       has_companion_course: req.user.has_companion_course ?? false,
+      onboarding_skipped: req.user.onboarding_skipped ?? false,
       created_at: req.user.created_at,
       usage: {
         active_deals: activeDealsResult.rows[0].count,
@@ -48,6 +49,20 @@ router.get('/me', ensureUser, async (req, res) => {
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Failed to fetch user' });
+  }
+});
+
+// POST /api/users/me/skip-onboarding — permanently dismiss the seller profile prompt
+router.post('/me/skip-onboarding', ensureUser, async (req, res) => {
+  try {
+    await query(
+      `UPDATE users SET onboarding_skipped = true WHERE id = $1`,
+      [req.user.id]
+    );
+    res.json({ ok: true });
+  } catch (error) {
+    console.error('Error skipping onboarding:', error);
+    res.status(500).json({ error: 'Failed to update' });
   }
 });
 

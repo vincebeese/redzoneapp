@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import Sidebar from './Sidebar';
 import MobileNav from './MobileNav';
+import SellerProfileBanner from './SellerProfileBanner';
 
 const PATH_TO_MODE = {
   '/deals': 'deal',
@@ -37,6 +38,7 @@ export default function Layout() {
 
       {/* Main content */}
       <div className="lg:pl-64">
+        <SellerProfileBanner />
         <main className="min-h-screen pb-20 lg:pb-0">
           <Outlet />
         </main>

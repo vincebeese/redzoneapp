@@ -248,11 +248,6 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           const filled = lines.length;
           systemPrompt += `\n\n# SELLER PROFILE (${filled}/${total} fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
-      } else if (!isSkipped) {
-        // No profile, not skipped — inject onboarding block on every turn so Claude always has
-        // the PROFILE_UPDATE signal format available regardless of which turn it collects the last answer.
-        // The block instructs Claude to continue from where it left off, not restart from Q1.
-        systemPrompt += ONBOARDING_BLOCK;
       }
     } catch (err) {
       console.warn('Could not load seller profile:', err.message);
@@ -488,39 +483,26 @@ router.post('/deal/opening', ensureUser, requireSubscription, async (req, res) =
     let openingPrompt;
 
     try {
-      const [profileResult, userResult] = await Promise.all([
-        query(
-          `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
-          [req.user.id]
-        ),
-        query(`SELECT onboarding_skipped FROM users WHERE id = $1`, [req.user.id]),
-      ]);
+      const profileResult = await query(
+        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
+        [req.user.id]
+      );
       const p = profileResult.rows[0];
       const hasProfile = p && (p.icp || p.avg_deal_size || p.win_themes);
-      const isSkipped = userResult.rows[0]?.onboarding_skipped === true;
 
-      if (!hasProfile && !isSkipped) {
-        // New user, not skipped — run onboarding first
-        systemPrompt += ONBOARDING_BLOCK;
-        openingPrompt = `The user has just created their first deal in Deal Mode:
-Company: ${company || 'Not specified'}
-Zone: ${zone.toUpperCase()} ZONE
-
-Run the onboarding sequence exactly as described in your instructions. Begin with the introduction and ask the first question only.`;
-      } else {
-        // Has profile or skipped — inject profile if available and go straight to coaching
-        if (hasProfile) {
-          const lines = [];
-          if (p.icp) lines.push(`ICP: ${p.icp}`);
-          if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
-          if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
-          if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
-          if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
-          if (lines.length > 0) {
-            systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/5 fields on file — apply silently to all coaching)\n` + lines.join('\n');
-          }
+      if (hasProfile) {
+        const lines = [];
+        if (p.icp) lines.push(`ICP: ${p.icp}`);
+        if (p.avg_deal_size) lines.push(`Average deal size: ${p.avg_deal_size}`);
+        if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
+        if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
+        if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
+        if (lines.length > 0) {
+          systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/5 fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
-        openingPrompt = `A new deal has just been opened.
+      }
+
+      openingPrompt = `A new deal has just been opened.
 Company: ${company || 'Not specified'}
 Zone: ${zone.toUpperCase()} ZONE
 
@@ -530,7 +512,6 @@ Provide an opening coaching message appropriate for this zone.
 - If Red Zone: Focus on what's needed to close
 
 Be concise but set the right tone for coaching this deal.`;
-      }
     } catch (err) {
       console.warn('Could not check seller profile for opening:', err.message);
       openingPrompt = `A new deal has just been opened.
