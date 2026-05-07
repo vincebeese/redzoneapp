@@ -5,6 +5,7 @@ export default function SellerProfileBanner() {
   const navigate = useNavigate();
   const location = useLocation();
   const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [dismissing, setDismissing] = useState(false);
 
   useEffect(() => {
@@ -31,8 +32,9 @@ export default function SellerProfileBanner() {
         credentials: 'include',
       });
     } catch {}
-    setVisible(false);
     setDismissing(false);
+    setDismissed(true);
+    setTimeout(() => setVisible(false), 4000);
   }
 
   function handleSetUp() {
@@ -40,6 +42,26 @@ export default function SellerProfileBanner() {
   }
 
   if (!visible) return null;
+
+  if (dismissed) {
+    return (
+      <div className="bg-gray-50 border-b border-gray-200 px-4 py-3">
+        <div className="max-w-4xl mx-auto flex items-center gap-3">
+          <span className="text-gray-400 text-sm">Got it — no problem.</span>
+          <span className="text-gray-400 text-sm">
+            You can always fill in your{' '}
+            <button
+              onClick={handleSetUp}
+              className="text-rzs-red hover:underline font-medium"
+            >
+              Seller Profile
+            </button>
+            {' '}from your Account page anytime.
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-amber-50 border-b border-amber-200 px-4 py-3">
