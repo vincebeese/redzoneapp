@@ -364,7 +364,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center text-sm text-gray-400 mb-10">
-            One session = one message in, one coach response out. &nbsp;|&nbsp; 14 days or 100 sessions — full access to all three modes. No credit card required.
+            One session = one message in, one coach response out. &nbsp;|&nbsp; 14-day free trial — full access to all three modes. No credit card required.
           </div>
 
           {/* AI Coach Chat Demo */}
@@ -434,19 +434,19 @@ export default function LandingPage() {
               <div className="bg-[#C0392B] px-6 py-5">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-white font-semibold">Founding Member</span>
-                  <span className="text-xs text-white bg-white/20 px-2 py-0.5 rounded-full font-medium">Limited</span>
+                  <span className="text-xs text-white bg-white/20 px-2 py-0.5 rounded-full font-medium">Limited — 50 seats</span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-white">$39</span>
+                  <span className="text-4xl font-bold text-white">$29</span>
                   <span className="text-white/80 text-sm">/mo</span>
                 </div>
               </div>
               <div className="p-6">
                 <ul className="space-y-3 mb-6 text-sm text-gray-700">
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> 100 sessions/month</li>
+                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> 75 sessions/month</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> All three modes — Deal, Coach, Mindset</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Founding Member rate locked for life</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Beta access &amp; early features</li>
+                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Capped at 50 seats — once gone, it's gone</li>
                 </ul>
                 <Link to="/signup" className="block text-center bg-[#C0392B] hover:bg-[#A93226] text-white font-medium py-3 rounded transition-colors">
                   Start Free Trial
@@ -459,15 +459,16 @@ export default function LandingPage() {
               <div className="bg-[#1A1A1A] px-6 py-5">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-white font-semibold">Pro</span>
+                  <span className="text-xs text-white bg-white/20 px-2 py-0.5 rounded-full font-medium">Most Popular</span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-white">$79</span>
+                  <span className="text-4xl font-bold text-white">$69</span>
                   <span className="text-white/80 text-sm">/mo</span>
                 </div>
               </div>
               <div className="p-6">
                 <ul className="space-y-3 mb-6 text-sm text-gray-700">
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> 200 sessions/month</li>
+                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> 150 sessions/month</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> All three modes — Deal, Coach, Mindset</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Priority support</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Early access to new features</li>

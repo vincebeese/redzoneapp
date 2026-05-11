@@ -7,15 +7,15 @@ const PLANS = [
   {
     id: 'founding',
     name: 'Founding Member',
-    price: '$39/mo',
-    note: 'Rate locked for life · Limited to 50 seats',
+    price: '$29/mo',
+    note: '75 sessions/mo · Rate locked for life · Limited to 50 seats',
     highlight: false,
   },
   {
     id: 'pro',
     name: 'Pro',
-    price: '$79/mo',
-    note: '200 sessions/mo · Most popular',
+    price: '$69/mo',
+    note: '150 sessions/mo · Most popular',
     highlight: true,
   },
 ];

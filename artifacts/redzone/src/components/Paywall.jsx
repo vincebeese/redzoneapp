@@ -7,20 +7,20 @@ const PLANS = {
     name: 'Founding Member',
     badge: 'Limited — 50 seats',
     badgeColor: '#c8102e',
-    monthlyPrice: 39,
-    annualPrice: 390,
-    annualMonthly: 32.50,
+    monthlyPrice: 29,
+    annualPrice: 290,
+    annualMonthly: 24.17,
     monthlyPriceId: 'price_1TKjiqAD6A0v3Wn8YMAsDWRB',
     annualPriceId: 'price_1TKjiqAD6A0v3Wn8oLoY0Gpl',
-    sessions: '100 sessions/mo',
-    description: 'Locked-in founder rate for life. Once 50 seats are claimed, this plan closes permanently.',
+    sessions: '75 sessions/mo',
+    description: 'Locked-in founder rate for life. Capped at 50 seats — once they\'re gone, this plan closes permanently.',
     features: [
-      '100 coaching sessions per month',
+      '75 coaching sessions per month',
       'Deal Mode: full pipeline coaching',
       'Coach Mode: on-demand guidance',
       'Mindset Mode: peak performance',
       'AI artifacts & action plans',
-      'Rate locked for life',
+      'Rate locked for life · 50-seat cap',
     ],
     highlight: false,
     cta: 'Claim Founding Member Rate',
@@ -30,15 +30,15 @@ const PLANS = {
     name: 'Starter',
     badge: 'Available',
     badgeColor: '#374151',
-    monthlyPrice: 49,
-    annualPrice: 490,
-    annualMonthly: 40.83,
+    monthlyPrice: 39,
+    annualPrice: 390,
+    annualMonthly: 32.50,
     monthlyPriceId: 'price_1TKjiqAD6A0v3Wn8LWHxtVTO',
     annualPriceId: 'price_1TKjiqAD6A0v3Wn8fWzigOFS',
-    sessions: '100 sessions/mo',
-    description: 'Full access with 100 coaching sessions per month.',
+    sessions: '75 sessions/mo',
+    description: 'Full access with 75 coaching sessions per month.',
     features: [
-      '100 coaching sessions per month',
+      '75 coaching sessions per month',
       'Deal Mode: full pipeline coaching',
       'Coach Mode: on-demand guidance',
       'Mindset Mode: peak performance',
@@ -52,16 +52,16 @@ const PLANS = {
     name: 'Pro',
     badge: 'Most Popular',
     badgeColor: '#1a1a2e',
-    monthlyPrice: 79,
-    annualPrice: 790,
-    annualMonthly: 65.83,
+    monthlyPrice: 69,
+    annualPrice: 690,
+    annualMonthly: 57.50,
     monthlyPriceId: 'price_1TKjirAD6A0v3Wn8yjzrzniE',
     annualPriceId: 'price_1TKjirAD6A0v3Wn8OBCmtF1s',
     paymentLink: 'https://buy.stripe.com/5kQ7sK81p1Uua7d6aA5ZC0a',
-    sessions: '200 sessions/mo',
-    description: 'Double the sessions plus priority access. Team pricing at $65/seat/mo for 5+ seats.',
+    sessions: '150 sessions/mo',
+    description: 'Double the sessions plus priority access. Team pricing available for 5+ seats.',
     features: [
-      '200 coaching sessions per month',
+      '150 coaching sessions per month',
       'Everything in Starter',
       'Priority AI response times',
       'Advanced deal analytics',
@@ -171,7 +171,7 @@ export default function Paywall() {
           <>
             <h1 className="text-3xl font-bold text-white mb-2">Session Limit Reached</h1>
             <p className="text-gray-400 text-base">
-              You've used all your sessions for this billing period. Add more instantly with a Session Pack, or upgrade to Pro for 200 sessions/mo.
+              You've used all your sessions for this billing period. Add more instantly with a Session Pack, or upgrade to Pro for 150 sessions/mo.
             </p>
           </>
         ) : (
@@ -179,7 +179,7 @@ export default function Paywall() {
             <h1 className="text-3xl font-bold text-white mb-2">Your Trial Has Ended</h1>
             <p className="text-gray-400 text-base">
               {userSelectedPlan
-                ? `Subscribe to the ${userSelectedPlan === 'founding' ? 'Founding Member' : 'Pro'} plan you selected to keep your deals, sessions, and coaching history.`
+                ? `Subscribe to the ${userSelectedPlan === 'founding' ? 'Founding Member ($29/mo)' : 'Pro ($69/mo)'} plan you selected to keep your deals, sessions, and coaching history.`
                 : 'Choose a plan to keep your deals, sessions, and coaching history — and keep closing.'}
             </p>
           </>

@@ -104,6 +104,67 @@ export async function sendMagicLinkEmail({ toEmail, magicUrl }) {
   return data;
 }
 
+export async function sendTrialStartedEmail({ toEmail, displayName, selectedPlan }) {
+  const { client, fromEmail } = await getResendClient();
+  const appUrl = process.env.APP_URL || 'https://redzoneselling.co';
+  const firstName = displayName?.split(' ')[0] || 'there';
+
+  const planName = selectedPlan === 'founding' ? 'Founding Member ($29/mo)'
+    : selectedPlan === 'pro' ? 'Pro ($69/mo)'
+    : null;
+
+  const planBlurb = planName
+    ? `<p style="font-size: 15px; line-height: 1.6;">You signed up for the <strong>${planName}</strong> plan. After your trial, subscribing takes less than 2 minutes — your rate is locked in the moment you subscribe.</p>`
+    : '';
+
+  const foundingNote = selectedPlan === 'founding'
+    ? `<p style="font-size: 13px; color: #888; line-height: 1.5; margin-top: 0;">Founding Member is capped at 50 seats. Your spot is reserved during your trial.</p>`
+    : '';
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: 'Your 14-day free trial has started — Red Zone Selling Coach',
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Free Trial</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
+
+        <h2 style="font-size: 20px; color: #1a1a2e; margin-bottom: 8px;">You're in. Your 14-day free trial is live.</h2>
+
+        <p style="font-size: 15px; line-height: 1.6;">
+          You have full access to all three modes — Deal, Coach, and Mindset — for the next 14 days. No credit card required.
+        </p>
+
+        ${planBlurb}
+        ${foundingNote}
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${appUrl}"
+             style="background-color: #c8102e; color: #ffffff; text-decoration: none;
+                    padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
+            Go to Your Dashboard
+          </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          Questions? Reply to this email or reach Vince at <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center;">REDZONESELLING.CO</p>
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send trial started email: ${error.message}`);
+  return data;
+}
+
 export async function sendWelcomeEmail({ toEmail, displayName }) {
   const { client, fromEmail } = await getResendClient();
   const firstName = displayName?.split(' ')[0] || 'there';
@@ -147,22 +208,26 @@ export async function sendWelcomeEmail({ toEmail, displayName }) {
   return data;
 }
 
-export async function sendNewUserAdminNotification({ adminEmail, newUserEmail, newUserName }) {
+export async function sendNewUserAdminNotification({ adminEmail, newUserEmail, newUserName, isTrial = false }) {
   const { client, fromEmail } = await getResendClient();
   const appUrl = process.env.APP_URL || 'https://redzoneselling.co';
+  const label = isTrial ? 'New Trial Signup' : 'New Beta Access Request';
+  const bodyText = isTrial
+    ? 'A new user has signed up for a 14-day free trial:'
+    : 'A new user has created an account and is requesting beta access:';
 
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: adminEmail,
-    subject: `New beta account request: ${newUserName || newUserEmail}`,
+    subject: `${label}: ${newUserName || newUserEmail}`,
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
         <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
-        <p style="color: #666; font-size: 13px; margin-top: 0;">New Beta Access Request</p>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">${label}</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
 
-        <p style="font-size: 15px; line-height: 1.6;">A new user has created an account and is requesting beta access:</p>
+        <p style="font-size: 15px; line-height: 1.6;">${bodyText}</p>
 
         <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
           <tr>
@@ -272,8 +337,8 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
   };
 
   const bodies = {
-    '7day': `Your beta trial of Red Zone Selling Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, upgrade to a plan before your trial expires.`,
-    '2day': `Your beta trial expires in <strong>2 days</strong>. Don't lose your deals, sessions, and coaching history — subscribe now to keep everything and stay in the game.`,
+    '7day': `Your free trial of Red Zone Selling Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, upgrade to a plan before your trial expires.`,
+    '2day': `Your free trial expires in <strong>2 days</strong>. Don't lose your deals, sessions, and coaching history — subscribe now to keep everything and stay in the game.`,
     '50session': `You've completed <strong>50 coaching sessions</strong> — you've got 50 more before your trial ends. When you're ready to go unlimited, upgrading takes less than 2 minutes.`,
     '75session': `You've used <strong>75 of your 100 trial sessions</strong>. You've got 25 left. Lock in your rate now before your trial ends and keep your momentum going.`,
   };
@@ -324,9 +389,9 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
 
   const configs = {
     expired_day0: {
-      subject: 'Your Red Zone Selling AI Coach beta has ended — here\'s how to keep going',
-      headline: 'Your beta access has ended',
-      body: `Your 14-day beta trial ended today. Your access is paused, but everything is still there — your deals, coaching sessions, and history are all saved and waiting.<br /><br />
+      subject: 'Your Red Zone Selling AI Coach free trial has ended — here\'s how to keep going',
+      headline: 'Your free trial has ended',
+      body: `Your 14-day free trial ended today. Your access is paused, but everything is still there — your deals, coaching sessions, and history are all saved and waiting.<br /><br />
         When you're ready to get back in, subscribing takes less than 2 minutes.`,
       cta: 'View Plans &amp; Subscribe',
     },
@@ -335,7 +400,7 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
       headline: 'Your account is still here',
       body: `Your Red Zone Selling AI Coach account is still here, and so is everything in it.<br /><br />
         A lot of sellers try a few tools during a trial and never go deep enough to feel the difference. If that was you — no problem. But if you got value from the coaching, this is worth finishing.<br /><br />
-        Founding Member rate is <strong>$39/month</strong> and locks in for life. Once 50 seats are gone, it's gone.`,
+        Founding Member rate is <strong>$29/month</strong> and locks in for life — capped at 50 seats. Once they're gone, this plan closes permanently.`,
       cta: 'Claim Your Spot',
     },
     expired_day7: {

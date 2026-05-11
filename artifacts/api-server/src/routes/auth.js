@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool, { query } from '../db/index.js';
-import { sendPasswordResetEmail, sendMagicLinkEmail, sendWelcomeEmail, sendNewUserAdminNotification } from '../services/email.js';
+import { sendPasswordResetEmail, sendMagicLinkEmail, sendWelcomeEmail, sendTrialStartedEmail, sendNewUserAdminNotification } from '../services/email.js';
 import { logEvent } from '../services/analytics.js';
 
 const router = Router();
@@ -124,15 +124,22 @@ router.post('/register', async (req, res) => {
       logEvent(user.id, 'trial_started', { plan: cleanSelectedPlan || 'none' });
     }
 
-    // Send welcome email and admin notification (non-blocking)
+    // Send welcome/trial-started email and admin notification (non-blocking)
     const adminEmail = process.env.ADMIN_EMAIL || 'vince@vincebeese.com';
-    sendWelcomeEmail({ toEmail: user.email, displayName: user.display_name }).catch((err) =>
-      console.error('Welcome email failed:', err.message)
-    );
+    if (isSelfServe) {
+      sendTrialStartedEmail({ toEmail: user.email, displayName: user.display_name, selectedPlan: cleanSelectedPlan }).catch((err) =>
+        console.error('Trial started email failed:', err.message)
+      );
+    } else {
+      sendWelcomeEmail({ toEmail: user.email, displayName: user.display_name }).catch((err) =>
+        console.error('Welcome email failed:', err.message)
+      );
+    }
     sendNewUserAdminNotification({
       adminEmail,
       newUserEmail: user.email,
       newUserName: user.display_name,
+      isTrial: isSelfServe,
     }).catch((err) => console.error('Admin notification email failed:', err.message));
 
     // Issue auth cookie for any user with access (invite with beta, or self-serve trial)
