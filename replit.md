@@ -62,3 +62,7 @@ Core tables: `users`, `modes`, `deals`, `messages`, `sessions`, `session_message
 - `rzs-charcoal`: #212121
 - `rzs-slate`: #757575
 - `rzs-gold`: #F9A825
+
+## User Preferences
+
+- **Always check the production database** when looking up users, accounts, or subscription status. Use `executeSql` with `environment: "production"` — never assume the dev DB reflects real user data.
