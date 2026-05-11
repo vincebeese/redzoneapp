@@ -21,6 +21,6 @@ run = "pnpm --filter @workspace/redzone run dev"
 build = [ "pnpm", "--filter", "@workspace/redzone", "run", "build" ]
 run = "pnpm --filter @workspace/redzone run serve"
 
-[services.env]
+[services.production.env]
 PORT = "19987"
 BASE_PATH = "/"
