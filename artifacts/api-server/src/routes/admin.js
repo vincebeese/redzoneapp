@@ -300,6 +300,10 @@ router.patch('/users/:id', async (req, res) => {
       const trialEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
       updates.push(`beta_expires_at = $${i++}`);
       values.push(trialEnd);
+    } else if (has_beta_access === false && beta_expires_at === undefined) {
+      // Clear the expiry date when revoking beta so there's no stale date left over
+      updates.push(`beta_expires_at = $${i++}`);
+      values.push(null);
     } else if (beta_expires_at !== undefined) {
       updates.push(`beta_expires_at = $${i++}`);
       values.push(beta_expires_at || null);

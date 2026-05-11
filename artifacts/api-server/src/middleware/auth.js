@@ -37,6 +37,16 @@ export async function ensureUser(req, res, next) {
     }
     req.user = result.rows[0];
 
+    // Enforce access: admins and active subscribers always pass through;
+    // beta users only if has_beta_access is true and the trial has not expired.
+    if (!req.user.is_admin && req.user.subscription_status !== 'active') {
+      const betaExpiry = req.user.beta_expires_at ? new Date(req.user.beta_expires_at) : null;
+      const betaValid = req.user.has_beta_access && (!betaExpiry || betaExpiry > new Date());
+      if (!betaValid) {
+        return res.status(403).json({ error: 'access_expired' });
+      }
+    }
+
     // Check per-user session_version to invalidate tokens after password change/reset
     const dbSessionVersion = req.user.session_version ?? 1;
     if ((payload.session_version ?? 1) !== dbSessionVersion) {

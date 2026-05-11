@@ -22,13 +22,24 @@ export function AuthProvider({ children }) {
     const originalFetch = window.fetch;
     window.fetch = async function interceptedFetch(input, init) {
       const res = await originalFetch(input, init);
-      if (res.status === 401) {
-        const url = typeof input === 'string' ? input : input?.url ?? '';
-        if (url.includes('/api/') && !url.includes('/api/auth/login')) {
+      const url = typeof input === 'string' ? input : input?.url ?? '';
+      if (url.includes('/api/') && !url.includes('/api/auth/login')) {
+        if (res.status === 401) {
           try {
             const data = await res.clone().json();
             if (data?.error === SESSION_EXPIRED_MESSAGE) {
               handleSessionExpired();
+            }
+          } catch { /* ignore parse errors */ }
+        } else if (res.status === 403) {
+          try {
+            const data = await res.clone().json();
+            if (data?.error === 'access_expired') {
+              if (handlingExpiry.current) return res;
+              handlingExpiry.current = true;
+              setUser(null);
+              fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+              window.location.href = '/login?reason=access_expired';
             }
           } catch { /* ignore parse errors */ }
         }

@@ -81,6 +81,12 @@ export default function Login() {
             </div>
           )}
 
+          {searchParams.get('reason') === 'access_expired' && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-3">
+              Your beta access has ended. Contact your administrator or subscribe to continue.
+            </div>
+          )}
+
           {mode === 'password' && (
             <>
               {error && (
