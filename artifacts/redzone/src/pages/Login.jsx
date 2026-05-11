@@ -83,7 +83,8 @@ export default function Login() {
 
           {searchParams.get('reason') === 'access_expired' && (
             <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-3">
-              Your beta access has ended. Contact your administrator or subscribe to continue.
+              Your trial has ended. Subscribe to continue, or contact{' '}
+              <a href="mailto:vince@redzoneselling.co" className="underline font-medium">vince@redzoneselling.co</a>.
             </div>
           )}
 
@@ -150,9 +151,9 @@ export default function Login() {
               </button>
 
               <p className="text-center text-sm text-gray-500">
-                Don't have an account?{' '}
-                <Link to="/register" className="text-rzs-red hover:underline font-medium">
-                  Sign up
+                No account?{' '}
+                <Link to="/signup" className="text-rzs-red hover:underline font-medium">
+                  Start free trial
                 </Link>
               </p>
             </>

@@ -86,6 +86,8 @@ export default function Paywall() {
     !user?.has_beta_access ||
     (user?.beta_expires_at && new Date(user.beta_expires_at) <= new Date())
   );
+  // Plan the user chose at trial signup — use to pre-highlight their card
+  const userSelectedPlan = user?.selected_plan || null;
 
   useEffect(() => {
     fetch('/api/stripe/seat-count', { credentials: 'include' })
@@ -168,7 +170,9 @@ export default function Paywall() {
           <>
             <h1 className="text-3xl font-bold text-white mb-2">Your Trial Has Ended</h1>
             <p className="text-gray-400 text-base">
-              Choose a plan to keep your deals, sessions, and coaching history — and keep closing.
+              {userSelectedPlan
+                ? `Subscribe to the ${userSelectedPlan === 'founding' ? 'Founding Member' : 'Pro'} plan you selected to keep your deals, sessions, and coaching history.`
+                : 'Choose a plan to keep your deals, sessions, and coaching history — and keep closing.'}
             </p>
           </>
         )}
@@ -249,12 +253,19 @@ export default function Paywall() {
               <h2 className={`text-xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
                 {plan.name}
               </h2>
-              <span
-                className="text-xs font-semibold px-2.5 py-1 rounded-full text-white shrink-0"
-                style={{ backgroundColor: plan.badgeColor }}
-              >
-                {plan.badge}
-              </span>
+              <div className="flex flex-col items-end gap-1.5 shrink-0">
+                <span
+                  className="text-xs font-semibold px-2.5 py-1 rounded-full text-white"
+                  style={{ backgroundColor: plan.badgeColor }}
+                >
+                  {plan.badge}
+                </span>
+                {trialExpired && userSelectedPlan === plan.id && (
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-800">
+                    Your plan
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Price */}

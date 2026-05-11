@@ -40,7 +40,7 @@ router.get('/invite/:token', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { email, password, display_name, invite_token } = req.body;
+  const { email, password, display_name, invite_token, selected_plan } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
@@ -59,11 +59,18 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: 'Password must be at least 8 characters' });
   }
 
+  // Validate selected_plan — only recognised values accepted
+  const VALID_PLANS = ['founding', 'pro'];
+  const cleanSelectedPlan = selected_plan && VALID_PLANS.includes(selected_plan) ? selected_plan : null;
+
   try {
-    // Validate invite token if provided
     let grantBetaAccess = false;
+    let trialEnd = null;
     let inviteId = null;
+    const isSelfServe = !invite_token;
+
     if (invite_token) {
+      // Invite-based signup — existing behaviour unchanged
       const inviteResult = await query(
         `SELECT id, email, has_beta_access, expires_at, accepted_at
          FROM invites WHERE token = $1`,
@@ -84,6 +91,10 @@ router.post('/register', async (req, res) => {
       }
       grantBetaAccess = invite.has_beta_access;
       inviteId = invite.id;
+    } else {
+      // Self-serve trial signup — everyone gets 14-day access immediately
+      grantBetaAccess = true;
+      trialEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
     }
 
     const existing = await query('SELECT id FROM users WHERE email = $1', [emailTrimmed]);
@@ -94,27 +105,26 @@ router.post('/register', async (req, res) => {
     const password_hash = await bcrypt.hash(password, 10);
     const newUserId = randomUUID();
     const result = await query(
-      `INSERT INTO users (id, email, password_hash, display_name, has_beta_access, subscription_status)
-       VALUES ($1, $2, $3, $4, $5, 'inactive')
-       RETURNING id, email, display_name, is_admin, has_beta_access, subscription_status`,
-      [newUserId, emailTrimmed, password_hash, display_name?.trim() || null, grantBetaAccess]
+      `INSERT INTO users (id, email, password_hash, display_name, has_beta_access, beta_expires_at, selected_plan, subscription_status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'inactive')
+       RETURNING id, email, display_name, is_admin, has_beta_access, beta_expires_at, selected_plan, subscription_status`,
+      [newUserId, emailTrimmed, password_hash, display_name?.trim() || null, grantBetaAccess, trialEnd, cleanSelectedPlan]
     );
 
     // Mark invite as accepted
     if (inviteId) {
-      await query(
-        `UPDATE invites SET accepted_at = NOW() WHERE id = $1`,
-        [inviteId]
-      );
+      await query(`UPDATE invites SET accepted_at = NOW() WHERE id = $1`, [inviteId]);
     }
 
     const user = result.rows[0];
 
     if (inviteId) {
       logEvent(user.id, 'invite_accepted', { invited_by: null });
+    } else if (isSelfServe) {
+      logEvent(user.id, 'trial_started', { plan: cleanSelectedPlan || 'none' });
     }
 
-    // Send welcome email to new user and notify admin (non-blocking)
+    // Send welcome email and admin notification (non-blocking)
     const adminEmail = process.env.ADMIN_EMAIL || 'vince@vincebeese.com';
     sendWelcomeEmail({ toEmail: user.email, displayName: user.display_name }).catch((err) =>
       console.error('Welcome email failed:', err.message)
@@ -125,8 +135,7 @@ router.post('/register', async (req, res) => {
       newUserName: user.display_name,
     }).catch((err) => console.error('Admin notification email failed:', err.message));
 
-    // Only set auth cookie if the user has beta access (invite-based signup).
-    // Non-beta users must wait for admin approval before they can log in.
+    // Issue auth cookie for any user with access (invite with beta, or self-serve trial)
     if (user.has_beta_access) {
       const versionRow = await query(`SELECT value FROM app_settings WHERE key = 'jwt_version'`).catch(() => ({ rows: [] }));
       const jwtVersion = versionRow.rows[0]?.value || '1';
@@ -148,6 +157,7 @@ router.post('/register', async (req, res) => {
       email: user.email,
       is_admin: user.is_admin,
       has_beta_access: user.has_beta_access,
+      selected_plan: user.selected_plan,
       subscription_status: user.subscription_status,
     });
   } catch (error) {
@@ -484,7 +494,7 @@ router.get('/me', async (req, res) => {
     const result = await query(
       `SELECT id, email, display_name, is_admin, has_beta_access, beta_expires_at,
               subscription_status, subscription_ends_at, session_bonus, created_at,
-              session_version
+              session_version, selected_plan
        FROM users WHERE id = $1`,
       [payload.userId]
     );

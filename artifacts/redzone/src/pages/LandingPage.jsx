@@ -20,10 +20,10 @@ export default function LandingPage() {
 
       {/* Beta Bar */}
       <div className="bg-[#1A1A1A] text-white text-xs text-center py-2 px-4">
-        RZS AI Coach Beta is live and locked. Join the waitlist for the next cohort→{' '}
-        <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="text-[#ef9a9a] font-semibold hover:underline whitespace-nowrap">
-          Join Waitlist →
-        </a>
+        RZS AI Coach is live. Start your 14-day free trial today →{' '}
+        <Link to="/signup" className="text-[#ef9a9a] font-semibold hover:underline whitespace-nowrap">
+          Start Free Trial →
+        </Link>
       </div>
 
       {/* Nav */}
@@ -98,9 +98,9 @@ export default function LandingPage() {
             <button onClick={() => scrollTo('coaching')} className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
               See how it works ↓
             </button>
-            <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-100 text-base h-12 px-7 rounded font-medium transition-colors">
-              Join the AI Coach Waitlist
-            </a>
+            <Link to="/signup" className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-100 text-base h-12 px-7 rounded font-medium transition-colors">
+              Start Free Trial — No Card Required
+            </Link>
           </div>
         </div>
       </section>
@@ -413,9 +413,9 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center">
-            <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#C0392B] hover:bg-[#A93226] text-white font-medium px-8 py-3 rounded transition-colors">
-              Join the Waitlist
-            </a>
+            <Link to="/signup" className="inline-block bg-[#C0392B] hover:bg-[#A93226] text-white font-medium px-8 py-3 rounded transition-colors">
+              Start Your Free Trial
+            </Link>
           </div>
         </div>
       </section>
@@ -426,7 +426,7 @@ export default function LandingPage() {
           <div className="text-center max-w-xl mx-auto mb-10">
             <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">Pricing</span>
             <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-3">Simple pricing. No surprises.</h2>
-            <p className="text-gray-600">Both plans include full access to all three modes. No credit card required to join the waitlist.</p>
+            <p className="text-gray-600">Both plans include full access to all three modes. Start with a 14-day free trial — no credit card required.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-6">
@@ -449,9 +449,9 @@ export default function LandingPage() {
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Founding Member rate locked for life</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Beta access &amp; early features</li>
                 </ul>
-                <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="block text-center bg-[#C0392B] hover:bg-[#A93226] text-white font-medium py-3 rounded transition-colors">
-                  Join the Waitlist
-                </a>
+                <Link to="/signup" className="block text-center bg-[#C0392B] hover:bg-[#A93226] text-white font-medium py-3 rounded transition-colors">
+                  Start Free Trial
+                </Link>
               </div>
             </div>
 
@@ -473,9 +473,9 @@ export default function LandingPage() {
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Priority support</li>
                   <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Early access to new features</li>
                 </ul>
-                <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="block text-center bg-[#1A1A1A] hover:bg-black text-white font-medium py-3 rounded transition-colors">
-                  Join the Waitlist
-                </a>
+                <Link to="/signup" className="block text-center bg-[#1A1A1A] hover:bg-black text-white font-medium py-3 rounded transition-colors">
+                  Start Free Trial
+                </Link>
               </div>
             </div>
           </div>
