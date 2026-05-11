@@ -1370,7 +1370,23 @@ function UsersTab({ onInvite }) {
         credentials: 'include',
         body: JSON.stringify({ has_beta_access: false }),
       });
-      showFlash('success', 'Beta access revoked');
+      showFlash('success', 'Access revoked — user is now blocked');
+      await fetchUsers();
+    } catch { showFlash('error', 'Failed'); }
+    finally { setSaving(null); }
+  }
+
+  async function grantFreeAccess(userId) {
+    setSaving(userId);
+    try {
+      const r = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ has_beta_access: true, beta_expires_at: null }),
+      });
+      if (!r.ok) { const d = await r.json(); showFlash('error', d.error); return; }
+      showFlash('success', 'Free access granted — no expiry date');
       await fetchUsers();
     } catch { showFlash('error', 'Failed'); }
     finally { setSaving(null); }
@@ -1536,16 +1552,30 @@ function UsersTab({ onInvite }) {
                           {expanded === u.id ? 'Close' : 'Edit'}
                         </button>
                         {!u.has_beta_access && !u.is_admin && (
-                          <button onClick={() => grantBeta(u.id)} disabled={saving === u.id}
-                            className="text-xs px-2.5 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors">
-                            {saving === u.id ? 'Approving…' : 'Approve'}
-                          </button>
+                          <>
+                            <button onClick={() => grantBeta(u.id)} disabled={saving === u.id}
+                              className="text-xs px-2.5 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors">
+                              {saving === u.id ? '…' : 'Approve (14d)'}
+                            </button>
+                            <button onClick={() => grantFreeAccess(u.id)} disabled={saving === u.id}
+                              className="text-xs px-2.5 py-1 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors">
+                              {saving === u.id ? '…' : 'Free access'}
+                            </button>
+                          </>
                         )}
                         {u.has_beta_access && (
-                          <button onClick={() => revokeBeta(u.id)} disabled={saving === u.id}
-                            className="text-xs text-orange-600 hover:underline disabled:opacity-50">
-                            Revoke beta
-                          </button>
+                          <>
+                            {u.beta_expires_at && (
+                              <button onClick={() => grantFreeAccess(u.id)} disabled={saving === u.id}
+                                className="text-xs px-2.5 py-1 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors">
+                                {saving === u.id ? '…' : 'Free access'}
+                              </button>
+                            )}
+                            <button onClick={() => revokeBeta(u.id)} disabled={saving === u.id}
+                              className="text-xs text-orange-600 hover:underline disabled:opacity-50">
+                              Revoke
+                            </button>
+                          </>
                         )}
                         {!u.onboarding_skipped ? (
                           <button onClick={() => skipOnboarding(u.id)} disabled={saving === u.id}
