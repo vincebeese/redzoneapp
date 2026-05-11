@@ -154,6 +154,14 @@ export default function Paywall() {
   const leftPlan = seatInfo.available ? PLANS.founding : PLANS.starter;
   const rightPlan = PLANS.pro;
 
+  // When a trial user's plan is known, override static highlight so their chosen card is visually primary
+  function isHighlighted(plan) {
+    if (trialExpired && userSelectedPlan) {
+      return plan.id === userSelectedPlan;
+    }
+    return plan.highlight;
+  }
+
   return (
     <div className="min-h-screen bg-rzs-charcoal flex flex-col items-center justify-start py-12 px-4">
 
@@ -243,14 +251,14 @@ export default function Paywall() {
           <div
             key={plan.id}
             className={`flex-1 rounded-2xl p-7 flex flex-col ${
-              plan.highlight
+              isHighlighted(plan)
                 ? 'bg-white ring-2 ring-rzs-red shadow-xl'
                 : 'bg-gray-800 ring-1 ring-gray-700'
             }`}
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-2 mb-4">
-              <h2 className={`text-xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
+              <h2 className={`text-xl font-bold ${isHighlighted(plan) ? 'text-rzs-charcoal' : 'text-white'}`}>
                 {plan.name}
               </h2>
               <div className="flex flex-col items-end gap-1.5 shrink-0">
@@ -270,21 +278,21 @@ export default function Paywall() {
 
             {/* Price */}
             <div className="mb-0.5">
-              <span className={`text-4xl font-bold ${plan.highlight ? 'text-rzs-charcoal' : 'text-white'}`}>
+              <span className={`text-4xl font-bold ${isHighlighted(plan) ? 'text-rzs-charcoal' : 'text-white'}`}>
                 ${annual ? Math.floor(plan.annualMonthly) : plan.monthlyPrice}
               </span>
-              <span className={`text-sm ml-1 ${plan.highlight ? 'text-gray-500' : 'text-gray-400'}`}>/mo</span>
+              <span className={`text-sm ml-1 ${isHighlighted(plan) ? 'text-gray-500' : 'text-gray-400'}`}>/mo</span>
             </div>
             {annual && (
-              <p className={`text-xs mb-1 ${plan.highlight ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className={`text-xs mb-1 ${isHighlighted(plan) ? 'text-gray-400' : 'text-gray-500'}`}>
                 Billed ${plan.annualPrice}/year
               </p>
             )}
-            <p className={`text-xs font-medium mb-4 ${plan.highlight ? 'text-rzs-red' : 'text-rzs-red'}`}>
+            <p className="text-xs font-medium mb-4 text-rzs-red">
               {plan.sessions}
             </p>
 
-            <p className={`text-sm mb-6 leading-relaxed ${plan.highlight ? 'text-gray-600' : 'text-gray-400'}`}>
+            <p className={`text-sm mb-6 leading-relaxed ${isHighlighted(plan) ? 'text-gray-600' : 'text-gray-400'}`}>
               {plan.description}
             </p>
 
@@ -295,7 +303,7 @@ export default function Paywall() {
                   <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className={`text-sm ${plan.highlight ? 'text-gray-700' : 'text-gray-300'}`}>{f}</span>
+                  <span className={`text-sm ${isHighlighted(plan) ? 'text-gray-700' : 'text-gray-300'}`}>{f}</span>
                 </li>
               ))}
             </ul>
@@ -305,7 +313,7 @@ export default function Paywall() {
               onClick={() => handleSubscribe(plan)}
               disabled={loadingPlan !== null}
               className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
-                plan.highlight
+                isHighlighted(plan)
                   ? 'bg-rzs-red text-white hover:bg-red-700'
                   : 'bg-gray-700 text-white hover:bg-gray-600 border border-gray-600'
               }`}

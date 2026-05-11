@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const WAITLIST_URL = 'https://oe8gn.share.hsforms.com/2pzn1m9yJS9uYej-9kaZvBA';
 const AMAZON_URL = 'https://www.amazon.com/dp/B0FLLHQG13';
 
 export default function LandingPage() {
@@ -233,9 +232,9 @@ export default function LandingPage() {
               <div className="px-5 pt-5 pb-3 flex-1">
                 <h3 className="text-lg font-semibold mb-2">RZS AI Coach</h3>
                 <p className="text-gray-600 text-sm mb-4">24/7 on-demand coaching. Three modes: Deal, Coach, and Mindset. Available the moment you need it.</p>
-                <a href={WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] font-semibold text-sm hover:underline">
-                  Join Waitlist →
-                </a>
+                <Link to="/signup" className="text-[#C0392B] font-semibold text-sm hover:underline">
+                  Start Free Trial →
+                </Link>
               </div>
             </div>
 
