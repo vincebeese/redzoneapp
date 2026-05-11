@@ -57,7 +57,7 @@ const PLANS = {
     annualMonthly: 57.50,
     monthlyPriceId: 'price_1TKjirAD6A0v3Wn8yjzrzniE',
     annualPriceId: 'price_1TKjirAD6A0v3Wn8OBCmtF1s',
-    paymentLink: 'https://buy.stripe.com/5kQ7sK81p1Uua7d6aA5ZC0a',
+    paymentLink: 'https://buy.stripe.com/fZubJ081p0Qq9390Qg5ZC0b',
     sessions: '150 sessions/mo',
     description: 'Double the sessions plus priority access. Team pricing available for 5+ seats.',
     features: [
