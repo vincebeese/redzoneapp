@@ -23,6 +23,9 @@ import { runMigrations } from "./db/migrate.js";
 
 const app: Express = express();
 
+// Required for express-rate-limit to correctly identify IPs behind Replit's proxy
+app.set("trust proxy", 1);
+
 // Rate limiter for sensitive auth endpoints (login, magic-link, forgot/reset password)
 const authRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -60,7 +63,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get("/api/health", (_req, res) => {
+app.get(["/api/health", "/api/healthz"], (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
