@@ -40,8 +40,8 @@ function Flash({ flash }) {
 
 function StatusBadge({ user }) {
   if (user.is_admin) return <span className="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800 font-medium">Admin</span>;
+  if (user.subscription_status === 'active') return <span className="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800 font-medium">Active</span>;
   if (user.has_beta_access) return <span className="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-800">Beta</span>;
-  if (user.subscription_status === 'active') return <span className="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800">Active</span>;
   return <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-500">Inactive</span>;
 }
 
@@ -1392,6 +1392,22 @@ function UsersTab({ onInvite }) {
     finally { setSaving(null); }
   }
 
+  async function activateSubscription(userId) {
+    setSaving(userId);
+    try {
+      const r = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ subscription_status: 'active' }),
+      });
+      if (!r.ok) { const d = await r.json(); showFlash('error', d.error); return; }
+      showFlash('success', 'Subscription activated — user now has full access');
+      await fetchUsers();
+    } catch { showFlash('error', 'Failed'); }
+    finally { setSaving(null); }
+  }
+
   async function resetOnboarding(userId) {
     setSaving(userId);
     try {
@@ -1551,7 +1567,13 @@ function UsersTab({ onInvite }) {
                           className="text-xs text-rzs-red hover:underline">
                           {expanded === u.id ? 'Close' : 'Edit'}
                         </button>
-                        {!u.has_beta_access && !u.is_admin && (
+                        {!u.is_admin && u.subscription_status !== 'active' && (
+                          <button onClick={() => activateSubscription(u.id)} disabled={saving === u.id}
+                            className="text-xs px-2.5 py-1 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700 disabled:opacity-50 transition-colors">
+                            {saving === u.id ? '…' : 'Activate'}
+                          </button>
+                        )}
+                        {!u.has_beta_access && !u.is_admin && u.subscription_status !== 'active' && (
                           <>
                             <button onClick={() => grantBeta(u.id)} disabled={saving === u.id}
                               className="text-xs px-2.5 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors">
@@ -1563,7 +1585,7 @@ function UsersTab({ onInvite }) {
                             </button>
                           </>
                         )}
-                        {u.has_beta_access && (
+                        {u.has_beta_access && u.subscription_status !== 'active' && (
                           <>
                             {u.beta_expires_at && (
                               <button onClick={() => grantFreeAccess(u.id)} disabled={saving === u.id}
