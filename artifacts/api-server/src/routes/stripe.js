@@ -73,7 +73,32 @@ router.post('/webhook', async (req, res) => {
         const status = subscription.status === 'active' || subscription.status === 'trialing' ? subscription.status : 'inactive';
         const periodEnd = subscription.current_period_end ? new Date(subscription.current_period_end * 1000) : null;
 
-        const subUserResult = await query(`SELECT id FROM users WHERE stripe_customer_id = $1`, [customerId]);
+        let subUserResult = await query(`SELECT id FROM users WHERE stripe_customer_id = $1`, [customerId]);
+
+        // Fallback for payment links: Stripe creates a new customer we haven't seen before.
+        // Look up the customer in Stripe by ID, match to our user by email, and save the customer ID.
+        if (subUserResult.rows.length === 0) {
+          try {
+            const stripeCustomer = await stripe.customers.retrieve(customerId);
+            if (stripeCustomer && !stripeCustomer.deleted && stripeCustomer.email) {
+              const emailMatch = await query(
+                `SELECT id FROM users WHERE LOWER(email) = LOWER($1)`,
+                [stripeCustomer.email]
+              );
+              if (emailMatch.rows.length > 0) {
+                await query(
+                  `UPDATE users SET stripe_customer_id = $1 WHERE id = $2`,
+                  [customerId, emailMatch.rows[0].id]
+                );
+                subUserResult = emailMatch;
+                console.log(`Linked new Stripe customer ${customerId} to user ${emailMatch.rows[0].id} via email`);
+              }
+            }
+          } catch (lookupErr) {
+            console.error('Stripe customer lookup failed:', lookupErr.message);
+          }
+        }
+
         const subUserId = subUserResult.rows[0]?.id;
 
         await query(

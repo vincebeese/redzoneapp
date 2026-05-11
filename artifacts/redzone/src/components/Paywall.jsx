@@ -57,6 +57,7 @@ const PLANS = {
     annualMonthly: 65.83,
     monthlyPriceId: 'price_1TKjirAD6A0v3Wn8yjzrzniE',
     annualPriceId: 'price_1TKjirAD6A0v3Wn8OBCmtF1s',
+    paymentLink: 'https://buy.stripe.com/5kQ7sK81p1Uua7d6aA5ZC0a',
     sessions: '200 sessions/mo',
     description: 'Double the sessions plus priority access. Team pricing at $65/seat/mo for 5+ seats.',
     features: [
@@ -95,10 +96,18 @@ export default function Paywall() {
   }, []);
 
   async function handleSubscribe(plan) {
-    const priceId = annual ? plan.annualPriceId : plan.monthlyPriceId;
     setLoadingPlan(plan.id);
     setError('');
     try {
+      // If the plan has a direct Stripe payment link, go straight there
+      if (plan.paymentLink) {
+        const url = new URL(plan.paymentLink);
+        if (user?.email) url.searchParams.set('prefilled_email', user.email);
+        window.location.href = url.toString();
+        return;
+      }
+
+      const priceId = annual ? plan.annualPriceId : plan.monthlyPriceId;
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
