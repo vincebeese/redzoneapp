@@ -165,8 +165,8 @@ router.post('/', ensureUser, (req, res, next) => {
     const filename = req.file ? req.file.originalname : 'paste';
 
     const insertResult = await query(
-      `INSERT INTO transcripts (deal_id, user_id, call_type, raw_text, word_count, source_format, filename)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO transcripts (deal_id, user_id, call_type, raw_text, content, word_count, source_format, filename)
+       VALUES ($1, $2, $3, $4, $4, $5, $6, $7)
        RETURNING id, call_type, word_count, created_at, source_format`,
       [deal_id, req.user.id, call_type, raw_text, word_count, source_format, filename]
     );
