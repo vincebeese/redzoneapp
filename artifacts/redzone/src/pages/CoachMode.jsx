@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import ChatThread from '../components/chat/ChatThread';
 import ChatInput from '../components/chat/ChatInput';
 import CommandPalette from '../components/search/CommandPalette';
+import TranscriptUploadModal from '../components/chat/TranscriptUploadModal';
 import { formatDistanceToNow } from '../utils/dateUtils';
 
 export default function CoachMode() {
@@ -29,6 +30,7 @@ export default function CoachMode() {
   const [headerTitleValue, setHeaderTitleValue] = useState('');
   const headerTitleRef = useRef(null);
   const headerTitleCommitted = useRef(false);
+  const [showTranscriptModal, setShowTranscriptModal] = useState(false);
 
   const loadSessions = useCallback(async () => {
     setSessionsLoading(true);
@@ -369,6 +371,13 @@ export default function CoachMode() {
 
   return (
     <div className="h-full flex">
+      {showTranscriptModal && activeSession && (
+        <TranscriptUploadModal
+          theme="light"
+          onClose={() => setShowTranscriptModal(false)}
+          onSend={(msg) => { setShowTranscriptModal(false); handleSend(msg); }}
+        />
+      )}
       {showPalette && (
         <CommandPalette
           modeSlug="coach"
@@ -422,7 +431,7 @@ export default function CoachMode() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {activeSession ? (
               editingHeaderTitle ? (
                 <input
@@ -459,6 +468,18 @@ export default function CoachMode() {
               </>
             )}
           </div>
+          {activeSession && (
+            <button
+              onClick={() => setShowTranscriptModal(true)}
+              className="flex-shrink-0 flex items-center gap-1.5 text-sm text-rzs-red border border-rzs-red/30 hover:bg-rzs-red/5 px-3 py-1.5 rounded-lg transition-colors"
+              title="Upload a call transcript for analysis"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <span className="hidden sm:inline">Transcript</span>
+            </button>
+          )}
         </header>
 
         {/* Chat area */}
