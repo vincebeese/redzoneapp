@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import mammoth from 'mammoth';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import { analyzeTranscript, formatAnalysisAsMessage } from '../services/transcriptAnalyzer.js';
@@ -20,10 +21,10 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
-    if (['.srt', '.docx', '.txt'].includes(ext)) {
+    if (['.srt', '.docx', '.txt', '.pdf'].includes(ext)) {
       cb(null, true);
     } else {
-      cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', 'Only .srt, .docx, and .txt files are supported.'));
+      cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', 'Only .srt, .docx, .txt, and .pdf files are supported.'));
     }
   },
 });
@@ -62,6 +63,11 @@ function parseTxt(buffer) {
   return buffer.toString('utf-8');
 }
 
+async function parsePdf(buffer) {
+  const data = await pdfParse(buffer);
+  return data.text;
+}
+
 async function parseTranscriptFile(file) {
   const ext = path.extname(file.originalname).toLowerCase();
   switch (ext) {
@@ -71,6 +77,8 @@ async function parseTranscriptFile(file) {
       return { text: await parseDocx(file.buffer), format: 'docx' };
     case '.txt':
       return { text: parseTxt(file.buffer), format: 'txt' };
+    case '.pdf':
+      return { text: await parsePdf(file.buffer), format: 'pdf' };
     default:
       throw new Error(`Unsupported file type: ${ext}`);
   }

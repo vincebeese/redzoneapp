@@ -24,6 +24,7 @@ const FORMAT_BADGE = {
   srt: 'bg-blue-100 text-blue-700',
   docx: 'bg-gray-100 text-gray-600',
   txt: 'bg-gray-100 text-gray-600',
+  pdf: 'bg-red-100 text-red-700',
 };
 
 const DOC_TYPE_LABELS = {
@@ -296,8 +297,8 @@ export default function TranscriptPanel({ dealId, onClose, onAnalysisComplete, o
 
   function validateFile(file) {
     const ext = file.name.split('.').pop().toLowerCase();
-    if (!['srt', 'docx', 'txt'].includes(ext)) {
-      return 'Only .srt, .docx, and .txt files are supported. For other formats, paste the transcript text directly.';
+    if (!['srt', 'docx', 'txt', 'pdf'].includes(ext)) {
+      return 'Only .srt, .docx, .txt, and .pdf files are supported. For other formats, paste the transcript text directly.';
     }
     if (file.size > 10 * 1024 * 1024) {
       return 'File too large — maximum 10MB. Try exporting a shorter segment.';
@@ -751,14 +752,14 @@ export default function TranscriptPanel({ dealId, onClose, onAnalysisComplete, o
                           ) : (
                             <div className="space-y-1">
                               <p className="text-sm text-gray-500">Drop file here or click to browse</p>
-                              <p className="text-xs text-gray-400">.srt, .docx, or .txt · max 10MB</p>
+                              <p className="text-xs text-gray-400">.srt, .docx, .txt, or .pdf · max 10MB</p>
                             </div>
                           )}
                         </div>
                         <input
                           ref={fileInputRef}
                           type="file"
-                          accept=".srt,.docx,.txt"
+                          accept=".srt,.docx,.txt,.pdf"
                           className="hidden"
                           onChange={(e) => { if (e.target.files[0]) handleFileSelect(e.target.files[0]); }}
                         />
