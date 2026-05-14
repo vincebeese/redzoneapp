@@ -18,6 +18,7 @@ import LearningHub from './pages/LearningHub';
 import Paywall from './components/Paywall';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
+import Whitepaper from './pages/Whitepaper';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function ProtectedRoute({ children }) {
@@ -50,6 +51,7 @@ export default function App() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/auth/magic" element={<MagicLinkVerify />} />
+      <Route path="/whitepaper" element={<Whitepaper />} />
       <Route
         element={
           <ProtectedRoute>
