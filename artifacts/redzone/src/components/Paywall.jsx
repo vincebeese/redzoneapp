@@ -10,7 +10,7 @@ const PLANS = {
     monthlyPrice: 29,
     annualPrice: 275,
     annualMonthly: 22.92,
-    monthlyPriceId: 'price_1TKjiqAD6A0v3Wn8YMAsDWRB',
+    monthlyPriceId: 'price_1TWzXzAD6A0v3Wn8OnPfiExr',
     annualPriceId: 'price_1TWzc8AD6A0v3Wn85EUXO7kz',
     sessions: '75 sessions/mo',
     description: 'Locked-in founder rate for life. Capped at 50 seats — once they\'re gone, this plan closes permanently.',

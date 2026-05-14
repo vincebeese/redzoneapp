@@ -11,8 +11,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const COMPANION_COURSE_PRICE_ID = 'price_1TPlNBAD6A0v3Wn8Ch7flZYc'; // Red Zone Ready Companion Course $199
 
 const FOUNDING_PRICE_IDS = [
-  'price_1TKjiqAD6A0v3Wn8YMAsDWRB', // monthly $29 (legacy)
+  'price_1TKjiqAD6A0v3Wn8YMAsDWRB', // monthly $39 (legacy)
   'price_1TKjiqAD6A0v3Wn8oLoY0Gpl', // annual $290 (legacy)
+  'price_1TWzXzAD6A0v3Wn8OnPfiExr', // monthly $29 (revised)
   'price_1TWzc8AD6A0v3Wn85EUXO7kz', // annual $275 (revised)
 ];
 const SESSION_PACK_PRICE_ID = 'price_1TKjirAD6A0v3Wn8r14nrESC';
