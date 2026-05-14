@@ -2,6 +2,7 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import { readFile } from "fs/promises";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 const rawPort = process.env.PORT;
@@ -21,26 +22,40 @@ if (!isBuild && (Number.isNaN(port) || port <= 0)) {
 
 const basePath = process.env.BASE_PATH ?? "/";
 
-const whitepaperOgRedirect = (): Plugin => ({
-  name: "whitepaper-og-redirect",
+const isWhitepaperPath = (url: string) =>
+  url === "/whitepaper" || url === "/whitepaper/";
+
+const whitepaperOgServe = (): Plugin => ({
+  name: "whitepaper-og-serve",
   configureServer(server) {
-    server.middlewares.use((req, res, next) => {
-      if (req.url === "/whitepaper") {
-        res.writeHead(301, { Location: "/whitepaper/" });
-        res.end();
-        return;
+    server.middlewares.use(async (req, res, next) => {
+      if (!isWhitepaperPath(req.url ?? "")) return next();
+      try {
+        const raw = await readFile(
+          path.resolve(import.meta.dirname, "whitepaper/index.html"),
+          "utf-8",
+        );
+        const html = await server.transformIndexHtml("/whitepaper/", raw);
+        res.setHeader("Content-Type", "text/html");
+        res.end(html);
+      } catch {
+        next();
       }
-      next();
     });
   },
   configurePreviewServer(server) {
-    server.middlewares.use((req, res, next) => {
-      if (req.url === "/whitepaper") {
-        res.writeHead(301, { Location: "/whitepaper/" });
-        res.end();
-        return;
+    server.middlewares.use(async (req, res, next) => {
+      if (!isWhitepaperPath(req.url ?? "")) return next();
+      try {
+        const html = await readFile(
+          path.resolve(import.meta.dirname, "dist/public/whitepaper/index.html"),
+          "utf-8",
+        );
+        res.setHeader("Content-Type", "text/html");
+        res.end(html);
+      } catch {
+        next();
       }
-      next();
     });
   },
 });
@@ -48,7 +63,7 @@ const whitepaperOgRedirect = (): Plugin => ({
 export default defineConfig({
   base: basePath,
   plugins: [
-    whitepaperOgRedirect(),
+    whitepaperOgServe(),
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
