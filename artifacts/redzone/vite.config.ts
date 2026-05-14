@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -21,9 +21,34 @@ if (!isBuild && (Number.isNaN(port) || port <= 0)) {
 
 const basePath = process.env.BASE_PATH ?? "/";
 
+const whitepaperOgRedirect = (): Plugin => ({
+  name: "whitepaper-og-redirect",
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      if (req.url === "/whitepaper") {
+        res.writeHead(301, { Location: "/whitepaper/" });
+        res.end();
+        return;
+      }
+      next();
+    });
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use((req, res, next) => {
+      if (req.url === "/whitepaper") {
+        res.writeHead(301, { Location: "/whitepaper/" });
+        res.end();
+        return;
+      }
+      next();
+    });
+  },
+});
+
 export default defineConfig({
   base: basePath,
   plugins: [
+    whitepaperOgRedirect(),
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
@@ -51,6 +76,12 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main:       path.resolve(import.meta.dirname, "index.html"),
+        whitepaper: path.resolve(import.meta.dirname, "whitepaper/index.html"),
+      },
+    },
   },
   server: {
     port,
