@@ -13,8 +13,9 @@ const COMPANION_COURSE_PRICE_ID = 'price_1TPlNBAD6A0v3Wn8Ch7flZYc'; // Red Zone 
 const FOUNDING_PRICE_IDS = [
   'price_1TKjiqAD6A0v3Wn8YMAsDWRB', // monthly $39 (legacy)
   'price_1TKjiqAD6A0v3Wn8oLoY0Gpl', // annual $290 (legacy)
-  'price_1TWzXzAD6A0v3Wn8OnPfiExr', // monthly $29 (revised)
-  'price_1TWzc8AD6A0v3Wn85EUXO7kz', // annual $275 (revised)
+  'price_1TWzXzAD6A0v3Wn8OnPfiExr', // monthly $29
+  'price_1TWzc8AD6A0v3Wn85EUXO7kz', // annual $275 (legacy)
+  'price_1TWznYAD6A0v3Wn8RbEEsEft', // annual $285
 ];
 const SESSION_PACK_PRICE_ID = 'price_1TKjirAD6A0v3Wn8r14nrESC';
 const FOUNDING_SEAT_CAP = 50;

@@ -8,10 +8,10 @@ const PLANS = {
     badge: 'Limited — 50 seats',
     badgeColor: '#c8102e',
     monthlyPrice: 29,
-    annualPrice: 275,
-    annualMonthly: 22.92,
+    annualPrice: 285,
+    annualMonthly: 23.75,
     monthlyPriceId: 'price_1TWzXzAD6A0v3Wn8OnPfiExr',
-    annualPriceId: 'price_1TWzc8AD6A0v3Wn85EUXO7kz',
+    annualPriceId: 'price_1TWznYAD6A0v3Wn8RbEEsEft',
     sessions: '75 sessions/mo',
     description: 'Locked-in founder rate for life. Capped at 50 seats — once they\'re gone, this plan closes permanently.',
     features: [
