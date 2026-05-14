@@ -1,0 +1,129 @@
+Here's the updated Replit prompt — ready to paste.
+
+---
+
+**Build a white paper landing page with lead capture and auto-download for redzoneselling.co**
+
+Build a single page at the route /whitepaper on the existing redzoneselling.co Replit project. The page captures lead information, submits it to HubSpot, and automatically triggers a PDF download in the browser on successful submission.
+
+**Brand standards — non-negotiable:**
+- Primary Red: #C62828
+- Charcoal Black: #212121
+- White: #FFFFFF
+- Slate Grey: #757575
+- Font: Arial throughout
+- Footer: REDZONESELLING.CO
+- Trademark symbol required: Red Zone Selling™
+
+---
+
+**Page structure — top to bottom:**
+
+**Header**
+- RZS logo top left
+- Clean red rule below header
+- No navigation links
+
+**Hero section**
+- Dark charcoal background (#212121)
+- White headline: Scale or Transform: Why Your Sales System Has to Come First
+- Red subheadline (#C62828): How to stop depending on top performers and build a sales org that elevates everyone
+- One line of body text in slate grey: A free framework for founders and sales leaders — download your copy below
+
+**Lead capture form**
+- White background, centered, 480px max-width on desktop, full width on mobile
+- Fields in this order, all required:
+  - First Name
+  - Last Name
+  - Company
+  - Email
+  - LinkedIn URL
+- Single CTA button below the fields
+  - Label: Download the Framework
+  - Background: #C62828
+  - Text: White, bold, Arial
+  - No rounded corners
+  - Hover state: #B71C1C
+  - Full width of the form container
+
+**Social proof strip**
+- Light grey background (#F5F5F5)
+- Three columns on desktop, stacked single column on mobile
+- One testimonial per column:
+
+Column 1:
+"Vince ran an interactive workshop with our team that provided actionable plays we could use immediately. The team left motivated and more importantly, armed with new tools to close deals."
+Joe Twer | Global VP of Sales | BlueSnap
+
+Column 2:
+"I've worked with a lot of sales trainers and coaches over the years. Vince is different. He combines real enterprise sales experience with a practical framework that actually sticks."
+Chris Schwartz | CRO | Trackforce
+
+Column 3:
+"Vince didn't just fix our sales motion — he changed how we think about selling."
+Keith Pepper | Publisher | Rough Draft Atlanta
+
+- Quote text in charcoal (#212121), italic
+- Name/title/company in slate grey (#757575), small, below the quote
+- Red opening quotation mark (#C62828) as a design element above each quote
+
+**Footer**
+- Dark charcoal background (#212121)
+- REDZONESELLING.CO centered in white
+- © 2026 Red Zone Selling™ in slate grey below
+
+---
+
+**Form submission flow:**
+
+1. User clicks Download the Framework
+2. Client-side validation runs — all five fields must be complete and email must be valid format and LinkedIn URL must begin with linkedin.com or www.linkedin.com
+3. If validation fails show inline error messages below the relevant fields in red (#C62828) — do not submit
+4. If validation passes POST the form data to the server
+5. Server submits the lead to HubSpot Forms API v3 using these environment variables:
+   - HUBSPOT_PORTAL_ID
+   - HUBSPOT_FORM_GUID
+6. Map the fields exactly as follows:
+   - First Name → firstname
+   - Last Name → lastname
+   - Company → company
+   - Email → email
+   - LinkedIn URL → linkedin_bio
+   - Hidden field → last_downloaded_asset = Scale or Transform Whitepaper
+7. On successful HubSpot response trigger the PDF download automatically in the browser — the PDF is stored at /public/RZS_Scale_or_Transform.pdf
+8. Show a brief success message above the form: "Your download is starting. Check your downloads folder."
+9. If HubSpot submission fails still trigger the PDF download but log the error server-side — do not block the user from getting the file
+
+---
+
+**Technical requirements:**
+- Use the existing Replit project stack
+- Store HUBSPOT_PORTAL_ID and HUBSPOT_FORM_GUID in Replit Secrets
+- PDF file stored at /public/RZS_Scale_or_Transform.pdf — do not expose directory listing
+- Mobile responsive throughout
+- No external dependencies beyond what is already installed unless absolutely necessary
+- No cookies, no pop-ups, no exit intent overlays
+- Page should load fast and clean
+
+---
+
+**Do not:**
+- Add navigation to other pages
+- Use any red other than #C62828
+- Add social share buttons
+- Redirect away from the page after submission
+- Block the PDF download if HubSpot fails
+
+---
+
+**Two things to do before running this in Replit:**
+
+1. Add these two values to Replit Secrets:
+   - HUBSPOT_PORTAL_ID → your HubSpot Hub ID from Settings → Account Information
+   - HUBSPOT_FORM_GUID → the GUID from your RZS — Whitepaper — Scale or Transform form in HubSpot → Actions → Share → Embed Code
+
+2. Upload the final white paper PDF to the /public folder and name it exactly: RZS_Scale_or_Transform.pdf
+
+---
+
+Before you go live test the full flow yourself — confirm the HubSpot contact is created, the linkedin_bio field is populated, the last_downloaded_asset hidden field shows Scale or Transform Whitepaper, the workflow enrolls you, and the PDF downloads automatically in the browser.
