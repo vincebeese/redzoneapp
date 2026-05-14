@@ -1484,7 +1484,7 @@ function UsersTab({ onInvite }) {
     if (statusFilter === 'all')      return true;
     if (statusFilter === 'admin')    return u.is_admin;
     if (statusFilter === 'active')   return u.subscription_status === 'active' && !u.is_admin;
-    if (statusFilter === 'beta')     return u.has_beta_access && !u.is_admin && u.subscription_status !== 'active';
+    if (statusFilter === 'beta')     return u.has_beta_access && !u.is_admin;
     if (statusFilter === 'inactive') return !u.is_admin && !u.has_beta_access && u.subscription_status !== 'active';
     return true;
   }
@@ -1493,7 +1493,7 @@ function UsersTab({ onInvite }) {
     all:      users.length,
     admin:    users.filter(u => u.is_admin).length,
     active:   users.filter(u => u.subscription_status === 'active' && !u.is_admin).length,
-    beta:     users.filter(u => u.has_beta_access && !u.is_admin && u.subscription_status !== 'active').length,
+    beta:     users.filter(u => u.has_beta_access && !u.is_admin).length,
     inactive: users.filter(u => !u.is_admin && !u.has_beta_access && u.subscription_status !== 'active').length,
   };
 
