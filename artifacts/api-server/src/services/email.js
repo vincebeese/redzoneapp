@@ -1,5 +1,45 @@
 import { Resend } from 'resend';
 
+const STRIPE_LINKS = {
+  foundingMonthly: 'https://buy.stripe.com/6oU4gychFbv43IP2Yo5ZC0c', // $29/mo
+  foundingAnnual:  'https://buy.stripe.com/14AeVca9x9mWdjpfLa5ZC0e', // $285/yr
+  proMonthly:      'https://buy.stripe.com/fZubJ081p0Qq9390Qg5ZC0b', // $69/mo
+};
+
+function pricingOptionsHtml({ highlight = 'founding' } = {}) {
+  return `
+    <div style="background: #f9f9f9; border: 1px solid #eee; border-radius: 6px; padding: 16px 20px; margin: 24px 0;">
+      <p style="font-size: 13px; font-weight: 700; color: #1a1a2e; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.05em;">Subscribe directly — no login needed</p>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
+            <a href="${STRIPE_LINKS.foundingMonthly}" style="color: #c8102e; font-weight: 700; font-size: 15px; text-decoration: none;">
+              Founding Member — $29/mo →
+            </a>
+            <span style="color: #888; font-size: 12px; display: block; margin-top: 2px;">Locked-in for life. Capped at 50 seats.</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
+            <a href="${STRIPE_LINKS.foundingAnnual}" style="color: #c8102e; font-weight: 600; font-size: 14px; text-decoration: none;">
+              Founding Member Annual — $285/yr ($23.75/mo) →
+            </a>
+            <span style="color: #888; font-size: 12px; display: block; margin-top: 2px;">Save ~17% vs monthly.</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0;">
+            <a href="${STRIPE_LINKS.proMonthly}" style="color: #555; font-size: 14px; text-decoration: none;">
+              Pro — $69/mo →
+            </a>
+            <span style="color: #888; font-size: 12px; display: block; margin-top: 2px;">150 sessions/mo, all features.</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `;
+}
+
 function getCredentials() {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -368,6 +408,8 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
           </a>
         </div>
 
+        ${pricingOptionsHtml()}
+
         <p style="font-size: 13px; color: #888; line-height: 1.5;">
           Questions? Reply to this email or reach out to <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
         </p>
@@ -442,12 +484,14 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
         <p style="font-size: 15px; line-height: 1.6;">${config.body}</p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${appUrl}/paywall"
+          <a href="${STRIPE_LINKS.foundingMonthly}"
              style="background-color: #c8102e; color: #ffffff; text-decoration: none;
                     padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
             ${config.cta}
           </a>
         </div>
+
+        ${pricingOptionsHtml()}
 
         <p style="font-size: 13px; color: #888; line-height: 1.5;">
           Questions? Reply to this email or reach out to <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
