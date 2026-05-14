@@ -162,12 +162,30 @@ router.post('/webhook', async (req, res) => {
         const failedInvoice = event.data.object;
         const customerId = failedInvoice.customer;
         if (failedInvoice.subscription) {
+          // Ensure customer is linked to a user (same email-match fallback as subscription events)
+          let failedUserResult = await query(`SELECT id FROM users WHERE stripe_customer_id = $1`, [customerId]);
+          if (failedUserResult.rows.length === 0) {
+            try {
+              const stripeCustomer = await stripe.customers.retrieve(customerId);
+              if (stripeCustomer && !stripeCustomer.deleted && stripeCustomer.email) {
+                const emailMatch = await query(
+                  `SELECT id FROM users WHERE LOWER(email) = LOWER($1)`,
+                  [stripeCustomer.email]
+                );
+                if (emailMatch.rows.length > 0) {
+                  await query(`UPDATE users SET stripe_customer_id = $1 WHERE id = $2`, [customerId, emailMatch.rows[0].id]);
+                  failedUserResult = emailMatch;
+                }
+              }
+            } catch (lookupErr) {
+              console.error('Stripe customer lookup failed (payment_failed):', lookupErr.message);
+            }
+          }
           await query(
             `UPDATE users SET subscription_status = 'past_due' WHERE stripe_customer_id = $1`,
             [customerId]
           );
-          const userRes = await query(`SELECT id FROM users WHERE stripe_customer_id = $1`, [customerId]);
-          const userId = userRes.rows[0]?.id;
+          const userId = failedUserResult.rows[0]?.id;
           if (userId) logEvent(userId, 'payment_failed', { invoice_id: failedInvoice.id });
         }
         break;
