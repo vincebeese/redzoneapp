@@ -22,26 +22,27 @@ if (!isBuild && (Number.isNaN(port) || port <= 0)) {
 
 const basePath = process.env.BASE_PATH ?? "/";
 
-const isWhitepaperPath = (url: string) =>
-  url === "/whitepaper" || url === "/whitepaper/";
+const ogRoutes: Record<string, string> = {
+  "/whitepaper":          "whitepaper/index.html",
+  "/scale-or-transform":  "scale-or-transform/index.html",
+};
 
 const whitepaperOgServe = (): Plugin => ({
   name: "whitepaper-og-serve",
   configureServer(server) {
     server.middlewares.use(async (req, res, next) => {
       const url = req.url ?? "";
-      if (url === "/whitepaper/") {
-        res.writeHead(301, { Location: "/whitepaper" });
+      const trailingSlash = url.endsWith("/") && url.length > 1 ? url.slice(0, -1) : null;
+      if (trailingSlash && ogRoutes[trailingSlash]) {
+        res.writeHead(301, { Location: trailingSlash });
         res.end();
         return;
       }
-      if (url === "/whitepaper") {
+      const srcFile = ogRoutes[url];
+      if (srcFile) {
         try {
-          const raw = await readFile(
-            path.resolve(import.meta.dirname, "whitepaper/index.html"),
-            "utf-8",
-          );
-          const html = await server.transformIndexHtml("/whitepaper", raw);
+          const raw = await readFile(path.resolve(import.meta.dirname, srcFile), "utf-8");
+          const html = await server.transformIndexHtml(url, raw);
           res.setHeader("Content-Type", "text/html");
           res.end(html);
           return;
@@ -55,17 +56,17 @@ const whitepaperOgServe = (): Plugin => ({
   configurePreviewServer(server) {
     server.middlewares.use(async (req, res, next) => {
       const url = req.url ?? "";
-      if (url === "/whitepaper/") {
-        res.writeHead(301, { Location: "/whitepaper" });
+      const trailingSlash = url.endsWith("/") && url.length > 1 ? url.slice(0, -1) : null;
+      if (trailingSlash && ogRoutes[trailingSlash]) {
+        res.writeHead(301, { Location: trailingSlash });
         res.end();
         return;
       }
-      if (url === "/whitepaper") {
+      const srcFile = ogRoutes[url];
+      if (srcFile) {
         try {
-          const html = await readFile(
-            path.resolve(import.meta.dirname, "dist/public/whitepaper/index.html"),
-            "utf-8",
-          );
+          const distFile = srcFile.replace(/\/index\.html$/, "").replace(/^/, "dist/public/") + "/index.html";
+          const html = await readFile(path.resolve(import.meta.dirname, distFile), "utf-8");
           res.setHeader("Content-Type", "text/html");
           res.end(html);
           return;
@@ -111,8 +112,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main:       path.resolve(import.meta.dirname, "index.html"),
-        whitepaper: path.resolve(import.meta.dirname, "whitepaper/index.html"),
+        main:               path.resolve(import.meta.dirname, "index.html"),
+        whitepaper:         path.resolve(import.meta.dirname, "whitepaper/index.html"),
+        scaleOrTransform:   path.resolve(import.meta.dirname, "scale-or-transform/index.html"),
       },
     },
   },

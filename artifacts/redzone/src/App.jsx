@@ -52,6 +52,7 @@ export default function App() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/auth/magic" element={<MagicLinkVerify />} />
       <Route path="/whitepaper" element={<Whitepaper />} />
+      <Route path="/scale-or-transform" element={<Whitepaper />} />
       <Route
         element={
           <ProtectedRoute>
