@@ -32,6 +32,7 @@ router.post('/whitepaper', hubspotLimiter, async (req, res) => {
       { objectTypeId: '0-1', name: 'lastname',            value: lastName },
       { objectTypeId: '0-1', name: 'company',             value: company },
       { objectTypeId: '0-1', name: 'email',               value: email },
+      { objectTypeId: '0-1', name: 'hs_linkedin_url',     value: linkedinUrl },
       { objectTypeId: '0-1', name: 'linkedin_bio',        value: linkedinUrl },
       { objectTypeId: '0-1', name: 'last_downloaded_asset', value: 'Scale or Transform Whitepaper' },
     ],
