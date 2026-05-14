@@ -1320,6 +1320,8 @@ function UsersTab({ onInvite }) {
   function openEdit(u) {
     setExpanded(u.id);
     setEditForm({
+      display_name: u.display_name || '',
+      email: u.email || '',
       has_beta_access: u.has_beta_access,
       beta_expires_at: u.beta_expires_at?.split('T')[0] || '',
       is_admin: u.is_admin,
@@ -1329,8 +1331,13 @@ function UsersTab({ onInvite }) {
   async function saveEdit(userId) {
     setSaving(userId);
     try {
-      const body = { ...editForm };
-      if (!body.has_beta_access) body.beta_expires_at = null;
+      const body = {
+        display_name: editForm.display_name,
+        email: editForm.email,
+        has_beta_access: editForm.has_beta_access,
+        is_admin: editForm.is_admin,
+        beta_expires_at: editForm.has_beta_access ? (editForm.beta_expires_at || null) : null,
+      };
       const r = await fetch(`/api/admin/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -1558,7 +1565,7 @@ function UsersTab({ onInvite }) {
                     </td>
                     <td className="px-4 py-3"><StatusBadge user={u} /></td>
                     <td className="px-4 py-3 text-sm text-gray-500">
-                      {u.beta_expires_at ? new Date(u.beta_expires_at).toLocaleDateString() : '—'}
+                      {u.beta_expires_at ? new Date(u.beta_expires_at).toLocaleDateString('en-US', { timeZone: 'UTC' }) : '—'}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{u.deal_count || 0}</td>
                     <td className="px-4 py-3">
@@ -1631,8 +1638,22 @@ function UsersTab({ onInvite }) {
                   {expanded === u.id && (
                     <tr key={`${u.id}-edit`} className="bg-blue-50">
                       <td colSpan={5} className="px-6 py-4">
-                        <div className="flex gap-6 items-end flex-wrap">
-                          <label className="flex items-center gap-2 text-sm">
+                        <div className="flex gap-4 items-end flex-wrap">
+                          <label className="text-sm">
+                            <span className="block text-gray-600 mb-1">Display name</span>
+                            <input type="text" value={editForm.display_name}
+                              onChange={e => setEditForm(f => ({ ...f, display_name: e.target.value }))}
+                              className="border border-gray-300 rounded px-2 py-1 text-sm w-40"
+                              placeholder="Full name" />
+                          </label>
+                          <label className="text-sm">
+                            <span className="block text-gray-600 mb-1">Email</span>
+                            <input type="email" value={editForm.email}
+                              onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))}
+                              className="border border-gray-300 rounded px-2 py-1 text-sm w-52"
+                              placeholder="email@example.com" />
+                          </label>
+                          <label className="flex items-center gap-2 text-sm self-end pb-1">
                             <input type="checkbox" checked={editForm.has_beta_access}
                               onChange={e => setEditForm(f => ({ ...f, has_beta_access: e.target.checked }))}
                               className="rounded border-gray-300 text-rzs-red focus:ring-rzs-red" />
@@ -1647,7 +1668,7 @@ function UsersTab({ onInvite }) {
                             </label>
                           )}
                           {u.id !== me?.id && (
-                            <label className="flex items-center gap-2 text-sm">
+                            <label className="flex items-center gap-2 text-sm self-end pb-1">
                               <input type="checkbox" checked={editForm.is_admin}
                                 onChange={e => setEditForm(f => ({ ...f, is_admin: e.target.checked }))}
                                 className="rounded border-gray-300 text-rzs-red focus:ring-rzs-red" />
@@ -1655,10 +1676,10 @@ function UsersTab({ onInvite }) {
                             </label>
                           )}
                           <button onClick={() => saveEdit(u.id)} disabled={saving === u.id}
-                            className="btn-primary text-sm">
+                            className="btn-primary text-sm self-end">
                             {saving === u.id ? 'Saving…' : 'Save'}
                           </button>
-                          <button onClick={() => setExpanded(null)} className="btn-secondary text-sm">Cancel</button>
+                          <button onClick={() => setExpanded(null)} className="btn-secondary text-sm self-end">Cancel</button>
                         </div>
                       </td>
                     </tr>

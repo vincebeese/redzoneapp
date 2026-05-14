@@ -275,7 +275,7 @@ router.get('/users', async (req, res) => {
 router.patch('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { has_beta_access, beta_expires_at, is_admin, subscription_status, onboarding_skipped } = req.body;
+    const { has_beta_access, beta_expires_at, is_admin, subscription_status, onboarding_skipped, display_name, email } = req.body;
 
     // Prevent self-lockout
     if (is_admin !== undefined && id === req.user.id) {
@@ -287,12 +287,20 @@ router.patch('/users/:id', async (req, res) => {
     if (existing.rows.length === 0) return res.status(404).json({ error: 'User not found' });
     const existingUser = existing.rows[0];
 
+    // Check email uniqueness if changing email
+    if (email !== undefined && email !== existingUser.email) {
+      const conflict = await query(`SELECT id FROM users WHERE email = $1 AND id != $2`, [email.toLowerCase().trim(), id]);
+      if (conflict.rows.length > 0) return res.status(400).json({ error: 'That email is already in use by another account' });
+    }
+
     const updates = [];
     const values = [];
     let i = 1;
 
     const beingApproved = has_beta_access === true && !existingUser.has_beta_access;
 
+    if (display_name !== undefined) { updates.push(`display_name = $${i++}`); values.push(display_name.trim() || null); }
+    if (email !== undefined) { updates.push(`email = $${i++}`); values.push(email.toLowerCase().trim()); }
     if (has_beta_access !== undefined) { updates.push(`has_beta_access = $${i++}`); values.push(has_beta_access); }
 
     // Auto-set 14-day trial window when approving for the first time
