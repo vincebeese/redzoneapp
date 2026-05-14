@@ -29,33 +29,51 @@ const whitepaperOgServe = (): Plugin => ({
   name: "whitepaper-og-serve",
   configureServer(server) {
     server.middlewares.use(async (req, res, next) => {
-      if (!isWhitepaperPath(req.url ?? "")) return next();
-      try {
-        const raw = await readFile(
-          path.resolve(import.meta.dirname, "whitepaper/index.html"),
-          "utf-8",
-        );
-        const html = await server.transformIndexHtml("/whitepaper/", raw);
-        res.setHeader("Content-Type", "text/html");
-        res.end(html);
-      } catch {
-        next();
+      const url = req.url ?? "";
+      if (url === "/whitepaper/") {
+        res.writeHead(301, { Location: "/whitepaper" });
+        res.end();
+        return;
       }
+      if (url === "/whitepaper") {
+        try {
+          const raw = await readFile(
+            path.resolve(import.meta.dirname, "whitepaper/index.html"),
+            "utf-8",
+          );
+          const html = await server.transformIndexHtml("/whitepaper", raw);
+          res.setHeader("Content-Type", "text/html");
+          res.end(html);
+          return;
+        } catch {
+          return next();
+        }
+      }
+      next();
     });
   },
   configurePreviewServer(server) {
     server.middlewares.use(async (req, res, next) => {
-      if (!isWhitepaperPath(req.url ?? "")) return next();
-      try {
-        const html = await readFile(
-          path.resolve(import.meta.dirname, "dist/public/whitepaper/index.html"),
-          "utf-8",
-        );
-        res.setHeader("Content-Type", "text/html");
-        res.end(html);
-      } catch {
-        next();
+      const url = req.url ?? "";
+      if (url === "/whitepaper/") {
+        res.writeHead(301, { Location: "/whitepaper" });
+        res.end();
+        return;
       }
+      if (url === "/whitepaper") {
+        try {
+          const html = await readFile(
+            path.resolve(import.meta.dirname, "dist/public/whitepaper/index.html"),
+            "utf-8",
+          );
+          res.setHeader("Content-Type", "text/html");
+          res.end(html);
+          return;
+        } catch {
+          return next();
+        }
+      }
+      next();
     });
   },
 });
