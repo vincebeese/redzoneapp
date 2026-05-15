@@ -393,36 +393,22 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="bg-white py-14 border-b border-gray-100">
-        <div className="container mx-auto px-6 max-w-3xl text-center">
-          <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">
-            Find the right fit.
-          </h2>
-          <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            Most clients don't pick just one. The AI Coach and 1:1 coaching are the most common combination — always-on between live sessions with Vince.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              to="/signup"
-              className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-11 px-6 rounded font-medium transition-colors"
-            >
-              Start AI Coach Free Trial →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
+      {/* Find the right fit + Contact Form */}
       <section className="bg-gray-50 py-14 border-t border-gray-200" id="contact">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4">Get In Touch</h2>
-              <p className="text-gray-600 mb-8">
-                Whether you're ready to start or just have questions, reach out and we'll point you in the right direction.
+              <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">Find the right fit.</h2>
+              <p className="text-gray-600 mb-6">
+                Most clients don't pick just one. The AI Coach and 1:1 coaching are the most common combination — always-on between live sessions with Vince.
               </p>
-              <div className="space-y-5">
+              <Link
+                to="/signup"
+                className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-sm h-10 px-5 rounded font-medium transition-colors mb-8"
+              >
+                Start AI Coach Free Trial →
+              </Link>
+              <div className="space-y-5 mt-2">
                 <div className="flex items-center gap-4 text-gray-700">
                   <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 text-[#C0392B]">✉</div>
                   <div>
