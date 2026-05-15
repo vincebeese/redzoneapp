@@ -277,6 +277,12 @@ export default function ServicesPage() {
               <p className="text-gray-400 text-sm mb-6">
                 Available now on Amazon. Start here if you want to build your own foundation before working with Vince directly.
               </p>
+              <blockquote className="border-l-2 border-[#C0392B] pl-4 mb-6">
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed text-sm">
+                  "The zone tells you where you are. The play tells you what to do. That's the whole system."
+                </p>
+                <p className="text-xs text-gray-500 mt-2">— Vince Beese</p>
+              </blockquote>
               <a
                 href={AMAZON_URL}
                 target="_blank"
