@@ -141,18 +141,17 @@ export default function AboutPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Real testimonial */}
             <figure className="bg-white border border-gray-200 rounded-xl px-7 py-6 shadow-sm">
               <blockquote>
                 <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4">
-                  "Vince ran an interactive workshop with our team that provided actionable plays we could use immediately. The team left motivated and more importantly, armed with new tools to close deals."
+                  "Vince started with a full sales audit — no sugarcoating, just an honest assessment of where we were breaking down. He built our sales process from scratch, gave the team a system for both active deals and prospecting, and created real pipeline visibility we never had before. The results followed fast. We hit our biggest revenue month since I took over the company. Vince didn't just fix our sales motion — he changed how we think about selling."
                 </p>
               </blockquote>
               <figcaption className="flex items-center gap-3">
                 <div className="w-px h-8 bg-[#C0392B]"></div>
                 <div>
-                  <p className="text-sm font-semibold text-[#1A1A1A]">Joe Twer</p>
-                  <p className="text-xs text-gray-500">Global Head of Sales, BlueSnap</p>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Keith Pepper</p>
+                  <p className="text-xs text-gray-500">Publisher, Rough Draft Atlanta</p>
                 </div>
               </figcaption>
             </figure>
