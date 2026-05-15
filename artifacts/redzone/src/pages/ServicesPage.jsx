@@ -394,7 +394,7 @@ export default function ServicesPage() {
             Find the right fit.
           </h2>
           <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            Many clients use more than one. The RZS AI Coach and 1:1 coaching are the most common combination — always-on coaching between live sessions with Vince.
+            Most clients don't pick just one. The AI Coach and 1:1 coaching are the most common combination — always-on between live sessions with Vince.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
