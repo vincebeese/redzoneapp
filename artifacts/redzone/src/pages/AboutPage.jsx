@@ -220,10 +220,10 @@ export default function AboutPage() {
               See All Services →
             </Link>
             <a
-              href="mailto:vince@vincebeese.com"
+              href="/services#contact"
               className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-50 text-base h-11 px-6 rounded font-medium transition-colors"
             >
-              Email Vince Directly
+              Get In Touch →
             </a>
           </div>
         </div>
