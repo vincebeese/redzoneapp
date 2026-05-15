@@ -17,6 +17,7 @@ import documentsRouter from "./routes/documents.js";
 import resourceCenterRouter from "./routes/resourceCenter.js";
 import analyticsRouter from "./routes/analytics.js";
 import hubspotRouter from "./routes/hubspot.js";
+import blogRouter from "./routes/blog.js";
 import { startTrialChecker } from "./services/trialChecker.js";
 import { startBackupScheduler } from "./services/backupService.js";
 import { runSchemaCheck } from "./db/schemaCheck.js";
@@ -88,6 +89,7 @@ app.use("/api/documents", documentsRouter);
 app.use("/api/resource-center", resourceCenterRouter);
 app.use("/api/analytics", analyticsRouter);
 app.use("/api/hubspot", hubspotRouter);
+app.use("/api/blog", blogRouter);
 
 app.use((err: Error & { status?: number }, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error("Error:", err);

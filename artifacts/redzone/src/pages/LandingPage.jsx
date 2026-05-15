@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import PublicLayout from '../components/PublicLayout';
 
 const AMAZON_URL = 'https://www.amazon.com/dp/B0FLLHQG13';
 
@@ -15,71 +16,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans">
-
-      {/* Beta Bar */}
-      <div className="bg-[#1A1A1A] text-white text-xs text-center py-2 px-4">
-        RZS AI Coach is live. Start your 14-day free trial today →{' '}
-        <Link to="/signup" className="text-[#ef9a9a] font-semibold hover:underline whitespace-nowrap">
-          Start Free Trial →
-        </Link>
-      </div>
-
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="relative flex items-center justify-between px-6 py-3">
-          <img src="/logo.png" alt="Red Zone Selling" style={{ height: '64px', width: 'auto' }} />
-
-          <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
-            <button onClick={() => scrollTo('coaching')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Offerings</button>
-            <button onClick={() => scrollTo('ai-coach')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">AI Coach</button>
-            <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-base text-gray-500 hover:text-gray-900 transition-colors">Book</a>
-            <button onClick={() => scrollTo('about')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">About</button>
-            <button onClick={() => scrollTo('contact')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Contact</button>
-            <a href="https://vbeese.substack.com/" target="_blank" rel="noopener noreferrer" className="text-base text-gray-500 hover:text-gray-900 transition-colors">Subscribe</a>
-          </div>
-
-          <div className="hidden sm:flex items-center gap-3">
-            <div className="w-px h-4 bg-gray-200" />
-            {user ? (
-              <Link to="/dashboard" className="text-sm font-medium text-white rounded px-3 py-1 hover:opacity-90 transition-opacity" style={{ background: '#C62828' }}>
-                Go to App
-              </Link>
-            ) : (
-              <Link to="/login" className="text-sm font-medium text-gray-900 border border-gray-300 rounded px-3 py-1 hover:bg-gray-50 transition-colors">
-                Login
-              </Link>
-            )}
-          </div>
-
-          <div className="flex sm:hidden items-center gap-3">
-            {user ? (
-              <Link to="/dashboard" className="text-sm font-medium text-white rounded px-3 py-1" style={{ background: '#C62828' }}>Go to App</Link>
-            ) : (
-              <Link to="/login" className="text-sm font-medium text-gray-900 border border-gray-300 rounded px-3 py-1">Login</Link>
-            )}
-            <button onClick={() => setMobileMenuOpen(v => !v)} className="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100" aria-label="Toggle menu">
-              {mobileMenuOpen ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="sm:hidden border-t border-gray-100 px-6 py-4 flex flex-col gap-3 bg-white">
-            <button onClick={() => scrollTo('coaching')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Offerings</button>
-            <button onClick={() => scrollTo('ai-coach')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">AI Coach</button>
-            <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 py-1 hover:text-gray-900">Book</a>
-            <button onClick={() => scrollTo('about')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">About</button>
-            <button onClick={() => scrollTo('contact')} className="text-sm text-gray-600 text-left py-1 hover:text-gray-900">Contact</button>
-            <a href="https://vbeese.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 py-1 hover:text-gray-900">Subscribe</a>
-          </div>
-        )}
-      </nav>
-
+    <PublicLayout>
       {/* Section 1 — Hero */}
       <section className="bg-[#F9F6F0] pt-16 pb-16 overflow-hidden">
         <div className="container mx-auto px-6 max-w-4xl text-center">
@@ -104,10 +41,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 2 — Vince & The Problem */}
+      {/* Section 2 — About Teaser */}
       <section className="bg-gray-50 py-14" id="about">
-        <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
               <img
                 src="/vince-headshot.jpg"
@@ -117,9 +54,12 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-5 leading-snug">
                 Most sales coaches teach what they've read. Vince teaches what he's lived.
               </h2>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed mb-5">
                 Vince Beese spent 25+ years, first as a rep, then as a CRO, now as a Sales Strength Coach. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it. Then he wrote the book — <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] hover:underline font-medium">Red Zone Selling</a>.
               </p>
+              <Link to="/about" className="text-[#C0392B] font-semibold text-sm hover:underline">
+                Learn more about Vince →
+              </Link>
             </div>
             <div>
               <div className="grid grid-cols-2 gap-5 mb-8">
@@ -214,7 +154,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 4 — Ways to Work Together */}
+      {/* Section 4 — Ways to Work Together (Teaser) */}
       <section className="bg-gray-50 py-14" id="coaching">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -246,9 +186,9 @@ export default function LandingPage() {
               <div className="px-5 pt-5 pb-3 flex-1">
                 <h3 className="text-lg font-semibold mb-2">1:1 Coaching</h3>
                 <p className="text-gray-600 text-sm mb-4">Private coaching with Vince. For sellers working live deals and leaders who want to elevate close rates.</p>
-                <button onClick={() => scrollTo('contact')} className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
-                  Work With Vince →
-                </button>
+                <Link to="/services" className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
+                  Learn More →
+                </Link>
               </div>
             </div>
 
@@ -260,9 +200,9 @@ export default function LandingPage() {
               <div className="px-5 pt-5 pb-3 flex-1">
                 <h3 className="text-lg font-semibold mb-2">Team Coaching</h3>
                 <p className="text-gray-600 text-sm mb-4">Red Zone Selling coaching for your entire team. Reps and leaders together. Compounds over time.</p>
-                <button onClick={() => scrollTo('contact')} className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
-                  Start a Conversation →
-                </button>
+                <Link to="/services" className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
+                  Learn More →
+                </Link>
               </div>
             </div>
 
@@ -274,9 +214,9 @@ export default function LandingPage() {
               <div className="px-5 pt-5 pb-3 flex-1">
                 <h3 className="text-lg font-semibold mb-2">Workshops &amp; Speaking</h3>
                 <p className="text-gray-600 text-sm mb-4">SKOs, QBRs, offsites, keynotes. A working session your team uses Monday morning.</p>
-                <button onClick={() => scrollTo('contact')} className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
-                  Book a Workshop →
-                </button>
+                <Link to="/services" className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
+                  Learn More →
+                </Link>
               </div>
             </div>
 
@@ -288,9 +228,9 @@ export default function LandingPage() {
               <div className="px-5 pt-5 pb-3 flex-1">
                 <h3 className="text-lg font-semibold mb-2">GTM &amp; Sales System</h3>
                 <p className="text-gray-600 text-sm mb-4">Fractional CRO or system architect. Pipeline, process, and Red Zone system installed across your org.</p>
-                <button onClick={() => scrollTo('contact')} className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
-                  Start a Conversation →
-                </button>
+                <Link to="/services" className="text-[#1A1A1A] font-semibold text-sm hover:underline text-left">
+                  Learn More →
+                </Link>
               </div>
             </div>
 
@@ -305,6 +245,12 @@ export default function LandingPage() {
                 </a>
               </div>
             </div>
+          </div>
+
+          <div className="text-center mb-8">
+            <Link to="/services" className="text-sm font-semibold text-[#C0392B] hover:underline">
+              See all services and details →
+            </Link>
           </div>
 
           <p className="text-center text-sm text-gray-500 max-w-xl mx-auto mb-10">
@@ -363,139 +309,31 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="text-center text-sm text-gray-400 mb-10">
-            One session = one message in, one coach response out. &nbsp;|&nbsp; 14-day free trial — full access to all three modes. No credit card required.
-          </div>
-
-          {/* AI Coach Chat Demo */}
-          <div className="max-w-md mx-auto mb-10">
-            <div className="bg-[#111111] text-white rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-1" style={{ background: 'linear-gradient(to right, #C0392B, #f97316)' }}></div>
-              <div className="border-b border-white/10 px-5 py-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C0392B, #7f1d1d)' }}>
-                    <span className="font-bold text-[9px]">RZS</span>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium flex items-center gap-2">
-                      RZS AI Coach
-                      <span className="flex h-2 w-2 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C0392B]"></span>
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-xs">Active now</p>
-                  </div>
-                </div>
-              </div>
-              <div className="px-5 py-4 space-y-4">
-                <div className="flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-gray-800 flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">RZS</div>
-                  <div className="bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-200">
-                    Walk me through your last deal that stalled. What happened at the presentation stage?
-                  </div>
-                </div>
-                <div className="flex gap-3 flex-row-reverse">
-                  <div className="w-6 h-6 rounded-full bg-[#C0392B] flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">You</div>
-                  <div className="bg-[#C0392B]/20 border border-[#C0392B]/30 rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white">
-                    They loved the demo but went quiet after I sent the proposal...
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-gray-800 flex-shrink-0 mt-1 flex items-center justify-center text-[10px]">RZS</div>
-                  <div className="bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-200 border border-gray-700">
-                    Classic Red Zone stall. Let's run a deal autopsy. I'll show you exactly where and why it stalled.
-                  </div>
-                </div>
-              </div>
+          <div className="text-center mb-8">
+            <div className="text-sm text-gray-400 mb-6">14-day free trial · No credit card required · Cancel anytime</div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/signup" className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-base h-12 px-7 rounded font-medium transition-colors">
+                Start Your Free Trial →
+              </Link>
+              {user && (
+                <Link to="/dashboard" className="inline-flex items-center justify-center border border-white/20 text-white hover:bg-white/10 text-base h-12 px-7 rounded font-medium transition-colors">
+                  Go to Dashboard →
+                </Link>
+              )}
             </div>
-          </div>
-
-          <div className="text-center">
-            <Link to="/signup" className="inline-block bg-[#C0392B] hover:bg-[#A93226] text-white font-medium px-8 py-3 rounded transition-colors">
-              Start Your Free Trial
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Section 6 — Pricing */}
-      <section className="bg-white py-14" id="pricing">
+      {/* Section 6 — How to Start */}
+      <section className="bg-white py-14">
         <div className="container mx-auto px-6">
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">Pricing</span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-3">Simple pricing. No surprises.</h2>
-            <p className="text-gray-600">Both plans include full access to all three modes. Start with a 14-day free trial — no credit card required.</p>
+          <div className="text-center mb-10 max-w-2xl mx-auto">
+            <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">How to Start</span>
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold">Three paths in. One system through.</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-6">
-            {/* Founding Member */}
-            <div className="border-2 border-[#C0392B] rounded-xl overflow-hidden shadow-md">
-              <div className="bg-[#C0392B] px-6 py-5">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-white font-semibold">Founding Member</span>
-                  <span className="text-xs text-white bg-white/20 px-2 py-0.5 rounded-full font-medium">Limited — 50 seats</span>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-white">$29</span>
-                  <span className="text-white/80 text-sm">/mo</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3 mb-6 text-sm text-gray-700">
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> 75 sessions/month</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> All three modes — Deal, Coach, Mindset</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Founding Member rate locked for life</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Capped at 50 seats — once gone, it's gone</li>
-                </ul>
-                <Link to="/signup" className="block text-center bg-[#C0392B] hover:bg-[#A93226] text-white font-medium py-3 rounded transition-colors">
-                  Start Free Trial
-                </Link>
-              </div>
-            </div>
-
-            {/* Pro */}
-            <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-              <div className="bg-[#1A1A1A] px-6 py-5">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-white font-semibold">Pro</span>
-                  <span className="text-xs text-white bg-white/20 px-2 py-0.5 rounded-full font-medium">Most Popular</span>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-white">$69</span>
-                  <span className="text-white/80 text-sm">/mo</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3 mb-6 text-sm text-gray-700">
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> 150 sessions/month</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> All three modes — Deal, Coach, Mindset</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Priority support</li>
-                  <li className="flex items-center gap-2"><span className="text-[#C0392B] font-bold">✓</span> Early access to new features</li>
-                </ul>
-                <Link to="/signup" className="block text-center bg-[#1A1A1A] hover:bg-black text-white font-medium py-3 rounded transition-colors">
-                  Start Free Trial
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-center text-sm text-gray-500">
-            Need seats for a team?{' '}
-            <button onClick={() => scrollTo('contact')} className="text-[#C0392B] font-medium hover:underline">Contact us for team pricing →</button>
-          </p>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="bg-gray-50 py-14">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="text-center mb-10">
-            <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-3 block">Get Started</span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-3">How do you want to start?</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <div className="bg-white border border-gray-200 rounded-xl p-6 text-center shadow-sm">
               <div className="w-12 h-12 rounded-full bg-[#FFF3F3] flex items-center justify-center mx-auto mb-4">
                 <svg className="w-6 h-6 text-[#C0392B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
@@ -511,7 +349,7 @@ export default function LandingPage() {
               </div>
               <h3 className="font-semibold mb-2">Work with Vince</h3>
               <p className="text-gray-600 text-sm mb-4">1:1 coaching, team programs, or AI coaching. Live and direct with Vince.</p>
-              <button onClick={() => scrollTo('contact')} className="text-[#C0392B] font-semibold text-sm hover:underline">Start a Conversation →</button>
+              <Link to="/services" className="text-[#C0392B] font-semibold text-sm hover:underline">See All Services →</Link>
             </div>
 
             <div className="bg-white border border-gray-200 rounded-xl p-6 text-center shadow-sm">
@@ -520,7 +358,7 @@ export default function LandingPage() {
               </div>
               <h3 className="font-semibold mb-2">Build your team</h3>
               <p className="text-gray-600 text-sm mb-4">Team coaching, workshops, and AI seats. The whole system installed at scale.</p>
-              <button onClick={() => scrollTo('contact')} className="text-[#C0392B] font-semibold text-sm hover:underline">Talk to Us →</button>
+              <Link to="/services" className="text-[#C0392B] font-semibold text-sm hover:underline">Talk to Us →</Link>
             </div>
           </div>
 
@@ -580,26 +418,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="relative px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-        <img src="/logo.png" alt="Red Zone Selling" style={{ height: '36px', width: 'auto' }} />
-        <div className="absolute left-1/2 -translate-x-1/2 flex flex-wrap gap-4">
-          <button onClick={() => scrollTo('coaching')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Offerings</button>
-          <button onClick={() => scrollTo('ai-coach')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">AI Coach</button>
-          <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
-          <button onClick={() => scrollTo('about')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">About</button>
-          <button onClick={() => scrollTo('contact')} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Contact</button>
-          <a href="https://vbeese.substack.com/" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Subscribe</a>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400">2026 Red Zone Selling™</span>
-          {user ? (
-            <Link to="/dashboard" className="text-xs font-medium text-white rounded px-2.5 py-1 hover:opacity-90" style={{ background: '#C62828' }}>Go to App</Link>
-          ) : null}
-        </div>
-      </footer>
-
-    </div>
+    </PublicLayout>
   );
 }
