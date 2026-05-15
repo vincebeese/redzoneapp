@@ -152,7 +152,7 @@ Hi [First Name],
 
 Your 14-day free trial ended today. Your access is paused, but everything is still there — your deals, coaching sessions, and history are all saved and waiting.
 
-When you're ready to get back in, subscribing takes less than 2 minutes.
+**Your data is stored for 30 days.** Subscribe any time within that window and pick up exactly where you left off. After 30 days, your data will be permanently deleted.
 
 [CTA Button: View Plans & Subscribe]
 
@@ -170,7 +170,7 @@ Hi [First Name],
 
 **Your account is still here**
 
-Your Red Zone Selling AI Coach account is still here, and so is everything in it.
+Your Red Zone Selling AI Coach account is still here, and so is everything in it. You have **27 days** before your data is permanently deleted.
 
 A lot of sellers try a few tools during a trial and never go deep enough to feel the difference. If that was you — no problem. But if you got value from the coaching, this is worth finishing.
 
@@ -192,7 +192,7 @@ Hi [First Name],
 
 **Still time to get back in**
 
-Your trial expired a week ago. Your data is still saved, but it won't be forever.
+Your trial expired a week ago. Your data is still saved — you have **23 days** remaining before it's permanently deleted.
 
 If you got value from the coaching, this is an easy decision. If you're not sure, reply and tell us what held you back — Vince reads these.
 
@@ -204,17 +204,37 @@ Questions? Reply to this email or reach out to vince@vincebeese.com
 
 ---
 
-## 11. Trial Expired — Day 14 (Final)
-**Trigger:** 14 days after trial expiry — last email sent  
-**Subject:** Last chance — your Red Zone Selling AI Coach data will be deleted tomorrow
+## 11. Trial Expired — Day 14
+**Trigger:** 14 days after trial expiry  
+**Subject:** Your Red Zone Selling AI Coach data will be deleted in 16 days
 
 Hi [First Name],
 
-**Final notice — your data will be deleted tomorrow**
+**16 days left before your data is deleted**
+
+Your trial ended 2 weeks ago. Your deals, coaching sessions, and history are still saved — but your account will be permanently deleted in **16 days** if you don't subscribe.
+
+Subscribing takes less than 2 minutes and your data will be there waiting for you. If you've decided this isn't for you, no hard feelings.
+
+[CTA Button: Subscribe and Keep My Data]
+
+*[Pricing options block — same as above]*
+
+Questions? Reply to this email or reach out to vince@vincebeese.com
+
+---
+
+## 12. Trial Expired — Day 28 (Final)
+**Trigger:** 28 days after trial expiry — last email sent  
+**Subject:** Final notice — your Red Zone Selling AI Coach data will be deleted in 2 days
+
+Hi [First Name],
+
+**Final notice — 2 days until your data is deleted**
 
 This is the last email we'll send.
 
-Your Red Zone Selling AI Coach account has been inactive for 14 days. Tomorrow, your deals, coaching sessions, and history will be permanently deleted and cannot be recovered.
+Your Red Zone Selling AI Coach account has been inactive for 28 days. In **2 days**, your deals, coaching sessions, and history will be permanently deleted and cannot be recovered.
 
 If you want to keep everything and get back to work, subscribe now — it takes less than 2 minutes.
 

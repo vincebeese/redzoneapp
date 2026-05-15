@@ -50,6 +50,9 @@ export async function runTrialCheck() {
       // Post-expiry emails — each fires once at its threshold, deduplication handled by sendIfNotSent
       if (msLeft <= 0) {
         const daysExpired = Math.abs(msLeft) / (1000 * 60 * 60 * 24);
+        if (daysExpired >= 28) {
+          await sendIfNotSent(user.id, 'expired_day28', user.email, user.display_name, {}, sendTrialExpiredEmail);
+        }
         if (daysExpired >= 14) {
           await sendIfNotSent(user.id, 'expired_day14', user.email, user.display_name, {}, sendTrialExpiredEmail);
         }

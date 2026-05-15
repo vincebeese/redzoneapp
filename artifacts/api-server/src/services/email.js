@@ -442,13 +442,13 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
       subject: 'Your Red Zone Selling AI Coach free trial has ended — here\'s how to keep going',
       headline: 'Your free trial has ended',
       body: `Your 14-day free trial ended today. Your access is paused, but everything is still there — your deals, coaching sessions, and history are all saved and waiting.<br /><br />
-        When you're ready to get back in, subscribing takes less than 2 minutes.`,
+        <strong>Your data is stored for 30 days.</strong> Subscribe any time within that window and pick up exactly where you left off. After 30 days, your data will be permanently deleted.`,
       cta: 'View Plans &amp; Subscribe',
     },
     expired_day3: {
       subject: 'Still thinking? Here\'s what\'s waiting for you',
       headline: 'Your account is still here',
-      body: `Your Red Zone Selling AI Coach account is still here, and so is everything in it.<br /><br />
+      body: `Your Red Zone Selling AI Coach account is still here, and so is everything in it. You have <strong>27 days</strong> before your data is permanently deleted.<br /><br />
         A lot of sellers try a few tools during a trial and never go deep enough to feel the difference. If that was you — no problem. But if you got value from the coaching, this is worth finishing.<br /><br />
         Founding Member rate is <strong>$29/month</strong> and locks in for life — capped at 50 seats. Once they're gone, this plan closes permanently.`,
       cta: 'Claim Your Spot',
@@ -456,15 +456,22 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
     expired_day7: {
       subject: 'Still time to keep your Red Zone Selling AI Coach account',
       headline: 'Still time to get back in',
-      body: `Your trial expired a week ago. Your data is still saved, but it won't be forever.<br /><br />
+      body: `Your trial expired a week ago. Your data is still saved — you have <strong>23 days</strong> remaining before it's permanently deleted.<br /><br />
         If you got value from the coaching, this is an easy decision. If you're not sure, reply and tell us what held you back — Vince reads these.`,
       cta: 'Subscribe and Keep Your Data',
     },
     expired_day14: {
-      subject: 'Last chance — your Red Zone Selling AI Coach data will be deleted tomorrow',
-      headline: 'Final notice — your data will be deleted tomorrow',
+      subject: 'Your Red Zone Selling AI Coach data will be deleted in 16 days',
+      headline: '16 days left before your data is deleted',
+      body: `Your trial ended 2 weeks ago. Your deals, coaching sessions, and history are still saved — but your account will be permanently deleted in <strong>16 days</strong> if you don't subscribe.<br /><br />
+        Subscribing takes less than 2 minutes and your data will be there waiting for you. If you've decided this isn't for you, no hard feelings.`,
+      cta: 'Subscribe and Keep My Data',
+    },
+    expired_day28: {
+      subject: 'Final notice — your Red Zone Selling AI Coach data will be deleted in 2 days',
+      headline: 'Final notice — 2 days until your data is deleted',
       body: `This is the last email we'll send.<br /><br />
-        Your Red Zone Selling AI Coach account has been inactive for 14 days. Tomorrow, your deals, coaching sessions, and history will be permanently deleted and cannot be recovered.<br /><br />
+        Your Red Zone Selling AI Coach account has been inactive for 28 days. In <strong>2 days</strong>, your deals, coaching sessions, and history will be permanently deleted and cannot be recovered.<br /><br />
         If you want to keep everything and get back to work, subscribe now — it takes less than 2 minutes.<br /><br />
         If you've decided this isn't for you, no hard feelings. We hope the trial gave you something useful.`,
       cta: 'Subscribe Now — Save My Data',
