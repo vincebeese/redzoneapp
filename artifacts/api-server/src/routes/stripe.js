@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import Stripe from 'stripe';
+import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import { logEvent } from '../services/analytics.js';
-import { sendSubscriptionConfirmationEmail } from '../services/email.js';
+import { sendSubscriptionConfirmationEmail, sendPasswordResetEmail } from '../services/email.js';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -79,7 +81,7 @@ router.post('/webhook', async (req, res) => {
         let subUserResult = await query(`SELECT id FROM users WHERE stripe_customer_id = $1`, [customerId]);
 
         // Fallback for payment links: Stripe creates a new customer we haven't seen before.
-        // Look up the customer in Stripe by ID, match to our user by email, and save the customer ID.
+        // 1. Try matching by email. 2. If no match, auto-create an account so the subscriber can log in.
         if (subUserResult.rows.length === 0) {
           try {
             const stripeCustomer = await stripe.customers.retrieve(customerId);
@@ -95,10 +97,35 @@ router.post('/webhook', async (req, res) => {
                 );
                 subUserResult = emailMatch;
                 console.log(`Linked new Stripe customer ${customerId} to user ${emailMatch.rows[0].id} via email`);
+              } else {
+                // No account exists — create one so the subscriber can access the app
+                const tempPasswordHash = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10);
+                const displayName = stripeCustomer.name || stripeCustomer.email.split('@')[0];
+                const newUserResult = await query(
+                  `INSERT INTO users (email, display_name, password_hash, subscription_status, stripe_customer_id, has_beta_access)
+                   VALUES ($1, $2, $3, 'active', $4, false)
+                   RETURNING id, email, display_name`,
+                  [stripeCustomer.email.toLowerCase().trim(), displayName, tempPasswordHash, customerId]
+                );
+                subUserResult = newUserResult;
+                // Generate a 7-day password-reset token so they can set a real password
+                const resetToken = crypto.randomBytes(32).toString('hex');
+                const resetExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+                await query(
+                  `INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)`,
+                  [newUserResult.rows[0].id, resetToken, resetExpiry]
+                );
+                const appBaseUrl = (process.env.REPLIT_DOMAINS || '').split(',')[0]
+                  ? `https://${(process.env.REPLIT_DOMAINS || '').split(',')[0]}`
+                  : 'https://redzoneselling.co';
+                const resetUrl = `${appBaseUrl}/reset-password?token=${resetToken}`;
+                sendPasswordResetEmail({ toEmail: stripeCustomer.email, resetUrl })
+                  .catch(err => console.error('Auto-create welcome email failed:', err.message));
+                console.log(`Auto-created user account for new Stripe subscriber ${customerId} (${stripeCustomer.email})`);
               }
             }
           } catch (lookupErr) {
-            console.error('Stripe customer lookup failed:', lookupErr.message);
+            console.error('Stripe customer lookup/create failed:', lookupErr.message);
           }
         }
 

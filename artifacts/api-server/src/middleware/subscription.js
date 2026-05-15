@@ -1,6 +1,6 @@
 import { query } from '../db/index.js';
 
-const SESSION_TRIAL_LIMIT = 100;
+const SESSION_TRIAL_LIMIT = 75;
 
 // Middleware to check subscription status
 export async function requireSubscription(req, res, next) {
