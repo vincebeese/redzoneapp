@@ -24,23 +24,11 @@ export default function ServicesPage() {
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <span className="inline-block bg-[#C0392B] text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Always on · Beta</span>
+              <span className="inline-block bg-[#C0392B] text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Always on · Free Trial</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">RZS AI Coach</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                The Red Zone Selling system, available 24/7. Three coaching modes — Deal, Coach, and Mindset — built for every selling situation. Start a session before a call, in the middle of a deal, or when the pressure is real.
+              <p className="text-gray-600 leading-relaxed mb-6">
+                The Red Zone Selling system. Always on. Ready when the moment is.
               </p>
-              <ul className="space-y-2 mb-6">
-                {[
-                  'Deal Mode — get a Red Zone diagnosis and the exact play to run next',
-                  'Coach Mode — strategic guidance on your pipeline, process, and scenarios',
-                  'Mindset Mode — get your head right before the moment that matters',
-                ].map(item => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
-                    <span className="text-[#C0392B] mt-0.5">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
               <div className="flex gap-3">
                 <Link
                   to="/signup"
@@ -57,12 +45,12 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="bg-[#1A1A1A] rounded-xl p-7 text-white">
-              <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">14-Day Free Trial</p>
+              <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">Three modes. Every selling situation.</p>
               <div className="space-y-4">
                 {[
-                  { badge: 'Deal Mode', desc: 'You\'re stuck on a deal. Drop in the situation. Get the zone, the risk, and the exact play.' },
-                  { badge: 'Coach Mode', desc: 'Ask anything about your pipeline or a specific selling scenario. Direct answers, no fluff.' },
-                  { badge: 'Mindset Mode', desc: 'The pressure is real. Get grounded and focused before the moment arrives.' },
+                  { badge: 'Deal Mode', desc: 'Get a Red Zone diagnosis and the exact play to run next. Drop in the situation — walk out with a named play and a time-bound next action.' },
+                  { badge: 'Coach Mode', desc: 'Strategic guidance on your pipeline, process, and scenarios. Ask anything. Direct answers grounded in the system, no fluff.' },
+                  { badge: 'Mindset Mode', desc: 'Get your head right before the moment that matters. Lost a deal. In a slump. Walking into the biggest close of the quarter. Get grounded and ready.' },
                 ].map(item => (
                   <div key={item.badge} className="border border-white/10 rounded-lg p-4">
                     <span className="inline-block bg-[#C0392B] text-white text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2">{item.badge}</span>
