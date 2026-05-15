@@ -275,7 +275,7 @@ router.get('/users', async (req, res) => {
 router.patch('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { has_beta_access, beta_expires_at, is_admin, subscription_status, onboarding_skipped, display_name, email } = req.body;
+    const { has_beta_access, beta_expires_at, is_admin, subscription_status, onboarding_skipped, display_name, email, stripe_customer_id } = req.body;
 
     // Prevent self-lockout
     if (is_admin !== undefined && id === req.user.id) {
@@ -319,6 +319,7 @@ router.patch('/users/:id', async (req, res) => {
 
     if (is_admin !== undefined) { updates.push(`is_admin = $${i++}`); values.push(is_admin); }
     if (subscription_status !== undefined) { updates.push(`subscription_status = $${i++}`); values.push(subscription_status); }
+    if (stripe_customer_id !== undefined) { updates.push(`stripe_customer_id = $${i++}`); values.push(stripe_customer_id || null); }
     if (onboarding_skipped !== undefined) { updates.push(`onboarding_skipped = $${i++}`); values.push(onboarding_skipped); }
 
     if (updates.length === 0) return res.status(400).json({ error: 'No fields to update' });

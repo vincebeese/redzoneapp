@@ -1325,6 +1325,8 @@ function UsersTab({ onInvite }) {
       has_beta_access: u.has_beta_access,
       beta_expires_at: u.beta_expires_at?.split('T')[0] || '',
       is_admin: u.is_admin,
+      subscription_status: u.subscription_status || 'inactive',
+      stripe_customer_id: u.stripe_customer_id || '',
     });
   }
 
@@ -1337,6 +1339,8 @@ function UsersTab({ onInvite }) {
         has_beta_access: editForm.has_beta_access,
         is_admin: editForm.is_admin,
         beta_expires_at: editForm.has_beta_access ? (editForm.beta_expires_at || null) : null,
+        subscription_status: editForm.subscription_status,
+        stripe_customer_id: editForm.stripe_customer_id || null,
       };
       const r = await fetch(`/api/admin/users/${userId}`, {
         method: 'PATCH',
@@ -1667,6 +1671,24 @@ function UsersTab({ onInvite }) {
                                 className="border border-gray-300 rounded px-2 py-1 text-sm" />
                             </label>
                           )}
+                          <label className="text-sm">
+                            <span className="block text-gray-600 mb-1">Subscription status</span>
+                            <select value={editForm.subscription_status}
+                              onChange={e => setEditForm(f => ({ ...f, subscription_status: e.target.value }))}
+                              className="border border-gray-300 rounded px-2 py-1 text-sm">
+                              <option value="inactive">inactive</option>
+                              <option value="active">active</option>
+                              <option value="past_due">past_due</option>
+                              <option value="trialing">trialing</option>
+                            </select>
+                          </label>
+                          <label className="text-sm">
+                            <span className="block text-gray-600 mb-1">Stripe customer ID</span>
+                            <input type="text" value={editForm.stripe_customer_id}
+                              onChange={e => setEditForm(f => ({ ...f, stripe_customer_id: e.target.value }))}
+                              className="border border-gray-300 rounded px-2 py-1 text-sm w-44"
+                              placeholder="cus_…" />
+                          </label>
                           {u.id !== me?.id && (
                             <label className="flex items-center gap-2 text-sm self-end pb-1">
                               <input type="checkbox" checked={editForm.is_admin}
