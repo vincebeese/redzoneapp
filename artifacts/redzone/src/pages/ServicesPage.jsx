@@ -121,7 +121,7 @@ export default function ServicesPage() {
               <span className="inline-block bg-white text-gray-500 border border-gray-300 text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Live · Teams</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">Team Coaching</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Red Zone Selling coaching for your entire revenue team. Reps and leaders working the same system in the same language. The methodology compounds — the longer a team runs it, the stronger the output.
+                Same system. Same language. Entire revenue team. The methodology compounds — the longer a team runs it, the stronger the output.
               </p>
               <ul className="space-y-2 mb-6">
                 {[
@@ -169,10 +169,10 @@ export default function ServicesPage() {
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="grid lg:grid-cols-2 gap-10 items-start">
             <div>
-              <span className="inline-block bg-white text-gray-500 border border-gray-300 text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Live · Events</span>
-              <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">Workshops &amp; Speaking</h2>
+              <span className="inline-block bg-white text-gray-500 border border-gray-300 text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Workshops &amp; Speaking · Live</span>
+              <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">High-energy, working sessions your team uses Monday morning.</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                High-energy, working sessions your team uses Monday morning. Built for SKOs, QBRs, offsites, and keynotes. Not a theory lecture — a practical session that installs plays your team can execute immediately.
+                Built for SKOs, QBRs, offsites, and keynotes. Not a theory lecture — a practical session that installs plays your team can execute immediately.
               </p>
               <ul className="space-y-2 mb-6">
                 {[
@@ -222,7 +222,7 @@ export default function ServicesPage() {
               <span className="inline-block bg-white text-gray-500 border border-gray-300 text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Live · Orgs</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">GTM &amp; Sales System</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Fractional CRO or system architect. For founders and CEOs who need an experienced revenue leader to build or rebuild the sales motion. Pipeline design, process installation, and the full Red Zone system embedded across your org.
+                For founders and CEOs who need a revenue leader, not a consultant. Pipeline design, process installation, and the full Red Zone system embedded across your org.
               </p>
               <ul className="space-y-2 mb-6">
                 {[
