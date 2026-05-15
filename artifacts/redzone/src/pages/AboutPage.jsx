@@ -210,7 +210,7 @@ export default function AboutPage() {
             Ready to build your system?
           </h2>
           <p className="text-gray-600 mb-8 leading-relaxed max-w-xl mx-auto">
-            Whether you're an individual seller who wants to close more deals, a sales leader looking to level up your team, or a founder building a GTM motion from scratch — there's a way to work together.
+            Whether you're a seller, a sales leader, or a founder building from scratch — there's a way to work together.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
