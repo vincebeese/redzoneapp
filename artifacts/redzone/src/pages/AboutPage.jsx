@@ -120,7 +120,7 @@ export default function AboutPage() {
       {/* Companies */}
       <section className="bg-white py-12">
         <div className="container mx-auto px-6 max-w-4xl text-center">
-          <p className="text-xs text-gray-400 uppercase tracking-widest mb-6">Worked with teams at</p>
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-6">Trusted by teams at</p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
             {companies.map(name => (
               <span key={name} className="text-sm font-semibold text-gray-400 tracking-tight hover:text-gray-600 transition-colors">
