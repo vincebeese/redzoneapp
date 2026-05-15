@@ -63,6 +63,15 @@ export async function runTrialCheck() {
         continue;
       }
 
+      // Time-based warnings (fires once at each threshold)
+      if (daysLeft <= 1) {
+        await sendIfNotSent(user.id, '1day', user.email, user.display_name, { daysLeft: 1 });
+      } else if (daysLeft <= 2) {
+        await sendIfNotSent(user.id, '2day', user.email, user.display_name, { daysLeft: Math.ceil(daysLeft) });
+      } else if (daysLeft <= 7) {
+        await sendIfNotSent(user.id, '7day', user.email, user.display_name, { daysLeft: Math.ceil(daysLeft) });
+      }
+
       // Session-based warnings (fires once at each threshold)
       if (sessions >= 50) {
         await sendIfNotSent(user.id, '50session', user.email, user.display_name, { sessionCount: sessions });

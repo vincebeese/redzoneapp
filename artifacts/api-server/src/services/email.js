@@ -212,22 +212,22 @@ export async function sendWelcomeEmail({ toEmail, displayName }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: 'Welcome to Red Zone Selling Coach — your request is being reviewed',
+    subject: 'Welcome to Red Zone Selling Coach — your account is being reviewed',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
         <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
-        <p style="color: #666; font-size: 13px; margin-top: 0;">Beta Access Request</p>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Account Created</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
 
         <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
 
         <p style="font-size: 15px; line-height: 1.6;">
-          Thanks for signing up! Your account has been created and your request for beta access is now being reviewed.
+          Thanks for signing up! Your account has been created and is now being reviewed.
         </p>
 
         <p style="font-size: 15px; line-height: 1.6;">
-          You'll receive another email as soon as your access is approved. We typically review requests within 1 business day.
+          You'll receive another email as soon as your access is confirmed. We typically review requests within 1 business day.
         </p>
 
         <p style="font-size: 15px; line-height: 1.6;">
@@ -306,18 +306,22 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: "You're approved — Red Zone Selling Coach beta access activated",
+    subject: "You're approved — your Red Zone Selling Coach trial is now active",
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
         <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
-        <p style="color: #666; font-size: 13px; margin-top: 0;">Beta Access Approved</p>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Trial Access Approved</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
 
         <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
 
         <p style="font-size: 15px; line-height: 1.6;">
-          Great news — your beta access to <strong>Red Zone Selling Coach™</strong> has been approved! You're ready to start coaching.
+          Great news — your trial access to <strong>Red Zone Selling Coach™</strong> has been approved! You're ready to start coaching.
+        </p>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          You can subscribe at any time during your trial and your access continues without interruption.
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
@@ -331,7 +335,7 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
         <div style="background: #f9f9f9; border: 1px solid #eee; border-left: 3px solid #c8102e; border-radius: 6px; padding: 16px 20px; margin: 24px 0;">
           <p style="font-size: 14px; font-weight: 600; color: #1a1a2e; margin: 0 0 6px 0;">Join the Red Zone Selling Community on Slack</p>
           <p style="font-size: 14px; color: #555; line-height: 1.5; margin: 0 0 12px 0;">
-            Connect with other beta members, share wins, ask questions, and get direct access to Vince.
+            Connect with other members, share wins, ask questions, and get direct access to Vince.
           </p>
           <a href="https://join.slack.com/t/redzoneselling/shared_invite/zt-3v9x4pguq-m8pAfJ3yOge7qNsZHfyp7g"
              style="color: #c8102e; font-size: 14px; font-weight: 600; text-decoration: none;">
@@ -353,7 +357,7 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
     `,
   });
 
-  if (error) throw new Error(`Failed to send beta approved email: ${error.message}`);
+  if (error) throw new Error(`Failed to send trial approved email: ${error.message}`);
   return data;
 }
 
@@ -364,23 +368,27 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
 
   const subjects = {
     '7day':      'Your Red Zone Selling Coach trial ends in 7 days',
-    '2day':      'Last chance — your trial ends in 2 days',
-    '50session': "You've hit the halfway mark on your trial sessions",
-    '75session': 'Only 25 coaching sessions left in your trial',
+    '2day':      'Your trial ends in 2 days — Red Zone Selling Coach',
+    '1day':      'Today is the last day of your trial — Red Zone Selling Coach',
+    '25session': "You've used 25 of your 75 trial sessions — Red Zone Selling Coach",
+    '50session': 'Only 25 coaching sessions left in your trial — Red Zone Selling Coach',
   };
 
   const headlines = {
     '7day':      '7 days left in your trial',
     '2day':      'Your trial ends in 2 days',
-    '50session': "50 sessions in — halfway there",
-    '75session': '75 sessions used — 25 remaining',
+    '1day':      'Today is the last day of your trial',
+    '25session': '25 sessions in — 50 remaining',
+    '50session': '50 sessions used — 25 remaining',
   };
 
   const bodies = {
-    '7day': `Your free trial of Red Zone Selling Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, upgrade to a plan before your trial expires.`,
-    '2day': `Your free trial expires in <strong>2 days</strong>. Don't lose your deals, sessions, and coaching history — subscribe now to keep everything and stay in the game.`,
-    '50session': `You've completed <strong>50 coaching sessions</strong> — you've got 50 more before your trial ends. When you're ready to go unlimited, upgrading takes less than 2 minutes.`,
-    '75session': `You've used <strong>75 of your 100 trial sessions</strong>. You've got 25 left. Lock in your rate now before your trial ends and keep your momentum going.`,
+    '7day': `Your free trial of Red Zone Selling Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, subscribe before your trial expires — you can subscribe at any time, even right now, and your rate locks in immediately.`,
+    '2day': `Your free trial expires in <strong>2 days</strong>. Don't lose your deals, sessions, and coaching history — subscribe to keep everything. You can subscribe at any time before your trial ends and your access continues without interruption.`,
+    '1day': `Today is the last day of your free trial. After today, your access will be paused — but everything is saved. Your deals, sessions, and coaching history will all be waiting for you.<br /><br />
+      Subscribe now to keep your momentum going. You can subscribe at any time, including right now, and your access continues immediately.`,
+    '25session': `You've completed <strong>25 coaching sessions</strong> — you've got 50 more before reaching the 75-session trial limit. When you're ready to go unlimited, subscribing takes less than 2 minutes. You can subscribe at any time, even before your trial ends.`,
+    '50session': `You've used <strong>50 of your 75 trial sessions</strong>. You've got 25 left. Subscribe now to keep going without interruption — you don't have to wait for your trial to end. Lock in your rate and keep your momentum.`,
   };
 
   const { data, error } = await client.emails.send({
@@ -458,7 +466,7 @@ export async function sendTrialExpiredEmail({ toEmail, displayName, type }) {
       body: `This is the last email we'll send.<br /><br />
         Your Red Zone Selling AI Coach account has been inactive for 14 days. Tomorrow, your deals, coaching sessions, and history will be permanently deleted and cannot be recovered.<br /><br />
         If you want to keep everything and get back to work, subscribe now — it takes less than 2 minutes.<br /><br />
-        If you've decided this isn't for you, no hard feelings. We hope the beta gave you something useful.`,
+        If you've decided this isn't for you, no hard feelings. We hope the trial gave you something useful.`,
       cta: 'Subscribe Now — Save My Data',
     },
   };
@@ -610,6 +618,52 @@ export async function sendBackupEmail({ toEmail, dateStr, tableResults, attachme
   return data;
 }
 
+export async function sendNewSubscriberWelcomeEmail({ toEmail, displayName, setPasswordUrl }) {
+  const { client, fromEmail } = await getResendClient();
+  const firstName = displayName?.split(' ')[0] || 'there';
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: 'Your Red Zone Selling Coach account is ready — set your password',
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Subscription Confirmed</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
+
+        <h2 style="font-size: 20px; color: #1a1a2e; margin-bottom: 8px;">Your subscription is confirmed and your account is ready.</h2>
+
+        <p style="font-size: 15px; line-height: 1.6;">
+          We've created your Red Zone Selling Coach account using the email address from your subscription. One last step — click below to set your password and start coaching.
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${setPasswordUrl}"
+             style="background-color: #c8102e; color: #ffffff; text-decoration: none;
+                    padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block;">
+            Set My Password →
+          </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888; line-height: 1.5;">
+          This link expires in <strong>7 days</strong> and can only be used once.<br />
+          Questions? Reply to this email or reach Vince at <a href="mailto:vince@vincebeese.com" style="color: #c8102e;">vince@vincebeese.com</a>
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center;">REDZONESELLING.CO</p>
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send new subscriber welcome email: ${error.message}`);
+  return data;
+}
+
 export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
   const { client, fromEmail } = await getResendClient();
 
@@ -620,16 +674,16 @@ export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
         <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
-        <p style="color: #666; font-size: 13px; margin-top: 0;">Beta Access Invitation</p>
+        <p style="color: #666; font-size: 13px; margin-top: 0;">Invitation</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
 
         <p style="font-size: 15px; line-height: 1.6;">
-          ${inviterName ? `<strong>${inviterName}</strong> has` : 'You have been'} invited you to join the Red Zone Selling Coach beta program — an AI-powered sales coaching platform built for elite performers.
+          ${inviterName ? `<strong>${inviterName}</strong> has invited you` : 'You have been invited'} to join Red Zone Selling Coach — an AI-powered sales coaching platform built for elite performers.
         </p>
 
         <p style="font-size: 15px; line-height: 1.6;">
-          Click the button below to create your account. Your beta access will be activated automatically.
+          Click the button below to create your account and start your 14-day free trial.
         </p>
 
         <div style="text-align: center; margin: 32px 0;">

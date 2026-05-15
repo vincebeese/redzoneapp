@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import { logEvent } from '../services/analytics.js';
-import { sendSubscriptionConfirmationEmail, sendPasswordResetEmail } from '../services/email.js';
+import { sendSubscriptionConfirmationEmail, sendNewSubscriberWelcomeEmail } from '../services/email.js';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -119,7 +119,7 @@ router.post('/webhook', async (req, res) => {
                   ? `https://${(process.env.REPLIT_DOMAINS || '').split(',')[0]}`
                   : 'https://redzoneselling.co';
                 const resetUrl = `${appBaseUrl}/reset-password?token=${resetToken}`;
-                sendPasswordResetEmail({ toEmail: stripeCustomer.email, resetUrl })
+                sendNewSubscriberWelcomeEmail({ toEmail: stripeCustomer.email, displayName, setPasswordUrl: resetUrl })
                   .catch(err => console.error('Auto-create welcome email failed:', err.message));
                 console.log(`Auto-created user account for new Stripe subscriber ${customerId} (${stripeCustomer.email})`);
               }
