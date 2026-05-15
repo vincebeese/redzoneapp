@@ -87,7 +87,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="mailto:vince@vincebeese.com"
+                href="/#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Work With Vince →
@@ -137,7 +137,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="mailto:vince@vincebeese.com"
+                href="/#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Start a Conversation →
@@ -188,7 +188,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="mailto:vince@vincebeese.com"
+                href="/#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Book a Workshop →
@@ -238,7 +238,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="mailto:vince@vincebeese.com"
+                href="/#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Start a Conversation →
@@ -410,7 +410,7 @@ export default function ServicesPage() {
               Start AI Coach Free Trial →
             </Link>
             <a
-              href="mailto:vince@vincebeese.com"
+              href="/#contact"
               className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-50 text-base h-11 px-6 rounded font-medium transition-colors"
             >
               Email Vince →
