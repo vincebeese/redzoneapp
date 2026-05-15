@@ -35,3 +35,9 @@ id = "lE1JkE720k669Xmi8XFQC"
 uri = "file://.local/prompts/mindset_mode_final.md"
 type = "text"
 title = "Mindset Mode — Live in Production"
+
+[[outputs]]
+id = "I22zJzUf7IegrSPpRf4ek"
+uri = "file://exports/RZS_Email_Templates.md"
+type = "text"
+title = "RZS Email Templates"
