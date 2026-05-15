@@ -48,8 +48,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-gray-600 leading-relaxed">
                 <p>
-                  Vince Beese spent 25+ years in B2B sales — first as a rep, then as a VP, then as a CRO. He's not a LinkedIn influencer recycling someone else's advice. He built his career closing real deals, leading real teams, and doing the hard work before he ever started teaching it.
-                </p>
+                  Vince Beese spent 25+ years in B2B sales — first as a rep, then as a VP, then as a CRO. He's not a LinkedIn influencer recycling someone else's advice.                </p>
                 <p>
                   He's helped revenue organizations at companies like Meta, AT&T, Experian, LivePerson, and BlueSnap build the discipline, process, and mental game needed to close at the highest level.
                 </p>
