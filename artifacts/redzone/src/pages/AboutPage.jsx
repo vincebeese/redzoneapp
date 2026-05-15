@@ -14,7 +14,7 @@ const timeline = [
   { period: '25+ Years', label: 'B2B Enterprise Sales', detail: 'Closed complex enterprise deals across SaaS, media, fintech, and logistics. Learned every zone of a deal from the inside out.' },
   { period: 'CRO', label: 'Five Exits', detail: 'Led revenue organizations through five successful exits. Built sales teams from scratch and scaled them through growth, change, and pressure.' },
   { period: '$1B+', label: 'Revenue Generated', detail: 'Directly responsible for building pipelines, systems, and teams that produced over a billion dollars in B2B revenue.' },
-  { period: 'Today', label: 'Coach · Speaker · Author', detail: 'Coaching individual sellers, sales leaders, and teams. Teaching the Red Zone Selling system live and through the RZS AI Coach.' },
+  { period: 'Today', label: 'Coach · Keynote Speaker · Author', detail: 'Coaching individual sellers, sales leaders, and teams. Keynote speaking at SKOs, QBRs, and sales conferences. Teaching the Red Zone Selling system live and through the RZS AI Coach.' },
 ];
 
 export default function AboutPage() {
@@ -28,7 +28,7 @@ export default function AboutPage() {
             Most sales coaches teach what they've read.<br className="hidden sm:block" /> Vince teaches what he's lived.
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            25+ years. Five exits. $1B+ in revenue generated. Vince Beese is a Sales Strength Coach, speaker, and author who built the Red Zone Selling system from 25 years of closing real deals and leading real teams.
+            25+ years. Five exits. $1B+ in revenue generated. Vince Beese is a Sales Strength Coach, keynote speaker, and author who built the Red Zone Selling system from 25 years of closing real deals and leading real teams.
           </p>
         </div>
       </section>
@@ -78,7 +78,7 @@ export default function AboutPage() {
                   <div className="text-sm text-gray-500 uppercase tracking-wider">Revenue Generated</div>
                 </div>
                 <div className="bg-[#F9F6F0] rounded-xl p-5 border border-gray-100">
-                  <div className="text-sm font-semibold text-[#1A1A1A] mb-1">Coach · Speaker · Author</div>
+                  <div className="text-sm font-semibold text-[#1A1A1A] mb-1">Coach · Keynote Speaker · Author</div>
                   <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-[#C0392B] hover:underline font-medium">Red Zone Selling on Amazon →</a>
                 </div>
               </div>
