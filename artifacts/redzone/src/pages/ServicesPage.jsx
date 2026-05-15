@@ -299,25 +299,25 @@ export default function ServicesPage() {
               </a>
             </div>
 
-            {/* Book quote block */}
+            {/* Book endorsements */}
             <div className="space-y-4">
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">From the book</p>
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">What readers are saying</p>
 
-              <div className="border border-white/10 rounded-xl px-6 py-5 relative">
-                <div className="absolute top-3 right-3 bg-yellow-900/40 text-yellow-400 text-xs font-medium px-2 py-0.5 rounded">Placeholder — replace with real quote</div>
-                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed mb-3 text-sm">
-                  "The Red Zone is not the time to learn a new play. It's the time to execute the one you've been practicing. Preparation is the only thing that separates confident closers from desperate ones."
-                </p>
-                <p className="text-xs text-gray-500">Red Zone Selling — Chapter [X]</p>
-              </div>
-
-              <div className="border border-white/10 rounded-xl px-6 py-5 relative">
-                <div className="absolute top-3 right-3 bg-yellow-900/40 text-yellow-400 text-xs font-medium px-2 py-0.5 rounded">Placeholder — replace with real quote</div>
-                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed mb-3 text-sm">
-                  "Most sellers spend 80% of their time in deals they'll never close. Zone discipline is about protecting your pipeline from yourself."
-                </p>
-                <p className="text-xs text-gray-500">Red Zone Selling — Chapter [X]</p>
-              </div>
+              {[
+                { quote: 'Red Zone Selling is the first sales playbook that actually feels like game day. Vince doesn\'t just teach you how to close, he shows you how to control the field, read the defense, and finish strong. Every chapter hits like a two-minute drill for enterprise deals.', name: 'Justin Michael', title: 'Bestselling Author, Cold Call ALGO' },
+                { quote: 'Red Zone Selling flips the script on traditional sales books. Vince gives you a clear framework to stay in control, create buyer value, and win when it counts. It\'s not just smart, it\'s built for sellers who want to close with confidence.', name: 'Andy Paul', title: 'Author, Sell Without Selling Out' },
+                { quote: 'Red Zone Selling is a high-impact playbook for enterprise sellers who are tired of losing deals in the final stretch. Vince Beese combines battle-tested tactics with sports metaphors that actually work, delivering a clear, actionable framework to qualify better, build real momentum, and close with precision. This isn\'t theory—it\'s a system designed by someone who\'s lived it.', name: 'Scott Leese', title: 'Founder / Sales Leader / Author / Speaker' },
+                { quote: 'Red Zone Selling aligns perfectly with my approach: it\'s relentless in driving value, not just pushing deals, ensuring sellers win big by guiding customers toward real outcomes.', name: 'Jamal Reimer', title: 'Founder, Enterprise Sellers · Author, Mega Deals Secrets' },
+                { quote: 'Red Zone Selling is the playbook every revenue leader needs. Vince Beese cuts through the noise and delivers a real-world framework that helps your team qualify smarter, build momentum, and close decisively. If you\'re serious about winning in enterprise sales, this book belongs on your desk—not your shelf.', name: 'Sam Jacobs', title: 'Founder & CEO, Pavilion · Author, Kind Folks Finish First' },
+              ].map(item => (
+                <div key={item.name} className="border border-white/10 rounded-xl px-6 py-5">
+                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed mb-3 text-sm">
+                    "{item.quote}"
+                  </p>
+                  <p className="text-xs text-gray-400 font-medium">{item.name}</p>
+                  <p className="text-xs text-gray-600">{item.title}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
