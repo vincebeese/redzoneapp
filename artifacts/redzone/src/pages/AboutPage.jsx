@@ -28,7 +28,7 @@ export default function AboutPage() {
             Most sales coaches teach what they've read.<br className="hidden sm:block" /> Vince teaches what he's lived.
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            25+ years. Five exits. $1B+ in revenue generated. Vince Beese is a Sales Strength Coach, keynote speaker, and author who built the Red Zone Selling system from 25 years of closing real deals and leading real teams.
+            25+ years. Five exits. $1B+ in revenue generated. Vince Beese is a Sales Strength Coach, keynote speaker, and author who built the Red Zone Selling system from closing real deals and leading real teams.
           </p>
         </div>
       </section>
