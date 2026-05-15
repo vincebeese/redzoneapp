@@ -87,7 +87,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="/#contact"
+                href="#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Work With Vince →
@@ -137,7 +137,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="/#contact"
+                href="#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Start a Conversation →
@@ -188,7 +188,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="/#contact"
+                href="#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Book a Workshop →
@@ -238,7 +238,7 @@ export default function ServicesPage() {
                 ))}
               </ul>
               <a
-                href="/#contact"
+                href="#contact"
                 className="inline-flex items-center justify-center bg-[#1A1A1A] hover:bg-[#333] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
               >
                 Start a Conversation →
@@ -394,7 +394,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="bg-white py-14">
+      <section className="bg-white py-14 border-b border-gray-100">
         <div className="container mx-auto px-6 max-w-3xl text-center">
           <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">
             Find the right fit.
@@ -409,12 +409,53 @@ export default function ServicesPage() {
             >
               Start AI Coach Free Trial →
             </Link>
-            <a
-              href="/#contact"
-              className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-50 text-base h-11 px-6 rounded font-medium transition-colors"
-            >
-              Email Vince →
-            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section className="bg-gray-50 py-14 border-t border-gray-200" id="contact">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="grid md:grid-cols-2 gap-12">
+            <div>
+              <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4">Get In Touch</h2>
+              <p className="text-gray-600 mb-8">
+                Whether you're ready to start or just have questions, reach out and we'll point you in the right direction.
+              </p>
+              <div className="space-y-5">
+                <div className="flex items-center gap-4 text-gray-700">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 text-[#C0392B]">✉</div>
+                  <div>
+                    <p className="font-medium text-sm">Email</p>
+                    <a href="mailto:vince@vincebeese.com" className="text-sm text-gray-600 hover:text-[#C0392B] transition-colors">vince@vincebeese.com</a>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-gray-700">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 text-[#C0392B] font-bold text-sm">in</div>
+                  <div>
+                    <p className="font-medium text-sm">LinkedIn</p>
+                    <a href="https://www.linkedin.com/in/vbeese/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-[#C0392B] transition-colors">linkedin.com/in/vbeese</a>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-gray-700">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 text-[#C0392B]">💬</div>
+                  <div>
+                    <p className="font-medium text-sm">Response Time</p>
+                    <p className="text-sm text-gray-600">We typically respond within 24 hours.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              <iframe
+                src="https://oe8gn.share.hsforms.com/2yxZx7jN2SceunGlF9Oi8mw"
+                title="Contact Form"
+                width="100%"
+                height="500"
+                frameBorder="0"
+                style={{ display: 'block' }}
+              />
+            </div>
           </div>
         </div>
       </section>
