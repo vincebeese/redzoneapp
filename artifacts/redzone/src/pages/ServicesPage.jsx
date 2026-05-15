@@ -402,13 +402,7 @@ export default function ServicesPage() {
               <p className="text-gray-600 mb-6">
                 Most clients don't pick just one. The AI Coach and 1:1 coaching are the most common combination — always-on between live sessions with Vince.
               </p>
-              <Link
-                to="/signup"
-                className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-sm h-10 px-5 rounded font-medium transition-colors mb-8"
-              >
-                Start AI Coach Free Trial →
-              </Link>
-              <div className="space-y-5 mt-2">
+              <div className="space-y-5">
                 <div className="flex items-center gap-4 text-gray-700">
                   <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 text-[#C0392B]">✉</div>
                   <div>
