@@ -11,10 +11,10 @@ export default function ServicesPage() {
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-4 block">Services</span>
           <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[#1A1A1A]">
-            One system. Every format.
+            One system. Multiple ways to work together.
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            Whether you need always-on AI coaching, live 1:1 sessions, team programs, or the book — the Red Zone Selling methodology is available in the format that fits where you are.
+            Whether you need always-on AI coaching, live 1:1 sessions, team programs, or the book — it's all Red Zone Selling.
           </p>
         </div>
       </section>
