@@ -157,19 +157,17 @@ export default function AboutPage() {
               </figcaption>
             </figure>
 
-            {/* Placeholder testimonial */}
-            <figure className="bg-white border border-dashed border-gray-300 rounded-xl px-7 py-6 relative">
-              <div className="absolute top-3 right-3 bg-yellow-100 text-yellow-700 text-xs font-medium px-2 py-0.5 rounded">Placeholder — replace with real quote</div>
+            <figure className="bg-white border border-gray-200 rounded-xl px-7 py-6 shadow-sm">
               <blockquote>
-                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-500 leading-relaxed mb-4">
-                  "Working with Vince completely changed how I think about my pipeline. I now know exactly which zone I'm in on every deal and what play to run next. My close rate went up significantly in the first 90 days."
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4">
+                  "We brought Vince in to keynote and run a workshop at our SKO to help our team get better at closing complex enterprise deals. The keynote set the stage but the workshop is where it came alive. The deal breakdown sessions were outstanding — enterprise sellers working through live opportunities in real time with the whole room weighing in. Everyone was engaged, everyone was coaching, everyone was learning. That level of participation doesn't happen by accident. Vince created it. Our team left better than they walked in."
                 </p>
               </blockquote>
               <figcaption className="flex items-center gap-3">
-                <div className="w-px h-8 bg-gray-300"></div>
+                <div className="w-px h-8 bg-[#C0392B]"></div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-500">[Client Name]</p>
-                  <p className="text-xs text-gray-400">[Title, Company]</p>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Shawn Lance</p>
+                  <p className="text-xs text-gray-500">VP of Sales, Covenant Logistics</p>
                 </div>
               </figcaption>
             </figure>

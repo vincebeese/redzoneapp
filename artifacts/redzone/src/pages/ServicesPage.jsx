@@ -106,18 +106,17 @@ export default function ServicesPage() {
               </a>
             </div>
             <div>
-              <figure className="bg-white border border-dashed border-gray-300 rounded-xl px-7 py-6 relative">
-                <div className="absolute top-3 right-3 bg-yellow-100 text-yellow-700 text-xs font-medium px-2 py-0.5 rounded">Placeholder — replace with real quote</div>
+              <figure className="bg-white border border-gray-200 rounded-xl px-7 py-6 shadow-sm">
                 <blockquote>
-                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-500 leading-relaxed mb-4">
-                    "After just a few sessions with Vince, I had a framework for every deal in my pipeline. I stopped guessing and started executing. The discipline he brings to the process is unlike anything I've seen from a coach."
+                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4">
+                    "Vince started with a full sales audit — no sugarcoating, just an honest assessment of where we were breaking down. He built our sales process from scratch, gave the team a system for both active deals and prospecting, and created real pipeline visibility we never had before. The results followed fast. We hit our biggest revenue month since I took over the company. Vince didn't just fix our sales motion — he changed how we think about selling."
                   </p>
                 </blockquote>
                 <figcaption className="flex items-center gap-3">
-                  <div className="w-px h-8 bg-gray-300"></div>
+                  <div className="w-px h-8 bg-[#C0392B]"></div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-500">[Client Name]</p>
-                    <p className="text-xs text-gray-400">[Title, Company]</p>
+                    <p className="text-sm font-semibold text-[#1A1A1A]">Keith Pepper</p>
+                    <p className="text-xs text-gray-500">Publisher, Rough Draft Atlanta</p>
                   </div>
                 </figcaption>
               </figure>
@@ -208,18 +207,17 @@ export default function ServicesPage() {
               </a>
             </div>
             <div>
-              <figure className="bg-white border border-dashed border-gray-300 rounded-xl px-7 py-6 relative">
-                <div className="absolute top-3 right-3 bg-yellow-100 text-yellow-700 text-xs font-medium px-2 py-0.5 rounded">Placeholder — replace with real quote</div>
+              <figure className="bg-white border border-gray-200 rounded-xl px-7 py-6 shadow-sm">
                 <blockquote>
-                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-500 leading-relaxed mb-4">
-                    "Vince's keynote at our SKO was the highlight of the event. He didn't come in with generic sales advice — he came in with a system, and our reps walked out with plays they could run the next morning."
+                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4">
+                    "We brought Vince in to keynote and run a workshop at our SKO to help our team get better at closing complex enterprise deals. The keynote set the stage but the workshop is where it came alive. The deal breakdown sessions were outstanding — enterprise sellers working through live opportunities in real time with the whole room weighing in. Everyone was engaged, everyone was coaching, everyone was learning. That level of participation doesn't happen by accident. Vince created it. Our team left better than they walked in."
                   </p>
                 </blockquote>
                 <figcaption className="flex items-center gap-3">
-                  <div className="w-px h-8 bg-gray-300"></div>
+                  <div className="w-px h-8 bg-[#C0392B]"></div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-500">[Client Name]</p>
-                    <p className="text-xs text-gray-400">[Title, Company]</p>
+                    <p className="text-sm font-semibold text-[#1A1A1A]">Shawn Lance</p>
+                    <p className="text-xs text-gray-500">VP of Sales, Covenant Logistics</p>
                   </div>
                 </figcaption>
               </figure>
@@ -334,7 +332,7 @@ export default function ServicesPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Real testimonial */}
+            {/* Joe Twer — full width */}
             <figure className="bg-white border border-gray-200 rounded-xl px-6 py-6 shadow-sm md:col-span-3">
               <blockquote>
                 <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 text-lg leading-relaxed mb-4">
@@ -345,30 +343,58 @@ export default function ServicesPage() {
                 <div className="w-px h-8 bg-[#C0392B]"></div>
                 <div>
                   <p className="text-sm font-semibold text-[#1A1A1A]">Joe Twer</p>
-                  <p className="text-xs text-gray-500">Global Head of Sales, BlueSnap</p>
+                  <p className="text-xs text-gray-500">Global VP of Sales, BlueSnap</p>
                 </div>
               </figcaption>
             </figure>
 
-            {[1, 2, 3].map(i => (
-              <figure key={i} className="bg-white border border-dashed border-gray-300 rounded-xl px-6 py-5 relative">
-                <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-700 text-xs font-medium px-1.5 py-0.5 rounded">Placeholder</div>
-                <blockquote>
-                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-400 leading-relaxed mb-4 text-sm">
-                    {i === 1 && '"[Add a real client testimonial here about your specific experience working with Vince and the results you achieved.]"'}
-                    {i === 2 && '"[Add a real client testimonial here. What changed after working with Vince? What results did you see in your pipeline or close rate?]"'}
-                    {i === 3 && '"[Add a real client testimonial here. What was your situation before and after? What would you tell someone considering working with Vince?]"'}
-                  </p>
-                </blockquote>
-                <figcaption className="flex items-center gap-3">
-                  <div className="w-px h-7 bg-gray-300"></div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-400">[Client Name]</p>
-                    <p className="text-xs text-gray-400">[Title, Company]</p>
-                  </div>
-                </figcaption>
-              </figure>
-            ))}
+            {/* Dan Cain */}
+            <figure className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm">
+              <blockquote>
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4 text-sm">
+                  "Vince ran a Red Zone Selling workshop at our SKO and it was exactly what our team needed. He came in prepared, understood our business quickly, and delivered a session that was practical from the first minute. The framework gave our reps a structured way to think about their deals that they didn't have before. The energy in the room was high and the feedback afterward was outstanding. Vince is the kind of facilitator who makes the content stick."
+                </p>
+              </blockquote>
+              <figcaption className="flex items-center gap-3">
+                <div className="w-px h-7 bg-[#C0392B]"></div>
+                <div>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Dan Cain</p>
+                  <p className="text-xs text-gray-500">VP of Sales, Implan</p>
+                </div>
+              </figcaption>
+            </figure>
+
+            {/* Katie Wilson */}
+            <figure className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm">
+              <blockquote>
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4 text-sm">
+                  "We brought Vince in to help us get clarity on our GTM motion. We had momentum but we didn't have a system. Vince assessed where we were, identified where we were breaking down, and helped us build a focused repeatable approach. What I appreciated most was that he didn't come in with a generic playbook. He learned our business and gave us something we could actually use. The Red Zone Selling framework is now part of how we operate."
+                </p>
+              </blockquote>
+              <figcaption className="flex items-center gap-3">
+                <div className="w-px h-7 bg-[#C0392B]"></div>
+                <div>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Katie Wilson</p>
+                  <p className="text-xs text-gray-500">VP of Client Services, Built</p>
+                </div>
+              </figcaption>
+            </figure>
+
+            {/* Chris Schwartz */}
+            <figure className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm">
+              <blockquote>
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-700 leading-relaxed mb-4 text-sm">
+                  "I've worked with a lot of sales trainers and coaches over the years. Vince is different. He combines real enterprise sales experience with a practical framework that actually sticks. We brought him in for a keynote and workshop combo and the impact carried beyond the event. The Red Zone Selling system gave our team a common language around deals and a way to hold each other accountable. If you're a CRO looking to sharpen your team's execution, this is the investment."
+                </p>
+              </blockquote>
+              <figcaption className="flex items-center gap-3">
+                <div className="w-px h-7 bg-[#C0392B]"></div>
+                <div>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Chris Schwartz</p>
+                  <p className="text-xs text-gray-500">CRO, Trackforce</p>
+                </div>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
