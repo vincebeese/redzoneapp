@@ -62,10 +62,10 @@ export async function sendPasswordResetEmail({ toEmail, resetUrl }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: 'Reset your Red Zone Selling Coach password',
+    subject: 'Reset your Red Zone Selling AI Coach password',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Password Reset</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -106,10 +106,10 @@ export async function sendMagicLinkEmail({ toEmail, magicUrl }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: 'Your Red Zone Selling Coach sign-in link',
+    subject: 'Your Red Zone Selling AI Coach sign-in link',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Passwordless Sign-In</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -164,10 +164,10 @@ export async function sendTrialStartedEmail({ toEmail, displayName, selectedPlan
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: 'Your 14-day free trial has started — Red Zone Selling Coach',
+    subject: 'Your 14-day free trial has started — Red Zone Selling AI Coach',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Free Trial</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -212,10 +212,10 @@ export async function sendWelcomeEmail({ toEmail, displayName }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: 'Welcome to Red Zone Selling Coach — your account is being reviewed',
+    subject: 'Welcome to Red Zone Selling AI Coach — your account is being reviewed',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Account Created</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -262,7 +262,7 @@ export async function sendNewUserAdminNotification({ adminEmail, newUserEmail, n
     subject: `${label}: ${newUserName || newUserEmail}`,
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">${label}</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -306,10 +306,10 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: "You're approved — your Red Zone Selling Coach trial is now active",
+    subject: "You're approved — your Red Zone Selling AI Coach trial is now active",
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Trial Access Approved</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -317,7 +317,7 @@ export async function sendBetaApprovedEmail({ toEmail, displayName }) {
         <p style="font-size: 15px; line-height: 1.6;">Hi ${firstName},</p>
 
         <p style="font-size: 15px; line-height: 1.6;">
-          Great news — your trial access to <strong>Red Zone Selling Coach™</strong> has been approved! You're ready to start coaching.
+          Great news — your trial access to <strong>Red Zone Selling AI Coach</strong> has been approved! You're ready to start coaching.
         </p>
 
         <p style="font-size: 13px; color: #888; line-height: 1.5;">
@@ -367,11 +367,11 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
   const firstName = displayName?.split(' ')[0] || 'there';
 
   const subjects = {
-    '7day':      'Your Red Zone Selling Coach trial ends in 7 days',
-    '2day':      'Your trial ends in 2 days — Red Zone Selling Coach',
-    '1day':      'Today is the last day of your trial — Red Zone Selling Coach',
-    '25session': "You've used 25 of your 75 trial sessions — Red Zone Selling Coach",
-    '50session': 'Only 25 coaching sessions left in your trial — Red Zone Selling Coach',
+    '7day':      'Your Red Zone Selling AI Coach trial ends in 7 days',
+    '2day':      'Your trial ends in 2 days — Red Zone Selling AI Coach',
+    '1day':      'Today is the last day of your trial — Red Zone Selling AI Coach',
+    '25session': "You've used 25 of your 75 trial sessions — Red Zone Selling AI Coach",
+    '50session': 'Only 25 coaching sessions left in your trial — Red Zone Selling AI Coach',
   };
 
   const headlines = {
@@ -383,7 +383,7 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
   };
 
   const bodies = {
-    '7day': `Your free trial of Red Zone Selling Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, subscribe before your trial expires — you can subscribe at any time, even right now, and your rate locks in immediately.`,
+    '7day': `Your free trial of Red Zone Selling AI Coach ends in <strong>7 days</strong>. To keep your access and all your deals and coaching history, subscribe before your trial expires — you can subscribe at any time, even right now, and your rate locks in immediately.`,
     '2day': `Your free trial expires in <strong>2 days</strong>. Don't lose your deals, sessions, and coaching history — subscribe to keep everything. You can subscribe at any time before your trial ends and your access continues without interruption.`,
     '1day': `Today is the last day of your free trial. After today, your access will be paused — but everything is saved. Your deals, sessions, and coaching history will all be waiting for you.<br /><br />
       Subscribe now to keep your momentum going. You can subscribe at any time, including right now, and your access continues immediately.`,
@@ -394,10 +394,10 @@ export async function sendTrialWarningEmail({ toEmail, displayName, type, daysLe
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: subjects[type] || 'Your Red Zone Selling Coach trial is ending soon',
+    subject: subjects[type] || 'Your Red Zone Selling AI Coach trial is ending soon',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Trial Update</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -582,7 +582,7 @@ export async function sendBackupEmail({ toEmail, dateStr, tableResults, attachme
     attachments,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Weekly Database Backup</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -625,10 +625,10 @@ export async function sendNewSubscriberWelcomeEmail({ toEmail, displayName, setP
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: 'Your Red Zone Selling Coach account is ready — set your password',
+    subject: 'Your Red Zone Selling AI Coach account is ready — set your password',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Subscription Confirmed</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
@@ -638,7 +638,7 @@ export async function sendNewSubscriberWelcomeEmail({ toEmail, displayName, setP
         <h2 style="font-size: 20px; color: #1a1a2e; margin-bottom: 8px;">Your subscription is confirmed and your account is ready.</h2>
 
         <p style="font-size: 15px; line-height: 1.6;">
-          We've created your Red Zone Selling Coach account using the email address from your subscription. One last step — click below to set your password and start coaching.
+          We've created your Red Zone Selling AI Coach account using the email address from your subscription. One last step — click below to set your password and start coaching.
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
@@ -670,16 +670,16 @@ export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
   const { data, error } = await client.emails.send({
     from: fromEmail,
     to: toEmail,
-    subject: "You're invited to Red Zone Selling Coach",
+    subject: "You're invited to Red Zone Selling AI Coach",
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
-        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling Coach™</h1>
+        <h1 style="color: #c8102e; font-size: 22px; margin-bottom: 4px;">Red Zone Selling AI Coach</h1>
         <p style="color: #666; font-size: 13px; margin-top: 0;">Invitation</p>
 
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
 
         <p style="font-size: 15px; line-height: 1.6;">
-          ${inviterName ? `<strong>${inviterName}</strong> has invited you` : 'You have been invited'} to join Red Zone Selling Coach — an AI-powered sales coaching platform built for elite performers.
+          ${inviterName ? `<strong>${inviterName}</strong> has invited you` : 'You have been invited'} to join Red Zone Selling AI Coach — an AI-powered sales coaching platform built for elite performers.
         </p>
 
         <p style="font-size: 15px; line-height: 1.6;">

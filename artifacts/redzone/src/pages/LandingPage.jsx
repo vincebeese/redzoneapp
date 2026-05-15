@@ -28,7 +28,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="relative flex items-center justify-between px-6 py-3">
-          <img src="/logo.png" alt="Red Zone Selling Coach" style={{ height: '64px', width: 'auto' }} />
+          <img src="/logo.png" alt="Red Zone Selling" style={{ height: '64px', width: 'auto' }} />
 
           <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-6">
             <button onClick={() => scrollTo('coaching')} className="text-base text-gray-500 hover:text-gray-900 transition-colors">Offerings</button>

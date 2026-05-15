@@ -53,7 +53,7 @@ export default function Dashboard() {
     <div>
       <TopBar
         title={`Welcome back, ${displayName}`}
-        subtitle="Red Zone Selling Coach™"
+        subtitle="Red Zone Selling AI Coach"
       />
 
       {/* Beta FAQ Banner */}

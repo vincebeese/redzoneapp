@@ -1,11 +1,11 @@
-# Red Zone Selling Coach — Email Templates
+# Red Zone Selling AI Coach — Email Templates
 *All automated emails sent by the platform. Last updated: May 2026.*
 
 ---
 
 ## 1. Trial Started
 **Trigger:** User signs up for a free trial  
-**Subject:** Your 14-day free trial has started — Red Zone Selling Coach
+**Subject:** Your 14-day free trial has started — Red Zone Selling AI Coach
 
 Hi [First Name],
 
@@ -27,11 +27,11 @@ Questions? Reply to this email or reach Vince at vince@vincebeese.com
 
 ## 2. Trial Approved (Admin Granted)
 **Trigger:** Admin manually approves a user's trial access  
-**Subject:** You're approved — your Red Zone Selling Coach trial is now active
+**Subject:** You're approved — your Red Zone Selling AI Coach trial is now active
 
 Hi [First Name],
 
-Great news — your trial access to **Red Zone Selling Coach™** has been approved! You're ready to start coaching.
+Great news — your trial access to **Red Zone Selling AI Coach** has been approved! You're ready to start coaching.
 
 You can subscribe at any time during your trial and your access continues without interruption.
 
@@ -49,13 +49,13 @@ Welcome to the team. Let's close some deals.
 
 ## 3. Trial Warning — 7 Days Remaining
 **Trigger:** 7 days left before trial expires  
-**Subject:** Your Red Zone Selling Coach trial ends in 7 days
+**Subject:** Your Red Zone Selling AI Coach trial ends in 7 days
 
 Hi [First Name],
 
 **7 days left in your trial**
 
-Your free trial of Red Zone Selling Coach ends in **7 days**. To keep your access and all your deals and coaching history, subscribe before your trial expires — you can subscribe at any time, even right now, and your rate locks in immediately.
+Your free trial of Red Zone Selling AI Coach ends in **7 days**. To keep your access and all your deals and coaching history, subscribe before your trial expires — you can subscribe at any time, even right now, and your rate locks in immediately.
 
 [CTA Button: View Plans & Subscribe]
 
@@ -70,7 +70,7 @@ Questions? Reply to this email or reach out to vince@vincebeese.com
 
 ## 4. Trial Warning — 2 Days Remaining
 **Trigger:** 2 days left before trial expires  
-**Subject:** Your trial ends in 2 days — Red Zone Selling Coach
+**Subject:** Your trial ends in 2 days — Red Zone Selling AI Coach
 
 Hi [First Name],
 
@@ -88,7 +88,7 @@ Questions? Reply to this email or reach out to vince@vincebeese.com
 
 ## 5. Trial Warning — Last Day
 **Trigger:** 1 day (or less) remaining on trial  
-**Subject:** Today is the last day of your trial — Red Zone Selling Coach
+**Subject:** Today is the last day of your trial — Red Zone Selling AI Coach
 
 Hi [First Name],
 
@@ -108,7 +108,7 @@ Questions? Reply to this email or reach out to vince@vincebeese.com
 
 ## 6. Trial Warning — 25 Sessions Used
 **Trigger:** User has used 25 of their 75 trial sessions  
-**Subject:** You've used 25 of your 75 trial sessions — Red Zone Selling Coach
+**Subject:** You've used 25 of your 75 trial sessions — Red Zone Selling AI Coach
 
 Hi [First Name],
 
@@ -126,7 +126,7 @@ Questions? Reply to this email or reach out to vince@vincebeese.com
 
 ## 7. Trial Warning — 50 Sessions Used
 **Trigger:** User has used 50 of their 75 trial sessions (25 remaining)  
-**Subject:** Only 25 coaching sessions left in your trial — Red Zone Selling Coach
+**Subject:** Only 25 coaching sessions left in your trial — Red Zone Selling AI Coach
 
 Hi [First Name],
 
@@ -232,6 +232,7 @@ Questions? Reply to this email or reach out to vince@vincebeese.com
 **Trigger:** Stripe subscription created/payment succeeds  
 **Subject:** You're in — welcome to Red Zone Selling AI Coach
 
+
 Hi [First Name],
 
 **Your subscription is confirmed.**
@@ -246,13 +247,13 @@ Questions at any time — reply here or reach Vince at vince@vincebeese.com
 
 ## 13. New Subscriber Welcome (Stripe direct — no prior account)
 **Trigger:** Someone subscribes via Stripe payment link with no existing app account  
-**Subject:** Your Red Zone Selling Coach account is ready — set your password
+**Subject:** Your Red Zone Selling AI Coach account is ready — set your password
 
 Hi [First Name],
 
 **Your subscription is confirmed and your account is ready.**
 
-We've created your Red Zone Selling Coach account using the email address from your subscription. One last step — click below to set your password and start coaching.
+We've created your Red Zone Selling AI Coach account using the email address from your subscription. One last step — click below to set your password and start coaching.
 
 [CTA Button: Set My Password →]
 
@@ -263,7 +264,7 @@ Questions? Reply to this email or reach Vince at vince@vincebeese.com
 
 ## 14. Password Reset
 **Trigger:** User requests a password reset  
-**Subject:** Reset your Red Zone Selling Coach password
+**Subject:** Reset your Red Zone Selling AI Coach password
 
 We received a request to reset your password. Click the button below to set a new one.
 
@@ -276,7 +277,7 @@ If you didn't request a password reset, you can safely ignore this email.
 
 ## 15. Magic Link Sign-In
 **Trigger:** User requests passwordless sign-in  
-**Subject:** Your Red Zone Selling Coach sign-in link
+**Subject:** Your Red Zone Selling AI Coach sign-in link
 
 Click the button below to sign in instantly — no password needed.
 
@@ -289,9 +290,9 @@ If you didn't request this, you can safely ignore this email.
 
 ## 16. Invitation
 **Trigger:** Admin sends a direct invite to a specific email address  
-**Subject:** You're invited to Red Zone Selling Coach
+**Subject:** You're invited to Red Zone Selling AI Coach
 
-[Inviter Name] has invited you to join Red Zone Selling Coach — an AI-powered sales coaching platform built for elite performers.
+[Inviter Name] has invited you to join Red Zone Selling AI Coach — an AI-powered sales coaching platform built for elite performers.
 
 Click the button below to create your account and start your 14-day free trial.
 
@@ -304,7 +305,7 @@ If you weren't expecting this email, you can safely ignore it.
 
 ## 17. Account Pending Review
 **Trigger:** User signs up but does not receive instant trial access  
-**Subject:** Welcome to Red Zone Selling Coach — your account is being reviewed
+**Subject:** Welcome to Red Zone Selling AI Coach — your account is being reviewed
 
 Hi [First Name],
 
