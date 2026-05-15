@@ -6,7 +6,7 @@ const AMAZON_URL = 'https://www.amazon.com/dp/B0FLLHQG13';
 const companies = [
   'Meta', 'AT&T', 'Experian', 'Kustomer', 'LivePerson',
   'True Fit', 'Shipt', 'BlueSnap', 'Covenant', 'Built',
-  'Trackforce', 'Implan',
+  'Trackforce', 'Implan', 'CheetahMail', 'Trusted ID', 'Rebel Mail',
 ];
 
 const timeline = [
