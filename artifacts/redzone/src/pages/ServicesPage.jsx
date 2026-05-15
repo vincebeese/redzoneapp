@@ -26,27 +26,13 @@ export default function ServicesPage() {
             <div>
               <span className="inline-block bg-[#C0392B] text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Always on · Free Trial</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">RZS AI Coach</h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
+              <p className="text-gray-600 leading-relaxed">
                 The Red Zone Selling system. Always on. Ready when the moment is.
               </p>
-              <div className="flex gap-3">
-                <Link
-                  to="/signup"
-                  className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
-                >
-                  Start Free Trial →
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm h-10 px-5 rounded font-medium transition-colors"
-                >
-                  Log In
-                </Link>
-              </div>
             </div>
             <div className="bg-[#1A1A1A] rounded-xl p-7 text-white">
               <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">Three modes. Every selling situation.</p>
-              <div className="space-y-4">
+              <div className="space-y-4 mb-6">
                 {[
                   { badge: 'Deal Mode', desc: 'Get a Red Zone diagnosis and the exact play to run next. Drop in the situation — walk out with a named play and a time-bound next action.' },
                   { badge: 'Coach Mode', desc: 'Strategic guidance on your pipeline, process, and scenarios. Ask anything. Direct answers grounded in the system, no fluff.' },
@@ -57,6 +43,20 @@ export default function ServicesPage() {
                     <p className="text-gray-300 text-sm">{item.desc}</p>
                   </div>
                 ))}
+              </div>
+              <div className="flex gap-3">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
+                >
+                  Start Free Trial →
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center border border-white/20 text-white hover:bg-white/10 text-sm h-10 px-5 rounded font-medium transition-colors"
+                >
+                  Log In
+                </Link>
               </div>
             </div>
           </div>
