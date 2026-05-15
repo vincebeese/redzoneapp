@@ -13,9 +13,9 @@ export default function PublicLayout({ children, hideBetaBar = false }) {
 
   function handleContact() {
     setMobileMenuOpen(false);
-    if (isHome) {
-      const el = document.getElementById('contact');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById('contact');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
     } else {
       navigate('/#contact');
     }
