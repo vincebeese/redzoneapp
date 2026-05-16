@@ -278,19 +278,17 @@ export default function ServicesPage() {
       {/* The Book */}
       <section className="bg-[#1A1A1A] text-white py-14 border-b border-gray-700">
         <div className="container mx-auto px-6 max-w-5xl">
-          <div className="grid lg:grid-cols-3 gap-10 items-start">
-            {/* Book cover */}
+          {/* Cover + text */}
+          <div className="grid lg:grid-cols-2 gap-10 items-center mb-10">
             <div className="flex justify-center lg:justify-start">
               <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer">
                 <img
                   src="/book-cover.jpg"
                   alt="Red Zone Selling — The Ultimate Playbook for High-Performing Enterprise Sellers by Vince Beese"
-                  className="w-52 lg:w-full max-w-[220px] rounded-lg shadow-2xl hover:opacity-90 transition-opacity"
+                  className="w-52 lg:w-64 rounded-lg shadow-2xl hover:opacity-90 transition-opacity"
                 />
               </a>
             </div>
-
-            {/* Text + CTA */}
             <div>
               <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-4 block">The Book</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4">Red Zone Selling</h2>
@@ -315,27 +313,29 @@ export default function ServicesPage() {
                 Get the Book on Amazon →
               </a>
             </div>
+          </div>
 
-            {/* Book endorsements */}
-            <div className="space-y-4">
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">What readers are saying</p>
-
-              {[
-                { quote: 'Red Zone Selling is the first sales playbook that actually feels like game day. Vince doesn\'t just teach you how to close, he shows you how to control the field, read the defense, and finish strong. Every chapter hits like a two-minute drill for enterprise deals.', name: 'Justin Michael', title: 'Bestselling Author, Cold Call ALGO' },
-                { quote: 'Red Zone Selling flips the script on traditional sales books. Vince gives you a clear framework to stay in control, create buyer value, and win when it counts. It\'s not just smart, it\'s built for sellers who want to close with confidence.', name: 'Andy Paul', title: 'Author, Sell Without Selling Out' },
-                { quote: 'Red Zone Selling is a high-impact playbook for enterprise sellers who are tired of losing deals in the final stretch. Vince Beese combines battle-tested tactics with sports metaphors that actually work, delivering a clear, actionable framework to qualify better, build real momentum, and close with precision. This isn\'t theory—it\'s a system designed by someone who\'s lived it.', name: 'Scott Leese', title: 'Founder / Sales Leader / Author / Speaker' },
-                { quote: 'Red Zone Selling aligns perfectly with my approach: it\'s relentless in driving value, not just pushing deals, ensuring sellers win big by guiding customers toward real outcomes.', name: 'Jamal Reimer', title: 'Founder, Enterprise Sellers · Author, Mega Deals Secrets' },
-                { quote: 'Red Zone Selling is the playbook every revenue leader needs. Vince Beese cuts through the noise and delivers a real-world framework that helps your team qualify smarter, build momentum, and close decisively. If you\'re serious about winning in enterprise sales, this book belongs on your desk—not your shelf.', name: 'Sam Jacobs', title: 'Founder & CEO, Pavilion · Author, Kind Folks Finish First' },
-              ].map(item => (
-                <div key={item.name} className="border border-white/10 rounded-xl px-6 py-5">
-                  <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed mb-3 text-sm">
-                    "{item.quote}"
-                  </p>
+          {/* Endorsements — horizontal grid */}
+          <p className="text-xs text-gray-500 uppercase tracking-widest mb-4">What readers are saying</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { quote: 'Red Zone Selling is the first sales playbook that actually feels like game day. Vince doesn\'t just teach you how to close, he shows you how to control the field, read the defense, and finish strong. Every chapter hits like a two-minute drill for enterprise deals.', name: 'Justin Michael', title: 'Bestselling Author, Cold Call ALGO' },
+              { quote: 'Red Zone Selling flips the script on traditional sales books. Vince gives you a clear framework to stay in control, create buyer value, and win when it counts. It\'s not just smart, it\'s built for sellers who want to close with confidence.', name: 'Andy Paul', title: 'Author, Sell Without Selling Out' },
+              { quote: 'Red Zone Selling is a high-impact playbook for enterprise sellers who are tired of losing deals in the final stretch. Vince Beese combines battle-tested tactics with sports metaphors that actually work, delivering a clear, actionable framework to qualify better, build real momentum, and close with precision.', name: 'Scott Leese', title: 'Founder / Sales Leader / Author / Speaker' },
+              { quote: 'Red Zone Selling aligns perfectly with my approach: it\'s relentless in driving value, not just pushing deals, ensuring sellers win big by guiding customers toward real outcomes.', name: 'Jamal Reimer', title: 'Founder, Enterprise Sellers · Author, Mega Deals Secrets' },
+              { quote: 'Red Zone Selling is the playbook every revenue leader needs. Vince Beese cuts through the noise and delivers a real-world framework that helps your team qualify smarter, build momentum, and close decisively. If you\'re serious about winning in enterprise sales, this book belongs on your desk—not your shelf.', name: 'Sam Jacobs', title: 'Founder & CEO, Pavilion · Author, Kind Folks Finish First' },
+              { quote: 'Vince delivers more than inspiration — he provides a structured, zone-based framework that sales teams can apply immediately and consistently.', name: 'Steve Richard', title: 'Co-Founder, Vorsight · Sales Expert' },
+            ].map(item => (
+              <div key={item.name} className="border border-white/10 rounded-xl px-5 py-4 flex flex-col">
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed mb-3 text-sm flex-1">
+                  "{item.quote}"
+                </p>
+                <div>
                   <p className="text-xs text-gray-400 font-medium">{item.name}</p>
                   <p className="text-xs text-gray-600">{item.title}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
