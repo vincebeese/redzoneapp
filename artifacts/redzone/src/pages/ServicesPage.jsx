@@ -33,16 +33,24 @@ export default function ServicesPage() {
             <div className="bg-[#1A1A1A] rounded-xl p-7 text-white">
               <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">Three modes. Every selling situation.</p>
               <div className="space-y-4 mb-6">
-                {[
-                  { badge: 'Deal Mode', desc: 'Get a Red Zone diagnosis and the exact play to run next. Drop in the situation — walk out with a named play and a time-bound next action.' },
-                  { badge: 'Coach Mode', desc: 'Strategic guidance on your pipeline, process, and scenarios. Ask anything. Direct answers grounded in the system, no fluff.' },
-                  { badge: 'Mindset Mode', desc: 'Get your head right before the moment that matters. Lost a deal. In a slump. Walking into the biggest close of the quarter. Get grounded and ready.' },
-                ].map(item => (
-                  <div key={item.badge} className="border border-white/10 rounded-lg p-4">
-                    <span className="inline-block bg-[#C0392B] text-white text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2">{item.badge}</span>
-                    <p className="text-gray-300 text-sm">{item.desc}</p>
-                  </div>
-                ))}
+                <div className="bg-[#111111] border border-white/10 rounded-xl p-5 flex flex-col">
+                  <span className="inline-block bg-[#C0392B] text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 self-start">Deal Mode</span>
+                  <h3 className="text-base font-semibold mb-2">You're stuck on a deal</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-3 flex-1">Drop in the situation. Get a Red Zone diagnosis — which zone you're in, what's at risk, and the exact play to run next.</p>
+                  <p className="text-xs text-gray-500 italic">You leave with a named play and a time-bound next action.</p>
+                </div>
+                <div className="bg-[#111111] border border-white/10 rounded-xl p-5 flex flex-col">
+                  <span className="inline-block bg-[#C0392B] text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 self-start">Coach Mode</span>
+                  <h3 className="text-base font-semibold mb-2">You need strategic guidance</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-3 flex-1">Ask anything about your pipeline, your process, or how to handle a specific selling scenario. Direct answers grounded in the system.</p>
+                  <p className="text-xs text-gray-500 italic">You leave with clarity and a concrete next step.</p>
+                </div>
+                <div className="bg-[#111111] border border-white/10 rounded-xl p-5 flex flex-col">
+                  <span className="inline-block bg-[#C0392B] text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 self-start">Mindset Mode</span>
+                  <h3 className="text-base font-semibold mb-2">The pressure is real</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-3 flex-1">You lost a deal. You're in a slump. You're walking into the biggest close of the quarter. Get your head right before the moment arrives.</p>
+                  <p className="text-xs text-gray-500 italic">You leave grounded, refocused, and ready to compete.</p>
+                </div>
               </div>
               <div className="flex gap-3">
                 <Link
