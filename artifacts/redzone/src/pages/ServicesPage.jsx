@@ -26,13 +26,30 @@ export default function ServicesPage() {
             <div>
               <span className="inline-block bg-[#C0392B] text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-4">Always on · Free Trial</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4 text-[#1A1A1A]">RZS AI Coach</h2>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed mb-4">
                 The Red Zone Selling system. Always on. Ready when the moment is.
               </p>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Get real-time coaching on your live deals, career moves, and mental game. No generic advice. No waiting. Just the right play for the moment you're in.
+              </p>
+              <div className="flex gap-3">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
+                >
+                  Start Free Trial →
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm h-10 px-5 rounded font-medium transition-colors"
+                >
+                  Log In
+                </Link>
+              </div>
             </div>
             <div className="bg-[#1A1A1A] rounded-xl p-7 text-white">
               <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">Three modes. Every selling situation.</p>
-              <div className="space-y-4 mb-6">
+              <div className="space-y-4">
                 <div className="bg-[#111111] border border-white/10 rounded-xl p-5 flex flex-col">
                   <span className="inline-block bg-[#C0392B] text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 self-start">Deal Mode</span>
                   <h3 className="text-base font-semibold mb-2">You're stuck on a deal</h3>
@@ -51,20 +68,6 @@ export default function ServicesPage() {
                   <p className="text-gray-400 text-sm leading-relaxed mb-3 flex-1">You lost a deal. You're in a slump. You're walking into the biggest close of the quarter. Get your head right before the moment arrives.</p>
                   <p className="text-xs text-gray-500 italic">You leave grounded, refocused, and ready to compete.</p>
                 </div>
-              </div>
-              <div className="flex gap-3">
-                <Link
-                  to="/signup"
-                  className="inline-flex items-center justify-center bg-[#C0392B] hover:bg-[#A93226] text-white text-sm h-10 px-5 rounded font-medium transition-colors"
-                >
-                  Start Free Trial →
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center border border-white/20 text-white hover:bg-white/10 text-sm h-10 px-5 rounded font-medium transition-colors"
-                >
-                  Log In
-                </Link>
               </div>
             </div>
           </div>
