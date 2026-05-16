@@ -177,12 +177,27 @@ export default function AboutPage() {
       <section className="bg-[#1A1A1A] text-white py-14">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div className="flex justify-center md:justify-start">
+              <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/book-cover.jpg"
+                  alt="Red Zone Selling — The Ultimate Playbook for High-Performing Enterprise Sellers by Vince Beese"
+                  className="w-52 md:w-64 rounded-lg shadow-2xl hover:opacity-90 transition-opacity"
+                />
+              </a>
+            </div>
             <div>
               <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-4 block">The Book</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4">Red Zone Selling</h2>
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p className="text-gray-300 leading-relaxed mb-4">
                 Three zones. 69 plays. The full Red Zone Selling system in a single book. If you want to understand the methodology that underpins everything Vince coaches, this is where it starts.
               </p>
+              <blockquote className="border-l-2 border-[#C0392B] pl-4 mb-6">
+                <p style={{ fontFamily: "'Playfair Display', serif" }} className="italic text-gray-300 leading-relaxed text-sm">
+                  "The zone tells you where you are. The play tells you what to do. That's the whole system."
+                </p>
+                <p className="text-xs text-gray-500 mt-2">— Vince Beese</p>
+              </blockquote>
               <a
                 href={AMAZON_URL}
                 target="_blank"
@@ -192,12 +207,6 @@ export default function AboutPage() {
                 Get the Book on Amazon →
               </a>
             </div>
-            <blockquote className="border-l-4 border-[#C0392B] pl-6">
-              <p style={{ fontFamily: "'Playfair Display', serif" }} className="text-lg italic text-gray-200 mb-3 leading-relaxed">
-                "The zone tells you where you are. The play tells you what to do. That's the whole system."
-              </p>
-              <footer className="text-sm font-medium text-gray-400">Vince Beese</footer>
-            </blockquote>
           </div>
         </div>
       </section>

@@ -235,14 +235,23 @@ export default function LandingPage() {
             </div>
 
             {/* The Book */}
-            <div className="bg-[#1A1A1A] text-white border border-gray-200 shadow-sm rounded-xl flex flex-col" id="book">
-              <div className="px-5 pt-5 pb-3 flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1">The Book</h3>
-                <p className="text-gray-400 text-sm font-medium mb-2">Red Zone Selling</p>
-                <p className="text-gray-300 text-sm mb-4">Three zones, 69 plays. The foundation of the system. Live on Amazon.</p>
-                <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] font-semibold text-sm hover:underline">
-                  Get the Book →
+            <div className="bg-[#1A1A1A] text-white border border-gray-200 shadow-sm rounded-xl flex flex-col overflow-hidden" id="book">
+              <div className="flex gap-4 px-5 pt-5 pb-3 flex-1 items-start">
+                <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+                  <img
+                    src="/book-cover.jpg"
+                    alt="Red Zone Selling book"
+                    className="w-14 rounded shadow-lg"
+                  />
                 </a>
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-1">The Book</h3>
+                  <p className="text-gray-400 text-sm font-medium mb-2">Red Zone Selling</p>
+                  <p className="text-gray-300 text-sm mb-4">Three zones, 69 plays. The foundation of the system. Live on Amazon.</p>
+                  <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-[#C0392B] font-semibold text-sm hover:underline">
+                    Get the Book →
+                  </a>
+                </div>
               </div>
             </div>
           </div>

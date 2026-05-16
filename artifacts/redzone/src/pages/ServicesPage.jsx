@@ -278,7 +278,19 @@ export default function ServicesPage() {
       {/* The Book */}
       <section className="bg-[#1A1A1A] text-white py-14 border-b border-gray-700">
         <div className="container mx-auto px-6 max-w-5xl">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+          <div className="grid lg:grid-cols-3 gap-10 items-start">
+            {/* Book cover */}
+            <div className="flex justify-center lg:justify-start">
+              <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/book-cover.jpg"
+                  alt="Red Zone Selling — The Ultimate Playbook for High-Performing Enterprise Sellers by Vince Beese"
+                  className="w-52 lg:w-full max-w-[220px] rounded-lg shadow-2xl hover:opacity-90 transition-opacity"
+                />
+              </a>
+            </div>
+
+            {/* Text + CTA */}
             <div>
               <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-4 block">The Book</span>
               <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl font-bold mb-4">Red Zone Selling</h2>
