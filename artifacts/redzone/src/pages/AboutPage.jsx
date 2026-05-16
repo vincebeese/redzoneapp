@@ -24,8 +24,8 @@ export default function AboutPage() {
       <section className="bg-[#F9F6F0] pt-16 pb-14">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-4 block">About Vince Beese</span>
-          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[#1A1A1A]">
-            Most sales coaches teach what they've read.<br className="hidden sm:block" /> Vince teaches what he's lived.
+          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[#1A1A1A] text-balance">
+            Most sales coaches teach what they've read. Vince teaches what he's lived.
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
             25+ years. Five exits. $1B+ in revenue generated. Vince Beese is a Sales Strength Coach, keynote speaker, and author who built the Red Zone Selling system from closing real deals and leading real teams.

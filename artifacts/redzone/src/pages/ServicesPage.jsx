@@ -10,7 +10,7 @@ export default function ServicesPage() {
       <section className="bg-[#F9F6F0] pt-16 pb-14">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <span className="text-[#C0392B] font-bold tracking-widest text-xs uppercase mb-4 block">Services</span>
-          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[#1A1A1A]">
+          <h1 style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[#1A1A1A] text-balance">
             One system. Multiple ways to work together.
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
