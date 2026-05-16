@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 
+import { createSsrHandler } from "./ssr/index.js";
 import authRouter from "./routes/auth.js";
 import modesRouter from "./routes/modes.js";
 import dealsRouter from "./routes/deals.js";
@@ -64,6 +65,15 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// SSR shell routes for public marketing pages — registered before any
+// static file-serving or SPA catch-all middleware so page-specific
+// meta tags, canonical URLs, and JSON-LD schemas are injected for crawlers.
+// The homepage (/) is served by the frontend's static index.html which
+// already contains correct homepage meta; only inner public pages need SSR.
+app.get("/about", createSsrHandler("/about"));
+app.get("/services", createSsrHandler("/services"));
+app.get("/blog", createSsrHandler("/blog"));
 
 app.get(["/api/health", "/api/healthz"], (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
