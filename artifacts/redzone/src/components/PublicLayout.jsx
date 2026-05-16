@@ -25,7 +25,7 @@ export default function PublicLayout({ children, hideBetaBar = false }) {
     <div className="min-h-screen bg-white text-gray-900 font-sans">
 
       {!hideBetaBar && (
-        <div className="bg-[#1A1A1A] text-white text-xs text-center py-2 px-4">
+        <div className="bg-[#1A1A1A] text-white text-sm text-center py-2 px-4">
           RZS AI Coach is live. Start your 14-day free trial today →{' '}
           <Link to="/signup" className="text-[#ef9a9a] font-semibold hover:underline whitespace-nowrap">
             Start Free Trial →
