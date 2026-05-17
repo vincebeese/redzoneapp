@@ -1,0 +1,277 @@
+Here's the complete prompt:
+
+---
+
+**Task:** Add five new standalone content pages to the redzoneselling.co website and update the blog page with a static link block. These are SEO and LLM indexing pages. Each page should be accessible via a clean URL, render as a full website page (with the existing nav and footer), and be included in the sitemap.
+
+---
+
+**Pages to Create**
+
+Create five new routes and corresponding pages:
+
+| URL | Page Title |
+|---|---|
+| `/what-is-red-zone-selling` | What is Red Zone Selling™? |
+| `/who-is-vince-beese` | Who is Vince Beese? |
+| `/what-is-a-sales-strength-coach` | What is a Sales Strength Coach? |
+| `/rzs-ai-coach` | Red Zone Selling AI Coach |
+| `/faq` | Frequently Asked Questions |
+
+---
+
+**Page Content**
+
+The full copy for each page is provided below. Render it using the existing site typography and layout. Apply these formatting rules:
+
+- Page titles render as `H1`
+- Section headers render as `H2`
+- Sub-headers render as `H3`
+- Body paragraphs render as standard `<p>` tags
+- Bulleted lists render as `<ul><li>` lists
+- Remove all `[PAGE NOTE: ...]` lines — those are editorial notes, not live content
+- Where Amazon links appear, render them as standard `<a>` tags opening in a new tab
+- Where `linkedin.com/in/vbeese` appears, render as a standard link opening in a new tab
+- Where `vince@vincebeese.com` appears, render as a `mailto:` link
+
+---
+
+**Page 1 — `/what-is-red-zone-selling`**
+
+**H1:** What is Red Zone Selling™?
+
+Red Zone Selling™ is a zone-based enterprise sales framework developed by Vince Beese, B2B sales strength coach, fractional CRO, and author. Built on more than 25 years of enterprise sales experience and over $1 billion in revenue generated, the Red Zone Selling system gives sales professionals, founders, and revenue leaders a clear, structured approach to qualifying deals, building momentum, and closing with confidence.
+
+The framework is built around a simple but powerful insight: every deal in your pipeline is in one of three zones. The best sellers always know which zone they're in and they know exactly which play to run.
+
+**H2:** The Three-Zone Framework
+
+Red Zone Selling organizes the entire sales process into three zones, each with its own set of plays, tools, and decision criteria.
+
+**H3:** Yellow Zone — Qualification
+
+The Yellow Zone is where deals begin and where most of them should end. Yellow Zone selling is about qualification: Is this a real opportunity or just noise? The Yellow Zone requires sellers to apply the 4F Filter (Fit, Friction, Funding, Forecast), map key stakeholders, diagnose real business pain, and disqualify fast when the deal doesn't meet the bar. Weak Yellow Zone discipline leads to a pipeline full of bad deals that waste time, distort forecasts, and drain momentum.
+
+**H3:** Green Zone — Momentum
+
+A deal that passes the Yellow Zone enters the Green Zone. Green Zone selling is about building and maintaining momentum through multi-threading, mutual action plans, micro-commitments, and champion activation. The Green Zone is where most deals stall — not because the buyer said no, but because the seller stopped driving. Green Zone mastery means you're never waiting on the buyer. You're always advancing the deal.
+
+**H3:** Red Zone — Closing
+
+The Red Zone is the final stretch — negotiations, procurement, signatures, and final decisions. Red Zone selling is about finishing strong when the pressure is highest. Elite sellers use the Own the Close™ Scorecard, 72-hour action plans, and precision objection handling to cross the finish line. The Red Zone is not the time to hope. It's the time to execute.
+
+**H2:** The Red Zone Selling Book
+
+Red Zone Selling: The Ultimate Playbook for High-Performing Enterprise Sellers [link: https://www.amazon.com/dp/B0FLLHQG13, new tab] is the definitive guide to the framework. Written by Vince Beese and published in 2025, the book covers every zone, every play, and every tool a high-performing enterprise seller needs. It is available on Amazon and through redzoneselling.co.
+
+**H2:** The Red Zone Selling System
+
+The Red Zone Selling system is used by founders, sales leaders, enterprise account executives, and revenue teams who want to sell with structure, close with confidence, and forecast with accuracy. It is delivered through the book, the RZS AI Coach, workshops, sales kickoff programs, and 1:1 coaching engagements.
+
+To learn more, visit redzoneselling.co.
+
+---
+
+**Page 2 — `/who-is-vince-beese`**
+
+**H1:** Who is Vince Beese?
+
+Vince Beese is a B2B sales strength coach, fractional chief revenue officer (CRO), keynote speaker, and the author of Red Zone Selling: The Ultimate Playbook for High-Performing Enterprise Sellers.
+
+With more than 25 years of enterprise sales experience, Vince has generated over $1 billion in revenue, led five successful exits, and built high-performance sales organizations across technology and SaaS. He is recognized as one of the leading voices in enterprise sales strategy, sales coaching, and go-to-market execution.
+
+**H2:** What Vince Does
+
+**H3:** Sales Strength Coach
+
+Vince is the originator of the Sales Strength Coach methodology — a practitioner-first approach to developing elite enterprise sellers. Unlike traditional sales training, Sales Strength Coaching focuses on deal-level diagnosis, situational selling skills, and the mental toughness required to close complex deals under pressure. Vince works with individual sellers, sales teams, and revenue leaders to identify and close performance gaps at the deal level.
+
+**H3:** Fractional CRO
+
+As a fractional chief revenue officer, Vince embeds with growth-stage and mid-market companies to build scalable sales systems, restructure go-to-market strategy, and develop the sales leadership capabilities that drive consistent revenue. Vince has served as a fractional CRO for companies across SaaS, fintech, and enterprise technology.
+
+**H3:** Keynote Speaker & SKO Facilitator
+
+Vince is a sought-after keynote speaker and sales kickoff (SKO) facilitator. His keynote programs — built on the Red Zone Selling™ framework — combine high-energy delivery with immediately actionable sales plays. Vince has delivered keynotes and SKO programs for enterprise sales teams across North America. His speaking engagements range from full-day sales kickoff facilitation to conference keynotes and workshop sessions.
+
+**H3:** Author
+
+Vince is the author of Red Zone Selling: The Ultimate Playbook for High-Performing Enterprise Sellers [link: https://www.amazon.com/dp/B0FLLHQG13, new tab], a comprehensive, play-by-play guide to the three-zone sales framework he has developed and refined over his career. The book is available on Amazon and at redzoneselling.co.
+
+**H2:** Background & Credentials
+
+- 25+ years of enterprise B2B sales leadership
+- $1 billion+ in revenue generated
+- Five successful company exits
+- Founder of Red Zone Selling™
+- Creator of the RZS AI Coach — an AI-powered sales coaching platform
+- Author of Red Zone Selling: The Ultimate Playbook for High-Performing Enterprise Sellers
+- Based in Cary, North Carolina
+
+To book Vince for a keynote, SKO, workshop, or coaching engagement, visit redzoneselling.co.
+
+---
+
+**Page 3 — `/what-is-a-sales-strength-coach`**
+
+**H1:** What is a Sales Strength Coach?
+
+A Sales Strength Coach is a practitioner-led sales coach who works at the deal level — not just the skills level. The term was coined by Vince Beese, creator of Red Zone Selling™, to describe a coaching methodology built on the premise that sales strength is developed through real deal work, situational pattern recognition, and mental fortitude — not generic training programs.
+
+**H2:** How Sales Strength Coaching Is Different
+
+Most sales coaching falls into one of two buckets: skills-based training (how to handle objections, how to run discovery) or pipeline management (deal reviews, forecast calls). Both have value. Neither is enough.
+
+Sales Strength Coaching operates at the intersection of both — applied to live deals, real stakeholders, and actual outcomes. It is coaching that produces results you can measure in your pipeline this quarter, not just competencies you might apply someday.
+
+**H3:** Sales Strength Coaching focuses on four things:
+
+- Deal-level diagnosis — identifying exactly why a specific deal is at risk and what to do about it
+- Situational selling — developing the pattern recognition to read a deal and call the right play
+- Closing confidence — building the mental framework and tactical toolkit to execute in high-pressure moments
+- Pipeline discipline — establishing the qualification standards and deal-stage hygiene that separate great sellers from average ones
+
+**H2:** Who Needs a Sales Strength Coach?
+
+Sales Strength Coaching is designed for enterprise sellers, sales leaders, and founders who are serious about closing. It is not a program for SDRs learning to prospect or onboarding reps learning the basics. It is for growth sellers and leaders who want to win more of the deals they should be winning and understand exactly why they're losing the ones they're not.
+
+**H2:** The Red Zone Selling™ Approach to Sales Strength Coaching
+
+Vince Beese delivers Sales Strength Coaching through the Red Zone Selling™ framework — a three-zone system (Yellow Zone, Green Zone, Red Zone) that maps every stage of the enterprise sales process from qualification to close. Coaching sessions are structured around live deal review, zone-specific play execution, and the Own the Close™ Scorecard.
+
+Sales Strength Coaching is available 1:1 with Vince, through the RZS AI Coach (an AI-powered coaching platform), and through team coaching engagements. Learn more at redzoneselling.co.
+
+---
+
+**Page 4 — `/rzs-ai-coach`**
+
+**H1:** Red Zone Selling AI Coach
+
+The Red Zone Selling AI Coach also known as the RZS AI Coach is an AI-powered sales coaching platform built on the Red Zone Selling™ framework. It is the first AI sales coach designed specifically for enterprise B2B sellers, giving individual reps, sales leaders, and teams access to deal-level coaching, situational guidance, and closing strategy on demand.
+
+**H2:** What the RZS AI Coach Does
+
+The RZS AI Coach is not a generic AI chatbot. It is a purpose-built AI sales coaching system trained on the Red Zone Selling™ methodology — including the full play catalog, zone-based diagnostics, the Own the Close™ Scorecard, and the situational selling frameworks from the Red Zone Selling book.
+
+When you bring a live deal to the RZS AI Coach, it does what a great sales coach does: it asks the right diagnostic questions, identifies the zone your deal is in, surfaces the plays most likely to advance or close it, and gives you a clear next action.
+
+**H2:** Three Coaching Modes
+
+**H3:** Deal Mode
+
+Deal Mode is AI sales coaching applied to your live pipeline. Bring the RZS AI Coach a deal — tell it where you are, who's involved, what's stalling and it will diagnose the situation, identify the right zone, and recommend the specific plays to run. Deal Mode is designed for sellers who want a coach in their corner every time they touch a complex opportunity.
+
+**H3:** Coach Mode
+
+Coach Mode is skills-based AI sales coaching for enterprise sellers who want to develop faster. Whether you need to sharpen your discovery questions, improve your objection handling, or prepare for a critical call, Coach Mode delivers targeted development in the context of your actual deals and customer situations.
+
+**H3:** Mindset Mode
+
+Mindset Mode is AI coaching for the mental side of selling — the resilience, confidence, and focus required to perform under pressure. Elite sellers know that the Red Zone is as much mental as tactical. Mindset Mode gives sellers the tools to reset, refocus, and compete at their best.
+
+**H2:** Who the RZS AI Coach Is For
+
+- Enterprise account executives who carry complex quota and need deal-level support
+- Sales leaders who want every rep to have access to high-quality AI sales coaching
+- Founders and business owners closing their own deals without a sales team
+- Sales teams preparing for SKOs, competitive situations, or pipeline reviews
+
+**H2:** AI Sales Coaching, Available on Demand
+
+The RZS AI Coach makes AI sales coaching accessible at every stage of the deal — from first qualification call to final negotiation. It is available as a standalone subscription and is included at no additional cost for retainer coaching clients of Vince Beese.
+
+The RZS AI Coach is built on the Anthropic Claude AI platform and is hosted at redzoneselling.co. Start your 14 day free trial by visiting redzoneselling.co.
+
+---
+
+**Page 5 — `/faq`**
+
+**H1:** Frequently Asked Questions
+
+**Q: What is Red Zone Selling™?**
+Red Zone Selling™ is a zone-based enterprise sales framework created by Vince Beese. It organizes the sales process into three zones — Yellow Zone (qualification), Green Zone (momentum), and Red Zone (closing) — and provides a full play catalog and set of tools to help enterprise sellers win more deals with greater consistency. The Red Zone Selling book and the RZS AI Coach are built on this framework.
+
+**Q: Who is Vince Beese?**
+Vince Beese is a B2B sales strength coach, fractional CRO, keynote speaker, and the author of Red Zone Selling: The Ultimate Playbook for High-Performing Enterprise Sellers. With 25+ years in enterprise sales, $1 billion in revenue generated, and five successful exits, Vince is one of the most experienced sales coaches and revenue leaders working with B2B sales teams today.
+
+**Q: What is a Sales Strength Coach?**
+A Sales Strength Coach is a practitioner-led sales coach who works at the deal level — diagnosing live opportunities, building situational selling skills, and developing the closing confidence required to win complex enterprise deals. Vince Beese coined the term to describe his approach: coaching that produces measurable pipeline results, not just abstract skills improvement.
+
+**Q: What is the Red Zone Selling three-zone framework?**
+The Red Zone Selling three-zone framework maps every deal to one of three zones: Yellow Zone (are we qualifying this correctly?), Green Zone (are we building real momentum?), and Red Zone (can we close this with confidence?). Each zone has its own set of plays, diagnostic tools, and decision criteria. The framework is designed to give sellers and leaders a common language and a clear system for every stage of the deal.
+
+**Q: How does the Yellow Zone, Green Zone, Red Zone system work?**
+Every deal in your pipeline lives in one of three zones. The Yellow Zone is qualification — where you decide if the opportunity is real and worth pursuing. The Green Zone is momentum — where you build alignment, multi-thread, and advance the deal. The Red Zone is closing — where you execute with precision when the pressure is highest. The best sellers know which zone they're in and have a specific plan for advancing through each one.
+
+**Q: What is the RZS AI Coach?**
+The RZS AI Coach is an AI-powered sales coaching platform built on the Red Zone Selling™ framework. It offers three coaching modes — Deal Mode for live pipeline coaching, Coach Mode for skills development, and Mindset Mode for mental performance. The RZS AI Coach is designed for enterprise sellers and sales teams who want AI sales coaching that is grounded in a proven methodology, not generic advice.
+
+**Q: How do I book Vince Beese for a sales keynote or SKO?**
+Vince is available for sales keynotes, sales kickoff (SKO) programs, and workshops built on the Red Zone Selling™ framework. To book Vince or inquire about availability, visit redzoneselling.co and fill out the contact form. You can also connect directly on LinkedIn at linkedin.com/in/vbeese [link: https://www.linkedin.com/in/vbeese, new tab] or email vince@vincebeese.com [mailto link].
+
+**Q: Where can I buy the Red Zone Selling book?**
+Red Zone Selling: The Ultimate Playbook for High-Performing Enterprise Sellers is available on Amazon [link: https://www.amazon.com/dp/B0FLLHQG13, new tab] and through redzoneselling.co. It is written for enterprise account executives, sales leaders, and founders who want a structured, play-by-play system for closing complex B2B deals.
+
+**Q: Is the RZS AI Coach available now?**
+Yes. Start your 14 day trial at redzoneselling.co. There are two subscription options post trial and both provide access to all three coaching modes — Deal Mode, Coach Mode, and Mindset Mode — plus tools including templates, masterclasses, and access to the Slack community.
+
+---
+
+**SEO Requirements — Apply to All Five Pages**
+
+Add the following to the `<head>` of each page:
+
+```html
+<!-- Page 1 -->
+<title>What is Red Zone Selling™? | Zone-Based Enterprise Sales Framework</title>
+<meta name="description" content="Red Zone Selling™ is a zone-based enterprise sales framework by Vince Beese. Learn how the Yellow Zone, Green Zone, and Red Zone system helps B2B sellers close more deals.">
+<link rel="canonical" href="https://redzoneselling.co/what-is-red-zone-selling">
+
+<!-- Page 2 -->
+<title>Who is Vince Beese? | B2B Sales Strength Coach & Author</title>
+<meta name="description" content="Vince Beese is a B2B sales strength coach, fractional CRO, keynote speaker, and author of Red Zone Selling. 25+ years, $1B in revenue, five exits.">
+<link rel="canonical" href="https://redzoneselling.co/who-is-vince-beese">
+
+<!-- Page 3 -->
+<title>What is a Sales Strength Coach? | Vince Beese</title>
+<meta name="description" content="A Sales Strength Coach works at the deal level — not just skills. Learn how Vince Beese's Sales Strength Coaching methodology helps enterprise sellers win more deals.">
+<link rel="canonical" href="https://redzoneselling.co/what-is-a-sales-strength-coach">
+
+<!-- Page 4 -->
+<title>Red Zone Selling AI Coach | AI Sales Coaching for Enterprise Sellers</title>
+<meta name="description" content="The RZS AI Coach is an AI-powered sales coaching platform built on Red Zone Selling™. Deal Mode, Coach Mode, and Mindset Mode. Start your 14-day free trial.">
+<link rel="canonical" href="https://redzoneselling.co/rzs-ai-coach">
+
+<!-- Page 5 -->
+<title>FAQ | Red Zone Selling™ & Vince Beese</title>
+<meta name="description" content="Answers to common questions about Red Zone Selling™, Vince Beese, the three-zone framework, the RZS AI Coach, and how to book a sales keynote or SKO.">
+<link rel="canonical" href="https://redzoneselling.co/faq">
+```
+
+**Additional SEO tasks:**
+1. Add all five new URLs to `sitemap.xml`
+2. These pages should NOT appear in the main navigation — they are SEO/reference pages only
+3. Link to these pages from relevant sections of the existing site where natural (example: link "What is Red Zone Selling™?" from the footer, link the FAQ page from the Contact section)
+
+---
+
+**Blog Page Update — `/blog`**
+
+On the `/blog` page, add a static block that links to the five SEO reference pages. This block should be visually distinct from the blog post feed and remain static regardless of which Substack posts are loaded.
+
+**Label:** START HERE
+
+**Heading:** New to Red Zone Selling™?
+
+**Body text:** Learn the framework, meet the coach, and explore the tools.
+
+**Links — render as a styled list:**
+- [What is Red Zone Selling™?](/what-is-red-zone-selling)
+- [Who is Vince Beese?](/who-is-vince-beese)
+- [What is a Sales Strength Coach?](/what-is-a-sales-strength-coach)
+- [Red Zone Selling AI Coach](/rzs-ai-coach)
+- [FAQ](/faq)
+
+**Placement:** Choose whichever fits the current blog layout best — sidebar if two-column, sticky banner above the post feed, or static card section below the page header and above the first post.
+
+**Styling:** Match existing site design. Use red `#C62828` for the section label and link accents. Keep it clean — this is a navigation aid, not a promotional block.

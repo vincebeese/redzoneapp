@@ -107,6 +107,9 @@ export function PublicFooter({ user }) {
         <Link to="/blog" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Blog</Link>
         <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Book</a>
         <Link to="/#contact" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Contact</Link>
+        <span className="text-xs text-gray-200">|</span>
+        <Link to="/what-is-red-zone-selling" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Learn More</Link>
+        <Link to="/faq" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">FAQ</Link>
       </div>
       <div className="flex items-center gap-3">
         <span className="text-xs text-gray-400">2026 Red Zone Selling™</span>

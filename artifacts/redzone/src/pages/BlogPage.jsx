@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import PublicLayout from '../components/PublicLayout';
 
 function formatDate(dateStr) {
@@ -56,6 +57,38 @@ export default function BlogPage() {
           >
             Subscribe on Substack →
           </a>
+        </div>
+      </section>
+
+      {/* Start Here block */}
+      <section className="bg-white border-b border-gray-100 py-10">
+        <div className="container mx-auto px-6 max-w-3xl">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-6 py-6">
+            <span className="text-[#C62828] font-bold tracking-widest text-xs uppercase mb-2 block">Start Here</span>
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-xl font-bold text-[#1A1A1A] mb-1">
+              New to Red Zone Selling™?
+            </h2>
+            <p className="text-sm text-gray-500 mb-4">Learn the framework, meet the coach, and explore the tools.</p>
+            <ul className="space-y-2">
+              {[
+                { label: 'What is Red Zone Selling™?', to: '/what-is-red-zone-selling' },
+                { label: 'Who is Vince Beese?', to: '/who-is-vince-beese' },
+                { label: 'What is a Sales Strength Coach?', to: '/what-is-a-sales-strength-coach' },
+                { label: 'Red Zone Selling AI Coach', to: '/rzs-ai-coach' },
+                { label: 'FAQ', to: '/faq' },
+              ].map(item => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    className="text-sm text-[#C62828] hover:underline font-medium flex items-center gap-1.5"
+                  >
+                    <span className="text-xs">→</span>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

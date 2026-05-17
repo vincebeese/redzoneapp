@@ -23,6 +23,11 @@ import Whitepaper from './pages/Whitepaper';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import BlogPage from './pages/BlogPage';
+import WhatIsRedZoneSelling from './pages/WhatIsRedZoneSelling';
+import WhoIsVinceBeese from './pages/WhoIsVinceBeese';
+import WhatIsASalesStrengthCoach from './pages/WhatIsASalesStrengthCoach';
+import RzsAiCoach from './pages/RzsAiCoach';
+import FaqPage from './pages/FaqPage';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function ScrollToTop() {
@@ -62,6 +67,11 @@ export default function App() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/blog" element={<BlogPage />} />
+      <Route path="/what-is-red-zone-selling" element={<WhatIsRedZoneSelling />} />
+      <Route path="/who-is-vince-beese" element={<WhoIsVinceBeese />} />
+      <Route path="/what-is-a-sales-strength-coach" element={<WhatIsASalesStrengthCoach />} />
+      <Route path="/rzs-ai-coach" element={<RzsAiCoach />} />
+      <Route path="/faq" element={<FaqPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/signup" element={<Signup />} />

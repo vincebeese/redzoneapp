@@ -38,6 +38,12 @@ export default function LandingPage() {
               Start Free Trial — No Card Required
             </Link>
           </div>
+          <p className="mt-5 text-sm text-gray-500">
+            New here?{' '}
+            <Link to="/what-is-red-zone-selling" className="text-[#C0392B] hover:underline font-medium">
+              Learn what Red Zone Selling™ is →
+            </Link>
+          </p>
         </div>
       </section>
 

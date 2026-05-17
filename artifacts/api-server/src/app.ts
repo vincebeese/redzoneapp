@@ -74,6 +74,11 @@ app.use(cookieParser());
 app.get("/about", createSsrHandler("/about"));
 app.get("/services", createSsrHandler("/services"));
 app.get("/blog", createSsrHandler("/blog"));
+app.get("/what-is-red-zone-selling", createSsrHandler("/what-is-red-zone-selling"));
+app.get("/who-is-vince-beese", createSsrHandler("/who-is-vince-beese"));
+app.get("/what-is-a-sales-strength-coach", createSsrHandler("/what-is-a-sales-strength-coach"));
+app.get("/rzs-ai-coach", createSsrHandler("/rzs-ai-coach"));
+app.get("/faq", createSsrHandler("/faq"));
 
 app.get(["/api/health", "/api/healthz"], (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
