@@ -261,6 +261,9 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           const filled = lines.length;
           systemPrompt += `\n\n# SELLER PROFILE (${filled}/${total} fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
+      } else if (!isSkipped) {
+        // No profile yet and user hasn't opted out — inject onboarding questions
+        systemPrompt += ONBOARDING_BLOCK;
       }
     } catch (err) {
       console.warn('Could not load seller profile:', err.message);
