@@ -167,7 +167,8 @@ router.delete('/me', ensureUser, async (req, res) => {
 router.get('/profile', ensureUser, async (req, res) => {
   try {
     const result = await query(
-      `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns
+      `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+              user_role, has_read_rzs, common_deal_killers
        FROM seller_profiles WHERE user_id = $1`,
       [req.user.id]
     );
@@ -181,9 +182,11 @@ router.get('/profile', ensureUser, async (req, res) => {
 // PATCH /api/users/profile — upsert seller profile
 router.patch('/profile', ensureUser, async (req, res) => {
   try {
-    const { icp, avg_deal_size, sales_cycle, win_themes, loss_patterns } = req.body;
+    const { icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+            user_role, has_read_rzs, common_deal_killers } = req.body;
 
-    const fields = { icp, avg_deal_size, sales_cycle, win_themes, loss_patterns };
+    const fields = { icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+                     user_role, has_read_rzs, common_deal_killers };
     for (const [key, val] of Object.entries(fields)) {
       if (val !== undefined && val !== null && typeof val !== 'string') {
         return res.status(400).json({ error: `${key} must be a string` });
@@ -192,19 +195,29 @@ router.patch('/profile', ensureUser, async (req, res) => {
         return res.status(400).json({ error: `${key} must be 1000 characters or less` });
       }
     }
+    if (has_read_rzs && !['yes', 'no', ''].includes(has_read_rzs)) {
+      return res.status(400).json({ error: 'has_read_rzs must be "yes" or "no"' });
+    }
 
     const result = await query(
-      `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, NOW())
+      `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+                                    user_role, has_read_rzs, common_deal_killers, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
        ON CONFLICT (user_id) DO UPDATE SET
          icp = EXCLUDED.icp,
          avg_deal_size = EXCLUDED.avg_deal_size,
          sales_cycle = EXCLUDED.sales_cycle,
          win_themes = EXCLUDED.win_themes,
          loss_patterns = EXCLUDED.loss_patterns,
+         user_role = EXCLUDED.user_role,
+         has_read_rzs = EXCLUDED.has_read_rzs,
+         common_deal_killers = EXCLUDED.common_deal_killers,
          updated_at = NOW()
-       RETURNING icp, avg_deal_size, sales_cycle, win_themes, loss_patterns`,
-      [req.user.id, icp || null, avg_deal_size || null, sales_cycle || null, win_themes || null, loss_patterns || null]
+       RETURNING icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+                 user_role, has_read_rzs, common_deal_killers`,
+      [req.user.id, icp || null, avg_deal_size || null, sales_cycle || null,
+       win_themes || null, loss_patterns || null,
+       user_role || null, has_read_rzs || null, common_deal_killers || null]
     );
 
     res.json(result.rows[0]);

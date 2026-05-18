@@ -106,7 +106,7 @@ function extractSignals(fullText) {
 
 /**
  * Onboarding block injected into the system prompt when a user has no seller profile.
- * Applies to all modes. The AI collects 5 answers then emits PROFILE_UPDATE.
+ * Applies to all modes. The AI collects 8 answers then emits PROFILE_UPDATE.
  * If the user declines, it emits ONBOARDING_SKIP so they are never asked again.
  */
 const ONBOARDING_BLOCK = `
@@ -118,28 +118,31 @@ const ONBOARDING_BLOCK = `
 This user has not yet completed their seller profile. Run the onboarding sequence below.
 
 If this is the very first message in the conversation, open with this introduction (adapt the wording naturally):
-"Before we dive in, I want to get a quick read on how you sell — five questions, takes about two minutes. It makes every coaching session sharper from here on out."
+"Before we dive in, I want to get a quick read on how you sell — eight quick questions, takes about three minutes. It makes every coaching session sharper from here on out."
 
 If some questions have already been asked and answered earlier in this conversation, do NOT repeat them — continue from where you left off and ask only the next unanswered question.
 
-The five questions, in order:
+The eight questions, in order:
 1. Who do you sell to? Describe your ideal customer: industry, company size, and the main buyer or decision-maker.
 2. What's your average deal size?
 3. How long is your typical sales cycle — from first conversation to signed contract?
 4. When you win, why do you win? Give me your top two or three themes.
 5. When you lose, what's usually the reason?
+6. What's your role in sales? (e.g. AE, Sales Leader, Founder, SDR)
+7. Have you read Red Zone Selling by Vince Beese? (yes or no)
+8. What are your most common deal killers — the things that reliably derail deals late in the process?
 
 Rules:
 - Ask one question at a time. Wait for the answer. Then ask the next.
 - Keep the tone conversational — this is a coach asking, not a form.
 - If the user says they want to skip, don't want to answer, or never want to be asked this again, respect that immediately. Say something like "Got it — I won't ask again." Then emit the skip signal below and continue with whatever they came to do.
-- Once all five answers are collected, immediately emit the profile update signal below on its own line, then transition directly into coaching.
+- Once all eight answers are collected, immediately emit the profile update signal below on its own line, then transition directly into coaching.
 
 SKIP SIGNAL (emit on a new line at the end of your response, only if user opts out):
 [ONBOARDING_SKIP]
 
-PROFILE UPDATE SIGNAL (emit on a new line at the end of your response, only after all 5 answers are collected):
-[PROFILE_UPDATE:{"icp":"<answer>","avg_deal_size":"<answer>","sales_cycle":"<answer>","win_themes":"<answer>","loss_patterns":"<answer>"}]
+PROFILE UPDATE SIGNAL (emit on a new line at the end of your response, only after all 8 answers are collected):
+[PROFILE_UPDATE:{"icp":"<answer>","avg_deal_size":"<answer>","sales_cycle":"<answer>","win_themes":"<answer>","loss_patterns":"<answer>","user_role":"<answer>","has_read_rzs":"<yes or no>","common_deal_killers":"<answer>"}]
 
 Both signals are invisible to the user. Never reference or explain them in your response text.`;
 
@@ -148,17 +151,22 @@ Both signals are invisible to the user. Never reference or explain them in your 
  */
 async function saveProfileUpdate(userId, profileUpdate) {
   await query(
-    `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, NOW())
+    `INSERT INTO seller_profiles (user_id, icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+                                  user_role, has_read_rzs, common_deal_killers, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
      ON CONFLICT (user_id) DO UPDATE SET
        icp = COALESCE(EXCLUDED.icp, seller_profiles.icp),
        avg_deal_size = COALESCE(EXCLUDED.avg_deal_size, seller_profiles.avg_deal_size),
        sales_cycle = COALESCE(EXCLUDED.sales_cycle, seller_profiles.sales_cycle),
        win_themes = COALESCE(EXCLUDED.win_themes, seller_profiles.win_themes),
        loss_patterns = COALESCE(EXCLUDED.loss_patterns, seller_profiles.loss_patterns),
+       user_role = COALESCE(EXCLUDED.user_role, seller_profiles.user_role),
+       has_read_rzs = COALESCE(EXCLUDED.has_read_rzs, seller_profiles.has_read_rzs),
+       common_deal_killers = COALESCE(EXCLUDED.common_deal_killers, seller_profiles.common_deal_killers),
        updated_at = NOW()`,
     [userId, profileUpdate.icp || null, profileUpdate.avg_deal_size || null,
-     profileUpdate.sales_cycle || null, profileUpdate.win_themes || null, profileUpdate.loss_patterns || null]
+     profileUpdate.sales_cycle || null, profileUpdate.win_themes || null, profileUpdate.loss_patterns || null,
+     profileUpdate.user_role || null, profileUpdate.has_read_rzs || null, profileUpdate.common_deal_killers || null]
   );
 }
 
@@ -226,7 +234,9 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
     try {
       const [profileResult, userResult] = await Promise.all([
         query(
-          `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
+          `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+                  user_role, has_read_rzs, common_deal_killers
+           FROM seller_profiles WHERE user_id = $1`,
           [req.user.id]
         ),
         query(`SELECT onboarding_skipped FROM users WHERE id = $1`, [req.user.id]),
@@ -243,8 +253,11 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
         if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
         if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
+        if (p.user_role) lines.push(`Role: ${p.user_role}`);
+        if (p.has_read_rzs) lines.push(`Has read Red Zone Selling: ${p.has_read_rzs}`);
+        if (p.common_deal_killers) lines.push(`Common deal killers: ${p.common_deal_killers}`);
         if (lines.length > 0) {
-          const total = 5;
+          const total = 8;
           const filled = lines.length;
           systemPrompt += `\n\n# SELLER PROFILE (${filled}/${total} fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
@@ -484,7 +497,9 @@ router.post('/deal/opening', ensureUser, requireSubscription, async (req, res) =
 
     try {
       const profileResult = await query(
-        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns FROM seller_profiles WHERE user_id = $1`,
+        `SELECT icp, avg_deal_size, sales_cycle, win_themes, loss_patterns,
+                user_role, has_read_rzs, common_deal_killers
+         FROM seller_profiles WHERE user_id = $1`,
         [req.user.id]
       );
       const p = profileResult.rows[0];
@@ -497,8 +512,11 @@ router.post('/deal/opening', ensureUser, requireSubscription, async (req, res) =
         if (p.sales_cycle) lines.push(`Sales cycle: ${p.sales_cycle}`);
         if (p.win_themes) lines.push(`Win themes: ${p.win_themes}`);
         if (p.loss_patterns) lines.push(`Loss patterns: ${p.loss_patterns}`);
+        if (p.user_role) lines.push(`Role: ${p.user_role}`);
+        if (p.has_read_rzs) lines.push(`Has read Red Zone Selling: ${p.has_read_rzs}`);
+        if (p.common_deal_killers) lines.push(`Common deal killers: ${p.common_deal_killers}`);
         if (lines.length > 0) {
-          systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/5 fields on file — apply silently to all coaching)\n` + lines.join('\n');
+          systemPrompt += `\n\n# SELLER PROFILE (${lines.length}/8 fields on file — apply silently to all coaching)\n` + lines.join('\n');
         }
       }
 

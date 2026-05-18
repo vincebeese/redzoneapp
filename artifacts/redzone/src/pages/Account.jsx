@@ -60,7 +60,7 @@ export default function Account() {
 
   const [sellerProfile, setSellerProfile] = useState(null);
   const [editingProfile, setEditingProfile] = useState(false);
-  const [profileDraft, setProfileDraft] = useState({ icp: '', avg_deal_size: '', sales_cycle: '', win_themes: '', loss_patterns: '' });
+  const [profileDraft, setProfileDraft] = useState({ icp: '', avg_deal_size: '', sales_cycle: '', win_themes: '', loss_patterns: '', user_role: '', has_read_rzs: '', common_deal_killers: '' });
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileError, setProfileError] = useState(null);
 
@@ -98,6 +98,9 @@ export default function Account() {
           sales_cycle: profileData.sales_cycle || '',
           win_themes: profileData.win_themes || '',
           loss_patterns: profileData.loss_patterns || '',
+          user_role: profileData.user_role || '',
+          has_read_rzs: profileData.has_read_rzs || '',
+          common_deal_killers: profileData.common_deal_killers || '',
         });
       })
       .catch(console.error)
@@ -135,6 +138,9 @@ export default function Account() {
       sales_cycle: sellerProfile?.sales_cycle || '',
       win_themes: sellerProfile?.win_themes || '',
       loss_patterns: sellerProfile?.loss_patterns || '',
+      user_role: sellerProfile?.user_role || '',
+      has_read_rzs: sellerProfile?.has_read_rzs || '',
+      common_deal_killers: sellerProfile?.common_deal_killers || '',
     });
   }
 
@@ -372,11 +378,14 @@ export default function Account() {
       {/* SECTION 2 — Seller Profile */}
       {(() => {
         const fields = [
-          { key: 'icp', label: 'ICP', placeholder: 'Industry, company size, buyer persona (e.g. Mid-market SaaS, 100-500 employees, VP Sales)' },
-          { key: 'avg_deal_size', label: 'Average deal size', placeholder: 'e.g. $75K ARR' },
-          { key: 'sales_cycle', label: 'Sales cycle length', placeholder: 'e.g. 90 days' },
-          { key: 'win_themes', label: 'Top win themes', placeholder: 'Why do you usually win? (e.g. Strong ROI story, executive alignment, technical fit)' },
-          { key: 'loss_patterns', label: 'Top loss patterns', placeholder: 'Why do you usually lose? (e.g. Single-threaded, budget unconfirmed early, slow to multi-thread)' },
+          { key: 'icp', label: 'ICP', placeholder: 'Industry, company size, buyer persona (e.g. Mid-market SaaS, 100-500 employees, VP Sales)', rows: 2 },
+          { key: 'avg_deal_size', label: 'Average deal size', placeholder: 'e.g. $75K ARR', rows: 1 },
+          { key: 'sales_cycle', label: 'Sales cycle length', placeholder: 'e.g. 90 days', rows: 1 },
+          { key: 'win_themes', label: 'Top win themes', placeholder: 'Why do you usually win? (e.g. Strong ROI story, executive alignment, technical fit)', rows: 2 },
+          { key: 'loss_patterns', label: 'Top loss patterns', placeholder: 'Why do you usually lose? (e.g. Single-threaded, budget unconfirmed early, slow to multi-thread)', rows: 2 },
+          { key: 'user_role', label: 'Role', placeholder: 'e.g. AE, Sales Leader, Founder, SDR', rows: 1 },
+          { key: 'has_read_rzs', label: 'Read Red Zone Selling?', type: 'select', options: [{ value: '', label: 'Not answered' }, { value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }] },
+          { key: 'common_deal_killers', label: 'Common deal killers', placeholder: 'Things that reliably derail your deals late in the process', rows: 2 },
         ];
         const filledCount = fields.filter(f => sellerProfile?.[f.key]).length;
         const isComplete = filledCount === fields.length;
@@ -407,8 +416,8 @@ export default function Account() {
                 {fields.map(f => (
                   <div key={f.key} className="border-t border-gray-100 pt-3 first:border-t-0 first:pt-0">
                     <p className="text-xs font-medium text-gray-500 mb-0.5">{f.label}</p>
-                    <p className="text-sm text-rzs-charcoal">
-                      {sellerProfile?.[f.key] || <span className="italic text-gray-300">Not set</span>}
+                    <p className="text-sm text-rzs-charcoal capitalize">
+                      {sellerProfile?.[f.key] || <span className="italic text-gray-300 normal-case">Not set</span>}
                     </p>
                   </div>
                 ))}
@@ -418,14 +427,26 @@ export default function Account() {
                 {fields.map(f => (
                   <div key={f.key}>
                     <label className="block text-xs font-medium text-gray-600 mb-1">{f.label}</label>
-                    <textarea
-                      value={profileDraft[f.key]}
-                      onChange={(e) => setProfileDraft((d) => ({ ...d, [f.key]: e.target.value }))}
-                      placeholder={f.placeholder}
-                      rows={f.key === 'icp' || f.key === 'win_themes' || f.key === 'loss_patterns' ? 2 : 1}
-                      maxLength={1000}
-                      className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-rzs-charcoal placeholder-gray-300 focus:outline-none focus:border-gray-400 resize-none"
-                    />
+                    {f.type === 'select' ? (
+                      <select
+                        value={profileDraft[f.key]}
+                        onChange={(e) => setProfileDraft((d) => ({ ...d, [f.key]: e.target.value }))}
+                        className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-rzs-charcoal focus:outline-none focus:border-gray-400 bg-white"
+                      >
+                        {f.options.map(o => (
+                          <option key={o.value} value={o.value}>{o.label}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <textarea
+                        value={profileDraft[f.key]}
+                        onChange={(e) => setProfileDraft((d) => ({ ...d, [f.key]: e.target.value }))}
+                        placeholder={f.placeholder}
+                        rows={f.rows}
+                        maxLength={1000}
+                        className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-rzs-charcoal placeholder-gray-300 focus:outline-none focus:border-gray-400 resize-none"
+                      />
+                    )}
                   </div>
                 ))}
                 {profileError && <p className="text-xs" style={{ color: '#C62828' }}>{profileError}</p>}
