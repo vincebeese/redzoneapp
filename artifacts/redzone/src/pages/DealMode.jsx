@@ -379,6 +379,11 @@ export default function DealMode() {
         setShownTranscriptTriggers((prev) => new Set([...prev, prompt.trigger]));
       }
 
+      // Notify Account page to re-fetch profile if onboarding was saved this turn
+      if (completePayload?.profile_saved) {
+        window.dispatchEvent(new CustomEvent('rz:profile-updated'));
+      }
+
     } catch (error) {
       console.error('Failed to send message:', error);
       setMessages((prev) => prev.filter((m) => m.id !== 'temp'));

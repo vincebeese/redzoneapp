@@ -107,6 +107,30 @@ export default function Account() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    function handleProfileUpdated() {
+      fetch('/api/users/profile', { credentials: 'include' })
+        .then((r) => r.json())
+        .then((profileData) => {
+          setSellerProfile(profileData);
+          setProfileDraft({
+            icp: profileData.icp || '',
+            avg_deal_size: profileData.avg_deal_size || '',
+            sales_cycle: profileData.sales_cycle || '',
+            win_themes: profileData.win_themes || '',
+            loss_patterns: profileData.loss_patterns || '',
+            user_role: profileData.user_role || '',
+            has_read_rzs: profileData.has_read_rzs || '',
+            common_deal_killers: profileData.common_deal_killers || '',
+          });
+        })
+        .catch(console.error);
+    }
+
+    window.addEventListener('rz:profile-updated', handleProfileUpdated);
+    return () => window.removeEventListener('rz:profile-updated', handleProfileUpdated);
+  }, []);
+
   async function saveProfile() {
     setProfileSaving(true);
     setProfileError(null);

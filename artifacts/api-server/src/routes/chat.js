@@ -526,6 +526,11 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           }
         }
 
+        res.write(`data: ${JSON.stringify({
+          type: 'complete',
+          profile_saved: !!(nonDealProfile && Object.keys(nonDealProfile).length > 0),
+        })}\n\n`);
+
         logEvent(req.user.id, 'coaching_turn', {
           mode,
           deal_id: null,

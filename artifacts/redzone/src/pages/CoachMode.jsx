@@ -157,7 +157,11 @@ export default function CoachMode() {
             }
             try {
               const parsed = JSON.parse(data);
-              if (parsed.text) {
+              if (parsed.type === 'complete') {
+                if (parsed.profile_saved) {
+                  window.dispatchEvent(new CustomEvent('rz:profile-updated'));
+                }
+              } else if (parsed.text) {
                 assistantContent += parsed.text;
                 setStreamingContent(assistantContent);
               } else if (parsed.error) {
