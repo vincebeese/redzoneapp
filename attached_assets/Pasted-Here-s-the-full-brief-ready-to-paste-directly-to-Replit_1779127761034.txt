@@ -1,0 +1,216 @@
+Here's the full brief — ready to paste directly to Replit.
+
+---
+
+```
+# Replit Dev Brief — Web Search Research Feature
+# Red Zone Selling AI Coach — Deal Mode & Coach Mode
+
+---
+
+## OVERVIEW
+
+Add web search capability to Deal Mode and Coach Mode.
+When a company name or person's name is introduced in
+either mode, the coach proactively offers to research
+them before coaching begins. The user controls whether
+research runs — the coach never executes it automatically.
+
+This is one feature with two query types:
+- Company research
+- Person research
+
+Both use the same web search tool. Build them together.
+
+---
+
+## WHERE IT LIVES
+
+Deal Mode — yes
+Coach Mode — yes
+Mindset Mode — no
+
+---
+
+## THE TRIGGER
+
+When a company name or person's name is introduced in
+a Deal Mode or Coach Mode conversation, the coach
+pauses before coaching and makes one offer:
+
+"Want me to research [Company] and/or [Person's Name]
+before we dig in? I can pull company background, ICP
+fit, and relevant intel on [Name] to sharpen your
+approach."
+
+One offer. One question. Not two separate prompts.
+
+---
+
+## USER RESPONSE OPTIONS
+
+The user responds with one of four answers:
+
+- Both → run company research first, person research
+  second, then proceed to coaching
+- Company only → run company research, skip person,
+  then proceed to coaching
+- Person only → run person research, skip company,
+  then proceed to coaching
+- No → skip research entirely, proceed directly
+  to coaching
+
+---
+
+## COMPANY RESEARCH OUTPUT FORMAT
+
+When company research is requested, run a web search
+on the company name and return results in this exact
+format:
+
+---
+
+COMPANY: [Name]
+WHAT THEY DO: [one sentence description]
+SIZE / STAGE: [headcount, funding stage, revenue
+              if available]
+RECENT NEWS: [anything relevant — funding rounds,
+             leadership changes, product launches,
+             layoffs, acquisitions, or anything that
+             could affect the sale]
+
+ICP FIT ASSESSMENT:
+Based on your ICP — [pull stored ICP from user
+profile] — this account [fits / partially fits /
+falls outside] your ICP profile.
+
+Here's why: [one to two sentences specific to their
+stored ICP criteria]
+
+[If fit] Green light on ICP. Let's qualify the rest.
+[If partial] Possible fit but [specific gap].
+Worth a conversation but go in eyes open.
+[If outside] This account falls outside your ICP.
+Here's what that means before you invest more time.
+
+---
+
+## PERSON RESEARCH OUTPUT FORMAT
+
+When person research is requested, run a web search
+on the person's name and company and return results
+in this exact format:
+
+---
+
+PERSON: [Name], [Title] at [Company]
+BACKGROUND: [career history — where they came from,
+            how long in current role, relevant prior
+            experience]
+LINKEDIN ACTIVITY: [recent posts, comments, or
+                   engagement if available — what
+                   are they publicly talking about?]
+RED FLAGS OR OPPORTUNITIES: [recent job change,
+                            promotion, company news
+                            that affects them
+                            personally, shared
+                            connections, or anything
+                            that creates an opening]
+
+COACHING NOTE:
+[One to two sentences on how to approach this person
+specifically based on their background. What matters
+to them? What is their likely buying lens — strategic,
+operational, or financial? Are they a likely champion
+or economic buyer based on their role and seniority?]
+
+---
+
+## RULE AFTER RESEARCH COMPLETES
+
+After delivering research output — whether company,
+person, or both — the coach must immediately connect
+the research to the next coaching action. Never let
+research be the endpoint. Always close with:
+
+"Here's what this means for how you go in —
+[one sentence connecting research findings to the
+rep's next action or approach]."
+
+Then proceed to coaching.
+
+---
+
+## ICP FIT LOGIC
+
+The ICP fit assessment in company research must pull
+the user's stored ICP from their seller profile and
+compare it against the research findings.
+
+If the user's ICP profile is incomplete or not on
+file, do not skip the assessment. Instead note it:
+
+"I don't have your ICP on file yet — want to set
+that up so I can assess fit automatically going
+forward? Takes 30 seconds."
+
+Then proceed with research output without the
+ICP assessment.
+
+---
+
+## TECHNICAL REQUIREMENTS
+
+1. Enable the Claude web search tool in the API
+   call for both Deal Mode and Coach Mode sessions.
+
+2. The research offer must fire when a company name
+   or person's name is introduced — whether at deal
+   creation or mid-conversation.
+
+3. Company and person research run as sequential
+   web searches in the same session — company first,
+   person second — when both are requested.
+
+4. Research output must reference the user's stored
+   seller profile (ICP field) for the fit assessment.
+   Pull from the database at the time of the search —
+   not from session context alone.
+
+5. The research offer should not repeat in the same
+   session for the same company or person. If research
+   was already run, do not offer it again.
+
+---
+
+## ACCEPTANCE CRITERIA
+
+The feature is working correctly when:
+
+1. A user enters a new deal with a company name and
+   the coach offers research before coaching begins.
+
+2. A user mentions a person's name in either Deal
+   Mode or Coach Mode and the coach offers to research
+   them alongside or independently of the company.
+
+3. The user can select company only, person only,
+   both, or neither — and the coach responds
+   correctly to each answer.
+
+4. Company research output includes an ICP fit
+   assessment that references the user's stored
+   ICP profile.
+
+5. Person research output includes a coaching note
+   that connects the person's background to how
+   the rep should approach them.
+
+6. After research is delivered, the coach immediately
+   connects findings to the next coaching action
+   before proceeding.
+
+7. If the user declines research, the coach proceeds
+   directly to coaching without referencing research
+   again in that session.
+```
