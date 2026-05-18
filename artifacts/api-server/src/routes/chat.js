@@ -147,6 +147,83 @@ PROFILE UPDATE SIGNAL (emit on a new line at the end of your response, only afte
 Both signals are invisible to the user. Never reference or explain them in your response text.`;
 
 /**
+ * Web search research block injected into Deal Mode and Coach Mode system prompts.
+ * Instructs the AI to offer proactive company and/or person research when names are
+ * introduced, using the built-in web_search tool. Never fires in Mindset Mode.
+ */
+const WEB_SEARCH_RESEARCH_BLOCK = `
+
+---
+
+# WEB SEARCH RESEARCH CAPABILITY
+
+You have access to a web search tool. Use it when the user requests company or person research.
+
+## WHEN TO OFFER RESEARCH
+
+When a company name or a person's name is first introduced in this conversation — whether at deal creation, session start, or mentioned mid-conversation — PAUSE before coaching and make this offer (one offer only, adapt the wording naturally):
+
+"Want me to research [Company] and/or [Person's Name] before we dig in? I can pull company background, ICP fit, and relevant intel on [Name] to sharpen your approach."
+
+**Rules:**
+- Make this offer ONCE per entity per session. If you have already offered or completed research on the same company or person in this conversation, do NOT offer again.
+- If only a company is mentioned (no named person), offer company research only.
+- If only a person is mentioned (no company), offer person research only.
+- If both are mentioned, combine into one offer.
+
+## USER RESPONSE HANDLING
+
+- "Both" / "yes, both" / "run both" → Run company research first, then person research, then proceed to coaching
+- "Company" / "company only" / "just the company" → Run company research, skip person, then proceed
+- "Person" / "person only" / "just [name]" → Run person research, skip company, then proceed
+- "No" / "skip" / "just coach me" / any decline → Skip research entirely. Proceed directly to coaching and do NOT reference or offer research again in this session.
+
+## COMPANY RESEARCH FORMAT
+
+Use the web search tool to search for the company. Return results in this exact format (no extra commentary before or after the block):
+
+---
+COMPANY: [Name]
+WHAT THEY DO: [One sentence description of what the company does]
+SIZE / STAGE: [Headcount, funding stage, revenue if available]
+RECENT NEWS: [Anything relevant — funding rounds, leadership changes, product launches, layoffs, acquisitions, or anything that could affect the sale. If nothing material, say "Nothing significant in the last 90 days."]
+
+ICP FIT ASSESSMENT:
+[If the seller's ICP is on file in the profile above:]
+Based on your ICP — [restate their ICP criteria briefly] — this account [fits / partially fits / falls outside] your ICP profile.
+Here's why: [One to two sentences connecting the company's profile to the seller's specific ICP criteria.]
+
+[If fits:] Green light on ICP. Let's qualify the rest.
+[If partial fit:] Possible fit but [specific gap]. Worth a conversation but go in eyes open.
+[If outside ICP:] This account falls outside your ICP. Here's what that means before you invest more time.
+
+[If NO ICP is on file:]
+I don't have your ICP on file yet — want to set that up so I can assess fit automatically going forward? Takes 30 seconds.
+---
+
+## PERSON RESEARCH FORMAT
+
+Use the web search tool to search for "[Person Name] [Company Name]". Return results in this exact format:
+
+---
+PERSON: [Name], [Title] at [Company]
+BACKGROUND: [Career history — where they came from, how long in current role, relevant prior experience]
+LINKEDIN ACTIVITY: [Recent posts, comments, or public engagement if available. What are they publicly talking about? If nothing found, say "No recent public activity found."]
+RED FLAGS OR OPPORTUNITIES: [Recent job change, promotion, company news that affects them personally, shared connections, or anything that creates an opening. If nothing notable, say "Nothing notable found."]
+
+COACHING NOTE:
+[One to two sentences on how to approach this person specifically. What matters to them based on their background? What is their likely buying lens — strategic, operational, or financial? Are they a likely champion or economic buyer based on their role and seniority?]
+---
+
+## AFTER ALL RESEARCH IS DELIVERED
+
+After delivering all requested research, ALWAYS close with a direct bridge to coaching:
+
+"Here's what this means for how you go in — [one sentence connecting the research findings to the rep's immediate next action or approach]."
+
+Then proceed directly to coaching without further preamble.`;
+
+/**
  * Upsert a seller profile from collected onboarding answers.
  */
 async function saveProfileUpdate(userId, profileUpdate) {
@@ -333,6 +410,13 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       );
     }
 
+    // Enable web search research for Deal and Coach modes
+    let chatTools;
+    if (mode === 'deal' || mode === 'coach') {
+      systemPrompt += WEB_SEARCH_RESEARCH_BLOCK;
+      chatTools = [{ type: 'web_search_20250305', name: 'web_search' }];
+    }
+
     // Stream the response
     let fullResponse = '';
 
@@ -342,6 +426,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       maxTokens: modeConfig.max_tokens,
       userId: req.user.id,
       modeSlug: mode,
+      tools: chatTools,
       onChunk: (text) => {
         fullResponse += text;
         res.write(`data: ${JSON.stringify({ text })}\n\n`);
@@ -547,6 +632,9 @@ Provide an opening coaching message appropriate for this zone.
 Be concise but set the right tone for coaching this deal.`;
     }
 
+    // Enable web search research for deal opening
+    systemPrompt += WEB_SEARCH_RESEARCH_BLOCK;
+
     let fullResponse = '';
 
     await streamChat({
@@ -555,6 +643,7 @@ Be concise but set the right tone for coaching this deal.`;
       maxTokens: modeConfig.max_tokens,
       userId: req.user.id,
       modeSlug: 'deal',
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
       onChunk: (text) => {
         fullResponse += text;
         res.write(`data: ${JSON.stringify({ text })}\n\n`);

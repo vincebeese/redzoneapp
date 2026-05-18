@@ -27,8 +27,8 @@ function logSpend({ model, tokensIn, tokensOut, userId, modeSlug }) {
   ).catch((err) => console.error('Spend log error:', err));
 }
 
-export async function streamChat({ systemPrompt, messages, maxTokens = 1200, onChunk, userId, modeSlug }) {
-  const stream = await anthropic.messages.stream({
+export async function streamChat({ systemPrompt, messages, maxTokens = 1200, onChunk, userId, modeSlug, tools }) {
+  const params = {
     model: COACHING_MODEL,
     max_tokens: maxTokens,
     system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
@@ -36,7 +36,13 @@ export async function streamChat({ systemPrompt, messages, maxTokens = 1200, onC
       role: m.role,
       content: m.content,
     })),
-  });
+  };
+
+  if (tools && tools.length > 0) {
+    params.tools = tools;
+  }
+
+  const stream = await anthropic.messages.stream(params);
 
   for await (const event of stream) {
     if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
