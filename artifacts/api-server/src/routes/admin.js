@@ -706,10 +706,10 @@ router.post('/artifact-templates', upload.single('file'), async (req, res) => {
 
     const insertResult = await query(
       `INSERT INTO artifact_templates
-         (name, slug, description, source_filename, source_format, raw_structure, offer_language, trigger_zone, trigger_condition, is_active, created_by)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,false,$10)
+         (type, name, slug, description, source_filename, source_format, raw_structure, offer_language, trigger_zone, trigger_condition, is_active, created_by)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,false,$11)
        RETURNING *`,
-      [name, slug, description || null, req.file.originalname, format, rawStructure,
+      [slug, name, slug, description || null, req.file.originalname, format, rawStructure,
        offer_language || null, trigger_zone || 'any', trigger_condition || null, req.user.id]
     );
     const template = insertResult.rows[0];
