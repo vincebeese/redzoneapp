@@ -27,7 +27,12 @@ function parseSignals(text) {
   // JSON ARTIFACT_OFFER signal
   const aoJson = cleanText.match(/\n?\[ARTIFACT_OFFER:(\{.*?\})\]/s);
   if (aoJson) {
-    try { artifactOffer = JSON.parse(aoJson[1]); } catch (_) {}
+    try {
+      // Normalize double-escaped quotes (""key"") that can appear when the AI
+      // copies from system prompt examples stored with PostgreSQL-escaped strings
+      const normalized = aoJson[1].replace(/""/g, '"');
+      artifactOffer = JSON.parse(normalized);
+    } catch (_) {}
     cleanText = cleanText.replace(/\n?\[ARTIFACT_OFFER:\{.*?\}\]/s, '').trim();
   }
   // Fallback: plain type

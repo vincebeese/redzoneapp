@@ -58,7 +58,12 @@ function extractSignals(fullText) {
   const aoJsonRegex = /\n?\[ARTIFACT_OFFER:(\{.*?\})\]/s;
   const aoJsonMatch = cleanText.match(aoJsonRegex);
   if (aoJsonMatch) {
-    try { artifactOffer = JSON.parse(aoJsonMatch[1]); } catch (e) {
+    try {
+      // Normalize double-escaped quotes (""key"") that can appear when the AI
+      // copies from system prompt examples stored with PostgreSQL-escaped strings
+      const normalized = aoJsonMatch[1].replace(/""/g, '"');
+      artifactOffer = JSON.parse(normalized);
+    } catch (e) {
       console.warn('Artifact offer JSON parse failed:', e.message);
     }
     cleanText = cleanText.replace(aoJsonRegex, '').trim();
