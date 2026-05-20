@@ -433,9 +433,15 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
       },
     });
 
+    // Track for the unified coaching_turn log below
+    let hadArtifactOffer = false;
+    let hadTranscriptPrompt = false;
+
     // Save assistant response for deal mode (strip signals, send complete event)
     if (mode === 'deal' && dealId) {
       const { cleanText, artifactOffer, transcriptPrompt, profileUpdate } = extractSignals(fullResponse);
+      hadArtifactOffer = !!artifactOffer;
+      hadTranscriptPrompt = !!transcriptPrompt;
 
       const savedMsg = await query(
         `INSERT INTO messages (user_id, deal_id, mode_slug, role, content)
@@ -472,14 +478,6 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         profile_saved: !!profileUpdate,
       })}\n\n`);
 
-      await logEvent(req.user.id, 'coaching_turn', {
-        mode,
-        deal_id: dealId || null,
-        turn_count: null,
-        had_artifact_offer: !!artifactOffer,
-        had_transcript_prompt: !!transcriptPrompt,
-      });
-
       if (artifactOffer && dealId) {
         try {
           const dealRow = await query(`SELECT zone, turn_count FROM deals WHERE id = $1`, [dealId]);
@@ -493,53 +491,52 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           });
         } catch { /* silent */ }
       }
-    } else {
-      // Save assistant response and bump updated_at for all non-deal modes
-      if (mode !== 'deal' && session_id) {
-        const { cleanText: nonDealClean, profileUpdate: nonDealProfile, onboardingSkip: nonDealSkip } = extractSignals(fullResponse);
+    } else if (mode !== 'deal' && session_id) {
+      // Save assistant response and bump updated_at for all non-deal modes with a session
+      const { cleanText: nonDealClean, profileUpdate: nonDealProfile, onboardingSkip: nonDealSkip } = extractSignals(fullResponse);
 
-        await query(
-          `INSERT INTO session_messages (session_id, role, content) VALUES ($1, 'assistant', $2)`,
-          [session_id, nonDealClean]
-        );
-        await query(
-          `UPDATE sessions SET updated_at = NOW() WHERE id = $1`,
-          [session_id]
-        );
+      await query(
+        `INSERT INTO session_messages (session_id, role, content) VALUES ($1, 'assistant', $2)`,
+        [session_id, nonDealClean]
+      );
+      await query(
+        `UPDATE sessions SET updated_at = NOW() WHERE id = $1`,
+        [session_id]
+      );
 
-        // Auto-save seller profile if onboarding answers were collected
-        if (nonDealProfile && Object.keys(nonDealProfile).length > 0) {
-          try {
-            await saveProfileUpdate(req.user.id, nonDealProfile);
-            console.log(`Seller profile auto-saved (${mode}) for user ${req.user.id}`);
-          } catch (err) {
-            console.warn('Could not auto-save seller profile:', err.message);
-          }
+      // Auto-save seller profile if onboarding answers were collected
+      if (nonDealProfile && Object.keys(nonDealProfile).length > 0) {
+        try {
+          await saveProfileUpdate(req.user.id, nonDealProfile);
+          console.log(`Seller profile auto-saved (${mode}) for user ${req.user.id}`);
+        } catch (err) {
+          console.warn('Could not auto-save seller profile:', err.message);
         }
-
-        // Record opt-out if user declined onboarding
-        if (nonDealSkip) {
-          try {
-            await saveOnboardingSkip(req.user.id);
-          } catch (err) {
-            console.warn('Could not save onboarding skip:', err.message);
-          }
-        }
-
-        res.write(`data: ${JSON.stringify({
-          type: 'complete',
-          profile_saved: !!(nonDealProfile && Object.keys(nonDealProfile).length > 0),
-        })}\n\n`);
-
-        await logEvent(req.user.id, 'coaching_turn', {
-          mode,
-          deal_id: null,
-          turn_count: null,
-          had_artifact_offer: false,
-          had_transcript_prompt: false,
-        });
       }
+
+      // Record opt-out if user declined onboarding
+      if (nonDealSkip) {
+        try {
+          await saveOnboardingSkip(req.user.id);
+        } catch (err) {
+          console.warn('Could not save onboarding skip:', err.message);
+        }
+      }
+
+      res.write(`data: ${JSON.stringify({
+        type: 'complete',
+        profile_saved: !!(nonDealProfile && Object.keys(nonDealProfile).length > 0),
+      })}\n\n`);
     }
+
+    // Always log a coaching turn for every completed AI response, all modes
+    await logEvent(req.user.id, 'coaching_turn', {
+      mode,
+      deal_id: dealId || null,
+      turn_count: null,
+      had_artifact_offer: hadArtifactOffer,
+      had_transcript_prompt: hadTranscriptPrompt,
+    });
 
     res.write('data: [DONE]\n\n');
     res.end();
