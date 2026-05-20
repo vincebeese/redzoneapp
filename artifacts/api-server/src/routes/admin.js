@@ -924,7 +924,7 @@ router.delete('/resource-center/:id', async (req, res) => {
 // === ANALYTICS ===
 
 let analyticsCache = { data: null, ts: 0 };
-const ANALYTICS_TTL = 10 * 60 * 1000; // 10 minutes
+const ANALYTICS_TTL = 2 * 60 * 1000; // 2 minutes
 
 router.get('/analytics', async (req, res) => {
   const period = Math.min(parseInt(req.query.period) || 30, 90);
@@ -957,23 +957,23 @@ router.get('/analytics', async (req, res) => {
         COUNT(*) FILTER (WHERE subscription_status = 'active') AS paying
         FROM users`),
 
-      // 2. WAU (current 7 days)
+      // 2. Active users (current period)
       query(`SELECT COUNT(DISTINCT user_id) AS wau,
         COUNT(*) AS total_sessions
         FROM analytics_events
-        WHERE created_at > NOW() - INTERVAL '7 days'
+        WHERE created_at > NOW() - INTERVAL '${period} days'
         AND event_type = 'app_session_start'`),
 
-      // 3. WAU (prior 7 days)
+      // 3. Active users (prior period)
       query(`SELECT COUNT(DISTINCT user_id) AS wau
         FROM analytics_events
-        WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days'
+        WHERE created_at BETWEEN NOW() - INTERVAL '${period * 2} days' AND NOW() - INTERVAL '${period} days'
         AND event_type = 'app_session_start'`),
 
-      // 4. Total coaching turns (current period)
-      query(`SELECT COUNT(*) AS total,
-        COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days') AS this_week,
-        COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days') AS last_week
+      // 4. Coaching turns (current period vs prior period)
+      query(`SELECT
+        COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '${period} days') AS this_week,
+        COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '${period * 2} days' AND NOW() - INTERVAL '${period} days') AS last_week
         FROM analytics_events WHERE event_type = 'coaching_turn'`),
 
       // 5. (merged into #4)
@@ -992,16 +992,18 @@ router.get('/analytics', async (req, res) => {
         AND created_at > NOW() - INTERVAL '${period} days'
         GROUP BY DATE(created_at) ORDER BY date ASC`),
 
-      // 8. Mode sessions
+      // 8. Mode sessions (current period)
       query(`SELECT properties->>'mode' AS mode, COUNT(*) AS sessions
         FROM analytics_events
         WHERE event_type = 'mode_entered'
+        AND created_at > NOW() - INTERVAL '${period} days'
         GROUP BY properties->>'mode'`),
 
-      // 9. Mode avg turns (coaching_turn has mode in properties)
+      // 9. Mode avg turns (current period)
       query(`SELECT properties->>'mode' AS mode, COUNT(*) AS turns
         FROM analytics_events
         WHERE event_type = 'coaching_turn'
+        AND created_at > NOW() - INTERVAL '${period} days'
         GROUP BY properties->>'mode'`),
 
       // 10. Artifact performance
@@ -1070,9 +1072,9 @@ router.get('/analytics', async (req, res) => {
     const totalSessions = parseInt(wauData?.total_sessions || 0);
     const wauDelta = wau - parseInt(wauPriorResult.rows[0]?.wau || 0);
     const avgSessionsPerUser = wau > 0 ? (totalSessions / wau).toFixed(1) : 0;
-    const totalTurns = parseInt(turnsResult.rows[0]?.total || 0);
     const turnsThisWeek = parseInt(turnsResult.rows[0]?.this_week || 0);
     const turnsLastWeek = parseInt(turnsResult.rows[0]?.last_week || 0);
+    const totalTurns = turnsThisWeek;
 
     // Build mode_usage table
     const sessionsByMode = {};
