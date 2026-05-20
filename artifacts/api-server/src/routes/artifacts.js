@@ -61,7 +61,7 @@ router.get('/', ensureUser, async (req, res) => {
                  AND m2.role = 'assistant'
                  AND m2.created_at <= m.created_at) AS turn_count
        FROM messages m
-       WHERE m.deal_id = $1 AND m.artifact_data IS NOT NULL
+       WHERE m.deal_id = $1 AND m.artifact_type IS NOT NULL
        ORDER BY m.created_at DESC`,
       [deal_id]
     );
