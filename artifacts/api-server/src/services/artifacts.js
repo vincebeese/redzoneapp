@@ -78,7 +78,7 @@ Deal Context:
 ${JSON.stringify(dealContext, null, 2)}
 
 Recent Conversation:
-${conversationHistory.slice(-6).map((m) => `${m.role}: ${m.content}`).join('\n\n')}
+${conversationHistory.map((m) => `${m.role}: ${m.content}`).join('\n\n')}
 
 Generate the artifact now:`;
 
@@ -112,7 +112,7 @@ Deal Context:
 ${JSON.stringify(dealContext, null, 2)}
 
 Recent Conversation:
-${conversationHistory.slice(-6).map((m) => `${m.role}: ${m.content}`).join('\n\n')}
+${conversationHistory.map((m) => `${m.role}: ${m.content}`).join('\n\n')}
 
 Generate the artifact now:`;
 
