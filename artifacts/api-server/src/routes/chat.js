@@ -472,7 +472,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         profile_saved: !!profileUpdate,
       })}\n\n`);
 
-      logEvent(req.user.id, 'coaching_turn', {
+      await logEvent(req.user.id, 'coaching_turn', {
         mode,
         deal_id: dealId || null,
         turn_count: null,
@@ -484,7 +484,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         try {
           const dealRow = await query(`SELECT zone, turn_count FROM deals WHERE id = $1`, [dealId]);
           const d = dealRow.rows[0];
-          logEvent(req.user.id, 'artifact_offered', {
+          await logEvent(req.user.id, 'artifact_offered', {
             type: artifactOffer.type,
             label: artifactOffer.label || '',
             deal_id: dealId,
@@ -531,7 +531,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           profile_saved: !!(nonDealProfile && Object.keys(nonDealProfile).length > 0),
         })}\n\n`);
 
-        logEvent(req.user.id, 'coaching_turn', {
+        await logEvent(req.user.id, 'coaching_turn', {
           mode,
           deal_id: null,
           turn_count: null,
