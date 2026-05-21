@@ -84,14 +84,10 @@ async function buildMetricsForPeriod(start, end) {
   const coach   = modeRows.find(r => r.mode_slug === 'coach')   || { active_users: 0, sessions: 0, turns: 0 };
   const mindset = modeRows.find(r => r.mode_slug === 'mindset') || { active_users: 0, sessions: 0, turns: 0 };
 
-  // Total active users (union across all modes)
+  // Paying subscribers (subscription_status = 'active') — current global count
   const { rows: [totUsers] } = await query(`
-    SELECT COUNT(DISTINCT user_id)::int AS active_users FROM (
-      SELECT DISTINCT user_id FROM messages WHERE mode_slug = 'deal' AND created_at >= $1 AND created_at < $2
-      UNION
-      SELECT DISTINCT user_id FROM sessions WHERE created_at >= $1 AND created_at < $2
-    ) combined
-  `, [s, e]);
+    SELECT COUNT(*)::int AS active_users FROM users WHERE subscription_status = 'active'
+  `);
 
   // New users (account created in window)
   const { rows: [newU] } = await query(`
@@ -448,7 +444,7 @@ function buildHtmlEmail(report) {
         </tr>
       </thead>
       <tbody>
-        <tr>${td('Active Users')}${td(fmt(c.platform.active_users), true)}${tdYest(fmt(y.platform.active_users))}${tdGray(fmt(p.platform.active_users))}</tr>
+        <tr>${td('Paying Subscribers')}${td(fmt(c.platform.active_users), true)}${tdYest(fmt(y.platform.active_users))}${tdGray(fmt(p.platform.active_users))}</tr>
         <tr>${td('New Users')}${td(fmt(c.platform.new_users), true)}${tdYest(fmt(y.platform.new_users))}${tdGray(fmt(p.platform.new_users))}</tr>
         <tr>${td('Total Sessions')}${td(fmt(c.platform.total_sessions), true)}${tdYest(fmt(y.platform.total_sessions))}${tdGray(fmt(p.platform.total_sessions))}</tr>
         <tr>${td('Total Coaching Turns')}${td(fmt(c.platform.total_turns), true)}${tdYest(fmt(y.platform.total_turns))}${tdGray(fmt(p.platform.total_turns))}</tr>
@@ -554,7 +550,7 @@ function buildSlackBlocks(report) {
       text: {
         type: 'mrkdwn',
         text: `*PLATFORM SUMMARY* · MTD: ${mtdLabel} · Yesterday: ${yesterdayLabel} · Prev Month: ${prevLabel}\n\n` +
-          metricLine('Active Users', c.platform.active_users, y.platform.active_users, p.platform.active_users) + '\n' +
+          metricLine('Paying Subscribers', c.platform.active_users, y.platform.active_users, p.platform.active_users) + '\n' +
           metricLine('New Users', c.platform.new_users, y.platform.new_users, p.platform.new_users) + '\n' +
           metricLine('Total Sessions', c.platform.total_sessions, y.platform.total_sessions, p.platform.total_sessions) + '\n' +
           metricLine('Total Coaching Turns', c.platform.total_turns, y.platform.total_turns, p.platform.total_turns) + '\n' +

@@ -187,8 +187,8 @@ function AnalyticsTab() {
   const METRICS = [
     { label: 'Total Users', value: km?.total_users, delta: null },
     { label: 'Beta Users', value: km?.beta_users, delta: null },
-    { label: 'Paying Subscribers', value: km?.paying_subscribers, delta: null },
-    { label: 'Active Users', value: km?.wau, delta: km?.wau_delta },
+    { label: 'Active Users', value: km?.paying_subscribers, delta: null },
+    { label: 'Users Coached', value: km?.wau, delta: km?.wau_delta },
     { label: 'Avg Sessions / User', value: km?.avg_sessions_per_user, delta: null },
     { label: 'Coaching Turns', value: km?.total_turns, delta: km ? (km.turns_this_week - km.turns_last_week) : null },
   ];
