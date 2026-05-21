@@ -95,6 +95,23 @@ function AnalyticsTab() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [reportSending, setReportSending] = useState(false);
+  const [reportMsg, setReportMsg] = useState(null);
+
+  async function sendDailyReport() {
+    setReportSending(true);
+    setReportMsg(null);
+    try {
+      const r = await fetch('/api/admin/report/run', { method: 'POST', credentials: 'include' });
+      const j = await r.json();
+      setReportMsg(j.ok ? 'Report sent!' : (j.error || 'Error sending report'));
+    } catch {
+      setReportMsg('Failed to trigger report');
+    } finally {
+      setReportSending(false);
+      setTimeout(() => setReportMsg(null), 5000);
+    }
+  }
   const dauRef = useRef(null);
   const turnsRef = useRef(null);
   const dauChart = useRef(null);
@@ -210,6 +227,15 @@ function AnalyticsTab() {
             className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-40 transition-colors">
             Export CSV
           </button>
+          <button onClick={sendDailyReport} disabled={reportSending}
+            className="px-3 py-1.5 border border-rzs-gold rounded-lg text-sm text-amber-700 hover:bg-amber-50 disabled:opacity-40 transition-colors">
+            {reportSending ? 'Sending…' : 'Send Daily Report'}
+          </button>
+          {reportMsg && (
+            <span className={`text-xs font-medium ${reportMsg === 'Report sent!' ? 'text-green-600' : 'text-red-500'}`}>
+              {reportMsg}
+            </span>
+          )}
         </div>
       </div>
 
