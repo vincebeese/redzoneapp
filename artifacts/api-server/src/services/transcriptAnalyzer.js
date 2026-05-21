@@ -62,7 +62,7 @@ export async function analyzeTranscript(rawText, callType, deal, userId, isSRT =
 
   const response = await anthropic.messages.create({
     model: ANALYSIS_MODEL,
-    max_tokens: 1500,
+    max_tokens: 4000,
     system: ANALYSIS_SYSTEM_PROMPT,
     messages: [
       {
@@ -83,11 +83,13 @@ ${rawText}${srtHint}`,
   );
 
   try {
-    const clean = response.content[0].text.trim()
-      .replace(/^```(?:json)?\s*\n?/, '')
-      .replace(/\n?```\s*$/, '')
-      .trim();
-    return JSON.parse(clean);
+    const text = response.content[0].text;
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    if (start === -1 || end === -1 || end <= start) {
+      throw new Error('No JSON object found in response');
+    }
+    return JSON.parse(text.substring(start, end + 1));
   } catch (e) {
     console.error('Transcript analysis parse failed:', e);
     return { parse_error: true, raw: response.content[0].text };

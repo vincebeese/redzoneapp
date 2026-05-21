@@ -1,0 +1,77 @@
+I analyzed the transcript but had trouble formatting the results. Here's what I found:
+
+{
+  "unhandled_objections": [
+    {
+      "text": "I'll speak to Jess on next steps and such on what he wants to do",
+      "play": "Champion Activation - Alisha is deferring entirely to Jess rather than owning the decision; activate her as a champion by clarifying her own pain and stake in the outcome before the Jess conversation"
+    },
+    {
+      "text": "Something needs to change, right, in this business" - open but non-committal, no explicit buy-in expressed",
+      "play": "Cost-of-Inaction - quantify what a bad Q3 costs (two deals above 60%, Adam's single $250K deal, 15% close rate) to convert general openness into urgency"
+    },
+    {
+      "text": "We already have AI tools and MEDPIC automations in place",
+      "play": "4F Filter - differentiate coaching value from existing tools; reframe that AI captures data but not situational awareness or deal strategy"
+    }
+  ],
+  "buying_signals": [
+    {
+      "text": "Something needs to change, right, in this business. Our last quarter wasn't great. This quarter looks okay. I'm really nervous about Q3.",
+      "action": "Anchor urgency here - use Cost-of-Inaction play to tie Q3 pipeline risk directly to the cost of delayed decision on coaching"
+    },
+    {
+      "text": "I am open. I mean, like something needs to change.",
+      "action": "Prospect verbally acknowledged need; follow up immediately post-call with a concrete proposal summary and ask Alisha to champion it into her Jess meeting happening the same day"
+    },
+    {
+      "text": "I've only got, I think, two deals above 60%. So if something happens there, if they're not managed right, then I don't have a quarter.",
+      "action": "Use this as the personal stakes moment - get personal play to tie Alisha's own credibility and new VP role to the outcome of Q3"
+    },
+    {
+      "text": "Alisha is meeting with Jess immediately after this call",
+      "action": "Send a one-page leave-behind or talking points to Alisha before her Jess meeting so she can advocate effectively - 72-Hour Action Plan trigger"
+    }
+  ],
+  "stakeholder_gaps": [
+    {
+      "name": "Jess",
+      "role": "CEO",
+      "note": "Economic buyer and original referral source; Alisha is deferring final decision to him. Not yet directly engaged in this conversation. Risk: deal stalls if Alisha cannot champion effectively or Jess deprioritizes."
+    },
+    {
+      "name": "Adam",
+      "role": "AE - North America",
+      "note": "Mentioned as a coaching target with single-deal tunnel vision ($250K deal). Key end-user of coaching. Not engaged. Risk: if Adam resists outside coaching, adoption fails."
+    },
+    {
+      "name": null,
+      "role": "AE - Brazil",
+      "note": "Named as a core problem rep (happy ears, not asking tough questions). High impact coaching target but not engaged. Risk: coaching impact is limited if she is not bought in."
+    },
+    {
+      "name": null,
+      "role": "AE - UK/London",
+      "note": "New hire, ~2 months in. Developmental need but not discussed in detail. Gap in understanding ramp expectations and coaching readiness."
+    }
+  ],
+  "pain_qualification": {
+    "layer1_complete": true,
+    "layer2_complete": true,
+    "layer3_complete": false,
+    "gaps": [
+      "Layer 3 incomplete: Alisha's personal stakes as a new VP of Commercial (only 3-4 months in, no sales background) were never explicitly surfaced - what happens to her specifically if Q3 fails or the team continues underperforming?",
+      "No explicit discussion of what failure means for Alisha's role, credibility with Jess, or tenure as VP Commercial"
+    ]
+  },
+  "next_step_quality": "weak",
+  "next_step_note": "Call ended with Alisha saying she would speak to Jess and take his lead. No specific follow-up date, no defined action, no commitment from Alisha beyond vague intent. Vince said 'let me know if you have any questions' - passive close with no Scheduled Next Step secured.",
+  "zone_recalibration": {
+    "changed": false,
+    "from": "yellow",
+    "to": "yellow",
+    "reason": "Deal remains in Yellow. Alisha expressed openness and validated pain but deferred entirely to Jess with no commitment, no timeline, and no defined next step. Champion not yet activated. Economic buyer not directly engaged. Urgency exists but has not been converted into forward momentum."
+  },
+  "recommended_play": "Champion Activation",
+  "next_step": "Send Alisha a concise one-page summary of coaching value tied to her specific Q3 risks (two deals at 60%, Adam's single deal, 15% close rate) within 2 hours so she can use it in her same-day meeting with Jess - follow up with Alisha by EOD May 21 to confirm Jess's reaction and schedule a three-way call with Jess by May 23."
+}
