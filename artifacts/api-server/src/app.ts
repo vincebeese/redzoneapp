@@ -21,6 +21,7 @@ import hubspotRouter from "./routes/hubspot.js";
 import blogRouter from "./routes/blog.js";
 import { startTrialChecker } from "./services/trialChecker.js";
 import { startBackupScheduler } from "./services/backupService.js";
+import { startDailyReportScheduler } from "./services/dailyReport.js";
 import { runSchemaCheck } from "./db/schemaCheck.js";
 import { runMigrations } from "./db/migrate.js";
 
@@ -116,6 +117,7 @@ app.use((err: Error & { status?: number }, _req: express.Request, res: express.R
 runMigrations().catch(err => console.error('Startup migration error:', err));
 startTrialChecker();
 startBackupScheduler();
+startDailyReportScheduler();
 runSchemaCheck();
 
 export default app;

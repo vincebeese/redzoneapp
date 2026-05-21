@@ -1,0 +1,233 @@
+# Replit Dev Brief — Daily Metrics Report
+# Red Zone Selling AI Coach
+
+---
+
+## OVERVIEW
+
+Build a daily automated report that runs every morning
+at 7:30 AM ET and delivers key platform metrics to
+both email and Slack. The report covers two windows:
+the current month to date and the previous full month
+for comparison.
+
+---
+
+## SCHEDULE
+
+Run daily at 7:30 AM Eastern Time.
+Deliver to both email and Slack simultaneously.
+
+---
+
+## DELIVERY — EMAIL
+
+Send to: vince@redzoneselling.co
+Subject line: RZS AI Coach — Daily Metrics Report |
+[Month Day, Year]
+
+Format: Clean HTML email. No attachments. All data
+inline in the email body. Mobile readable.
+
+---
+
+## DELIVERY — SLACK
+
+Post to the #ai_coach_feedback channel.
+Format: Structured Slack message using blocks.
+Numbers bold. Section headers clear.
+Keep it scannable — this is a quick read, not a report.
+
+---
+
+## REPORT STRUCTURE
+
+The report has four sections in this exact order:
+
+---
+
+### SECTION 1 — PLATFORM SUMMARY
+
+Two columns: Current Month (MTD) and Previous Month.
+
+Metrics to include:
+- Total active users (users with at least one session)
+- Total new users (first session this period)
+- Total sessions
+- Total coaching turns (messages exchanged)
+- Average sessions per user
+- Average turns per session
+- Average turns per user
+
+---
+
+### SECTION 2 — MODE BREAKDOWN
+
+Repeat the same metrics split by mode.
+Three rows: Deal Mode / Coach Mode / Mindset Mode.
+Two columns: Current Month MTD / Previous Month.
+
+Metrics per mode:
+- Active users
+- Total sessions
+- Total coaching turns
+- Average turns per session
+
+Also include a combined totals row at the bottom
+of this section that matches Section 1.
+
+---
+
+### SECTION 3 — TOP USERS
+
+Ranked by total sessions in the current month MTD.
+Show top 10 users.
+
+Columns:
+- Rank
+- User name (first + last)
+- Email
+- Total sessions (current month)
+- Total coaching turns (current month)
+- Modes used (which of the three modes they've
+  used this month — list all that apply)
+- Profile complete (yes / no — all 8 fields on file)
+- Member since (account creation date)
+
+---
+
+### SECTION 4 — ENGAGEMENT SIGNALS
+
+Four specific signals worth tracking daily:
+
+1. NEW USERS YESTERDAY
+   How many users had their first ever session
+   yesterday. List name and email for each.
+
+2. POWER USERS
+   Users who have had 10 or more sessions in the
+   current month MTD. Name, email, session count.
+
+3. AT-RISK USERS
+   Users who were active in the previous month but
+   have had zero sessions in the current month.
+   Name, email, last session date.
+
+4. PROFILE COMPLETION RATE
+   Percentage of all users with a complete profile
+   (all 8 fields on file) vs incomplete.
+   Show: X% complete (N users) / X% incomplete
+   (N users).
+
+---
+
+## DATA DEFINITIONS
+
+Active user: any user with at least one session in
+the reporting window.
+
+Session: one Deal Mode, Coach Mode, or Mindset Mode
+conversation. Each mode entry counts as one session.
+
+Coaching turn: one complete exchange — one user
+message plus one AI response. Count pairs, not
+individual messages.
+
+Current month MTD: from the first day of the current
+calendar month through yesterday (not including
+today, since the report runs at 7:30 AM before most
+sessions happen).
+
+Previous month: the full prior calendar month,
+first through last day.
+
+New user: a user whose account was created within
+the reporting window.
+
+Complete profile: all 8 fields populated — icp,
+avg_deal_size, sales_cycle, win_themes,
+loss_patterns, user_role, has_read_rzs,
+common_deal_killers.
+
+---
+
+## TECHNICAL REQUIREMENTS
+
+1. Use a scheduled cron job or equivalent to trigger
+   at 7:30 AM ET daily. Account for daylight saving
+   time — the trigger must always fire at 7:30 AM ET
+   regardless of UTC offset.
+
+2. Query the database directly for all metrics.
+   Do not rely on cached or pre-aggregated data.
+
+3. Email delivery via the existing email service
+   in the app (whatever is currently used for
+   transactional emails).
+
+4. Slack delivery via the existing Slack webhook
+   or bot integration. If no Slack integration
+   exists yet, use an incoming webhook to the
+   #ai_coach_feedback channel. Provide the webhook
+   URL field in the environment config so it can
+   be set without a code change.
+
+5. If the report job fails for any reason, send a
+   failure alert to vince@redzoneselling.co with
+   the error details. Do not fail silently.
+
+6. Log each report run to the database with:
+   - Timestamp
+   - Status (success / failed)
+   - Metrics snapshot (JSON) for audit purposes
+
+---
+
+## ACCEPTANCE CRITERIA
+
+The feature is working correctly when:
+
+1. The report fires at exactly 7:30 AM ET every day
+   without manual intervention.
+
+2. The email arrives formatted cleanly with all four
+   sections, correct metric values, and the correct
+   date in the subject line.
+
+3. The Slack message posts to #ai_coach_feedback
+   with the same data, formatted for readability.
+
+4. Current month MTD and previous month numbers are
+   accurate against the database.
+
+5. Top Users list is sorted correctly by session
+   count descending.
+
+6. At-risk users section correctly identifies users
+   active last month with zero sessions this month.
+
+7. A failed run triggers an alert email rather than
+   failing silently.
+
+8. Each run is logged to the database with a
+   metrics snapshot.
+
+---
+
+## QUESTIONS FOR REPLIT BEFORE BUILDING
+
+1. Is there an existing email service (SendGrid,
+   Postmark, Resend, etc.) already configured in
+   the app? If yes, use that. If no, recommend one
+   and flag the setup requirement.
+
+2. Is there an existing Slack integration or webhook
+   already in use for the #ai_coach_feedback channel?
+   If yes, use that. If no, an incoming webhook URL
+   will need to be configured.
+
+3. What is the current database structure for
+   sessions and messages? Confirm the table and
+   field names used to track session starts and
+   message counts per mode before building the
+   queries.
