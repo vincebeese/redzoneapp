@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import { Resend } from 'resend';
 import { query } from '../db/index.js';
 
-const REPORT_TO = 'vince@redzoneselling.co';
+const REPORT_TO = 'vince@vincebeese.com';
 const FROM_EMAIL = 'noreply@redzoneselling.co';
 const PROFILE_FIELDS = ['icp', 'avg_deal_size', 'sales_cycle', 'win_themes', 'loss_patterns', 'user_role', 'has_read_rzs', 'common_deal_killers'];
 
