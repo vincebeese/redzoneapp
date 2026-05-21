@@ -958,54 +958,75 @@ router.get('/analytics', async (req, res) => {
         COUNT(*) FILTER (WHERE subscription_status = 'active') AS paying
         FROM users`),
 
-      // 2. Active users (current period)
-      query(`SELECT COUNT(DISTINCT user_id) AS wau,
-        COUNT(*) AS total_sessions
-        FROM analytics_events
-        WHERE created_at > NOW() - INTERVAL '${period} days'
-        AND event_type = 'app_session_start'`),
+      // 2. Active users + total sessions (current period) — from actual message tables
+      query(`SELECT
+        (SELECT COUNT(DISTINCT user_id) FROM (
+          SELECT user_id FROM messages WHERE created_at > NOW() - INTERVAL '${period} days'
+          UNION
+          SELECT user_id FROM sessions WHERE created_at > NOW() - INTERVAL '${period} days'
+        ) u) AS wau,
+        (
+          (SELECT COUNT(DISTINCT deal_id) FROM messages WHERE mode_slug = 'deal' AND created_at > NOW() - INTERVAL '${period} days') +
+          (SELECT COUNT(*) FROM sessions WHERE created_at > NOW() - INTERVAL '${period} days')
+        ) AS total_sessions`),
 
-      // 3. Active users (prior period)
-      query(`SELECT COUNT(DISTINCT user_id) AS wau
-        FROM analytics_events
-        WHERE created_at BETWEEN NOW() - INTERVAL '${period * 2} days' AND NOW() - INTERVAL '${period} days'
-        AND event_type = 'app_session_start'`),
+      // 3. Active users (prior period) — from actual message tables
+      query(`SELECT COUNT(DISTINCT user_id) AS wau FROM (
+        SELECT user_id FROM messages WHERE created_at BETWEEN NOW() - INTERVAL '${period * 2} days' AND NOW() - INTERVAL '${period} days'
+        UNION
+        SELECT user_id FROM sessions WHERE created_at BETWEEN NOW() - INTERVAL '${period * 2} days' AND NOW() - INTERVAL '${period} days'
+      ) u`),
 
-      // 4. Coaching turns (current period vs prior period)
+      // 4. Coaching turns (current + prior period) — from actual message tables
       query(`SELECT
         COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '${period} days') AS this_week,
         COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '${period * 2} days' AND NOW() - INTERVAL '${period} days') AS last_week
-        FROM analytics_events WHERE event_type = 'coaching_turn'`),
+        FROM (
+          SELECT created_at FROM messages WHERE mode_slug = 'deal' AND role = 'assistant'
+          UNION ALL
+          SELECT sm.created_at FROM session_messages sm WHERE sm.role = 'assistant'
+        ) all_turns`),
 
       // 5. (merged into #4)
       query(`SELECT 1 AS dummy`),
 
-      // 6. DAU series
-      query(`SELECT DATE(created_at) AS date, COUNT(DISTINCT user_id) AS count
-        FROM analytics_events
-        WHERE created_at > NOW() - INTERVAL '${period} days'
-        GROUP BY DATE(created_at) ORDER BY date ASC`),
+      // 6. DAU series — distinct users active per day from actual tables
+      query(`SELECT date, COUNT(DISTINCT user_id) AS count FROM (
+        SELECT DATE(created_at) AS date, user_id FROM messages WHERE created_at > NOW() - INTERVAL '${period} days'
+        UNION
+        SELECT DATE(created_at) AS date, user_id FROM sessions WHERE created_at > NOW() - INTERVAL '${period} days'
+      ) activity GROUP BY date ORDER BY date ASC`),
 
-      // 7. Coaching turns series
-      query(`SELECT DATE(created_at) AS date, COUNT(*) AS count
-        FROM analytics_events
-        WHERE event_type = 'coaching_turn'
-        AND created_at > NOW() - INTERVAL '${period} days'
-        GROUP BY DATE(created_at) ORDER BY date ASC`),
+      // 7. Coaching turns series — actual turns per day from message tables
+      query(`SELECT DATE(created_at) AS date, COUNT(*) AS count FROM (
+        SELECT created_at FROM messages WHERE mode_slug = 'deal' AND role = 'assistant' AND created_at > NOW() - INTERVAL '${period} days'
+        UNION ALL
+        SELECT sm.created_at FROM session_messages sm
+        JOIN sessions s ON s.id = sm.session_id
+        WHERE sm.role = 'assistant' AND sm.created_at > NOW() - INTERVAL '${period} days'
+      ) turns GROUP BY DATE(created_at) ORDER BY date ASC`),
 
-      // 8. Mode sessions (current period)
-      query(`SELECT properties->>'mode' AS mode, COUNT(*) AS sessions
-        FROM analytics_events
-        WHERE event_type = 'mode_entered'
-        AND created_at > NOW() - INTERVAL '${period} days'
-        GROUP BY properties->>'mode'`),
+      // 8. Mode sessions (current period) — from actual tables
+      query(`SELECT mode, SUM(sessions)::int AS sessions FROM (
+        SELECT 'deal' AS mode, COUNT(DISTINCT deal_id) AS sessions
+          FROM messages WHERE mode_slug = 'deal' AND created_at > NOW() - INTERVAL '${period} days'
+        UNION ALL
+        SELECT mode_slug AS mode, COUNT(*) AS sessions
+          FROM sessions WHERE created_at > NOW() - INTERVAL '${period} days'
+          GROUP BY mode_slug
+      ) m GROUP BY mode`),
 
-      // 9. Mode avg turns (current period)
-      query(`SELECT properties->>'mode' AS mode, COUNT(*) AS turns
-        FROM analytics_events
-        WHERE event_type = 'coaching_turn'
-        AND created_at > NOW() - INTERVAL '${period} days'
-        GROUP BY properties->>'mode'`),
+      // 9. Mode turns (current period) — from actual tables
+      query(`SELECT mode, SUM(turns)::int AS turns FROM (
+        SELECT 'deal' AS mode, COUNT(*) AS turns
+          FROM messages WHERE mode_slug = 'deal' AND role = 'assistant' AND created_at > NOW() - INTERVAL '${period} days'
+        UNION ALL
+        SELECT s.mode_slug AS mode, COUNT(*) AS turns
+          FROM session_messages sm
+          JOIN sessions s ON s.id = sm.session_id
+          WHERE sm.role = 'assistant' AND sm.created_at > NOW() - INTERVAL '${period} days'
+          GROUP BY s.mode_slug
+      ) t GROUP BY mode`),
 
       // 10. Artifact performance
       query(`SELECT
@@ -1026,7 +1047,7 @@ router.get('/analytics', async (req, res) => {
         COUNT(DISTINCT user_id) FILTER (WHERE event_type = 'artifact_accepted') AS artifact_users
         FROM analytics_events`),
 
-      // 12. Retention cohorts (last 8 weeks)
+      // 12. Retention cohorts (last 8 weeks) — from actual message tables
       query(`WITH cohorts AS (
         SELECT
           DATE_TRUNC('week', created_at) AS cohort_week,
@@ -1034,12 +1055,10 @@ router.get('/analytics', async (req, res) => {
         FROM users
         WHERE created_at > NOW() - INTERVAL '8 weeks'
       ),
-      sessions AS (
-        SELECT
-          user_id,
-          DATE_TRUNC('week', created_at) AS session_week
-        FROM analytics_events
-        WHERE event_type = 'app_session_start'
+      user_sessions AS (
+        SELECT user_id, DATE_TRUNC('week', created_at) AS session_week FROM messages
+        UNION
+        SELECT user_id, DATE_TRUNC('week', created_at) AS session_week FROM sessions
       )
       SELECT
         c.cohort_week,
@@ -1048,9 +1067,9 @@ router.get('/analytics', async (req, res) => {
         COUNT(DISTINCT s2.user_id) FILTER (WHERE s2.session_week = c.cohort_week + INTERVAL '2 weeks') AS w3,
         COUNT(DISTINCT s3.user_id) FILTER (WHERE s3.session_week = c.cohort_week + INTERVAL '3 weeks') AS w4
       FROM cohorts c
-      LEFT JOIN sessions s1 ON s1.user_id = c.user_id
-      LEFT JOIN sessions s2 ON s2.user_id = c.user_id
-      LEFT JOIN sessions s3 ON s3.user_id = c.user_id
+      LEFT JOIN user_sessions s1 ON s1.user_id = c.user_id
+      LEFT JOIN user_sessions s2 ON s2.user_id = c.user_id
+      LEFT JOIN user_sessions s3 ON s3.user_id = c.user_id
       GROUP BY c.cohort_week
       ORDER BY c.cohort_week DESC`),
 

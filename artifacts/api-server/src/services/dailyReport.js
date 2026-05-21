@@ -298,8 +298,9 @@ async function buildReport() {
   const windows = getDateWindows();
   const { mtdStart, mtdEnd, prevStart, prevEnd, yesterdayStart, yesterdayEnd } = windows;
 
-  const [current, previous, topUsers, signals] = await Promise.all([
+  const [current, yesterday, previous, topUsers, signals] = await Promise.all([
     buildMetricsForPeriod(mtdStart, mtdEnd),
+    buildMetricsForPeriod(yesterdayStart, yesterdayEnd),
     buildMetricsForPeriod(prevStart, prevEnd),
     buildTopUsers(mtdStart, mtdEnd),
     buildEngagementSignals(mtdStart, mtdEnd, prevStart, prevEnd, yesterdayStart, yesterdayEnd),
@@ -309,39 +310,44 @@ async function buildReport() {
   const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const mtdLabel = `${mtdStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${new Date(mtdEnd.getTime() - 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
   const prevLabel = `${prevStart.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+  const yesterdayLabel = yesterdayStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-  return { current, previous, topUsers, signals, dateLabel, mtdLabel, prevLabel };
+  return { current, yesterday, previous, topUsers, signals, dateLabel, mtdLabel, prevLabel, yesterdayLabel };
 }
 
 // ─── HTML Email ───────────────────────────────────────────────────────────────
 
 function buildHtmlEmail(report) {
-  const { current: c, previous: p, topUsers, signals, dateLabel, mtdLabel, prevLabel } = report;
+  const { current: c, yesterday: y, previous: p, topUsers, signals, dateLabel, mtdLabel, prevLabel, yesterdayLabel } = report;
 
-  const th = (t) => `<th style="text-align:left;padding:7px 10px;font-size:12px;font-weight:600;color:#fff;background:#c8102e;white-space:nowrap;">${t}</th>`;
+  const th = (t, bg = '#c8102e') => `<th style="text-align:left;padding:7px 10px;font-size:12px;font-weight:600;color:#fff;background:${bg};white-space:nowrap;">${t}</th>`;
   const td = (t, bold = false) => `<td style="padding:7px 10px;font-size:13px;color:#1a1a2e;border-bottom:1px solid #f0f0f0;${bold ? 'font-weight:700;' : ''}">${t ?? '—'}</td>`;
+  const tdYest = (t, bold = false) => `<td style="padding:7px 10px;font-size:13px;color:#1a1a2e;border-bottom:1px solid #f0f0f0;background:#fffbf0;${bold ? 'font-weight:700;' : ''}">${t ?? '—'}</td>`;
   const tdGray = (t) => `<td style="padding:7px 10px;font-size:13px;color:#888;background:#fafafa;border-bottom:1px solid #f0f0f0;">${t ?? '—'}</td>`;
-  const sectionHeader = (t) => `<tr><td colspan="3" style="padding:18px 10px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#c8102e;border-bottom:2px solid #c8102e;">${t}</td></tr>`;
 
-  const modeRows = (label, curr, prev) => `
+  const modeRows = (label, curr, yest, prev) => `
     <tr>
       ${td(label, true)}
-      ${td(fmt(curr.active_users))} 
-      ${td(fmt(prev.active_users))}
+      ${td(fmt(curr.active_users))}
+      ${tdYest(fmt(yest.active_users))}
+      ${tdGray(fmt(prev.active_users))}
     </tr>
     <tr>
       ${td('&nbsp;&nbsp;Sessions')}
       ${td(fmt(curr.sessions))}
+      ${tdYest(fmt(yest.sessions))}
       ${tdGray(fmt(prev.sessions))}
     </tr>
     <tr>
       ${td('&nbsp;&nbsp;Turns')}
       ${td(fmt(curr.turns))}
+      ${tdYest(fmt(yest.turns))}
       ${tdGray(fmt(prev.turns))}
     </tr>
     <tr>
       ${td('&nbsp;&nbsp;Avg turns/session')}
       ${td(curr.avg_turns_per_session)}
+      ${tdYest(yest.avg_turns_per_session)}
       ${tdGray(prev.avg_turns_per_session)}
     </tr>
   `;
@@ -349,31 +355,40 @@ function buildHtmlEmail(report) {
   const modesTable = `
     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:12px;">
       <thead>
-        <tr>${th('Mode / Metric')}${th(`Current MTD<br/><span style="font-weight:400;">${mtdLabel}</span>`)}${th(`Previous Month<br/><span style="font-weight:400;">${prevLabel}</span>`)}</tr>
+        <tr>
+          ${th('Mode / Metric')}
+          ${th(`Current MTD<br/><span style="font-weight:400;">${mtdLabel}</span>`)}
+          ${th(`Yesterday<br/><span style="font-weight:400;">${yesterdayLabel}</span>`, '#b8860b')}
+          ${th(`Previous Month<br/><span style="font-weight:400;">${prevLabel}</span>`, '#555')}
+        </tr>
       </thead>
       <tbody>
-        ${modeRows('Deal Mode', c.modes.deal, p.modes.deal)}
-        ${modeRows('Coach Mode', c.modes.coach, p.modes.coach)}
-        ${modeRows('Mindset Mode', c.modes.mindset, p.modes.mindset)}
+        ${modeRows('Deal Mode', c.modes.deal, y.modes.deal, p.modes.deal)}
+        ${modeRows('Coach Mode', c.modes.coach, y.modes.coach, p.modes.coach)}
+        ${modeRows('Mindset Mode', c.modes.mindset, y.modes.mindset, p.modes.mindset)}
         <tr style="background:#fff8f8;">
           ${td('Combined Totals', true)}
           ${td(fmt(c.modes.totals.active_users), true)}
-          ${td(fmt(p.modes.totals.active_users))}
+          ${tdYest(fmt(y.modes.totals.active_users), true)}
+          ${tdGray(fmt(p.modes.totals.active_users))}
         </tr>
         <tr style="background:#fff8f8;">
           ${td('&nbsp;&nbsp;Sessions')}
           ${td(fmt(c.modes.totals.sessions), true)}
-          ${td(fmt(p.modes.totals.sessions))}
+          ${tdYest(fmt(y.modes.totals.sessions))}
+          ${tdGray(fmt(p.modes.totals.sessions))}
         </tr>
         <tr style="background:#fff8f8;">
           ${td('&nbsp;&nbsp;Turns')}
           ${td(fmt(c.modes.totals.turns), true)}
-          ${td(fmt(p.modes.totals.turns))}
+          ${tdYest(fmt(y.modes.totals.turns))}
+          ${tdGray(fmt(p.modes.totals.turns))}
         </tr>
         <tr style="background:#fff8f8;">
           ${td('&nbsp;&nbsp;Avg turns/session')}
           ${td(c.modes.totals.avg_turns_per_session, true)}
-          ${td(p.modes.totals.avg_turns_per_session)}
+          ${tdYest(y.modes.totals.avg_turns_per_session)}
+          ${tdGray(p.modes.totals.avg_turns_per_session)}
         </tr>
       </tbody>
     </table>
@@ -428,17 +443,18 @@ function buildHtmlEmail(report) {
         <tr>
           ${th('Metric')}
           ${th(`Current MTD<br/><span style="font-weight:400;font-size:11px;">${mtdLabel}</span>`)}
-          ${th(`Previous Month<br/><span style="font-weight:400;font-size:11px;">${prevLabel}</span>`)}
+          ${th(`Yesterday<br/><span style="font-weight:400;font-size:11px;">${yesterdayLabel}</span>`, '#b8860b')}
+          ${th(`Previous Month<br/><span style="font-weight:400;font-size:11px;">${prevLabel}</span>`, '#555')}
         </tr>
       </thead>
       <tbody>
-        <tr>${td('Active Users')}${td(fmt(c.platform.active_users), true)}${tdGray(fmt(p.platform.active_users))}</tr>
-        <tr>${td('New Users')}${td(fmt(c.platform.new_users), true)}${tdGray(fmt(p.platform.new_users))}</tr>
-        <tr>${td('Total Sessions')}${td(fmt(c.platform.total_sessions), true)}${tdGray(fmt(p.platform.total_sessions))}</tr>
-        <tr>${td('Total Coaching Turns')}${td(fmt(c.platform.total_turns), true)}${tdGray(fmt(p.platform.total_turns))}</tr>
-        <tr>${td('Avg Sessions / User')}${td(c.platform.avg_sessions_per_user, true)}${tdGray(p.platform.avg_sessions_per_user)}</tr>
-        <tr>${td('Avg Turns / Session')}${td(c.platform.avg_turns_per_session, true)}${tdGray(p.platform.avg_turns_per_session)}</tr>
-        <tr>${td('Avg Turns / User')}${td(c.platform.avg_turns_per_user, true)}${tdGray(p.platform.avg_turns_per_user)}</tr>
+        <tr>${td('Active Users')}${td(fmt(c.platform.active_users), true)}${tdYest(fmt(y.platform.active_users))}${tdGray(fmt(p.platform.active_users))}</tr>
+        <tr>${td('New Users')}${td(fmt(c.platform.new_users), true)}${tdYest(fmt(y.platform.new_users))}${tdGray(fmt(p.platform.new_users))}</tr>
+        <tr>${td('Total Sessions')}${td(fmt(c.platform.total_sessions), true)}${tdYest(fmt(y.platform.total_sessions))}${tdGray(fmt(p.platform.total_sessions))}</tr>
+        <tr>${td('Total Coaching Turns')}${td(fmt(c.platform.total_turns), true)}${tdYest(fmt(y.platform.total_turns))}${tdGray(fmt(p.platform.total_turns))}</tr>
+        <tr>${td('Avg Sessions / User')}${td(c.platform.avg_sessions_per_user, true)}${tdYest(y.platform.avg_sessions_per_user)}${tdGray(p.platform.avg_sessions_per_user)}</tr>
+        <tr>${td('Avg Turns / Session')}${td(c.platform.avg_turns_per_session, true)}${tdYest(y.platform.avg_turns_per_session)}${tdGray(p.platform.avg_turns_per_session)}</tr>
+        <tr>${td('Avg Turns / User')}${td(c.platform.avg_turns_per_user, true)}${tdYest(y.platform.avg_turns_per_user)}${tdGray(p.platform.avg_turns_per_user)}</tr>
       </tbody>
     </table>
 
@@ -503,10 +519,10 @@ function buildHtmlEmail(report) {
 // ─── Slack Block Kit ──────────────────────────────────────────────────────────
 
 function buildSlackBlocks(report) {
-  const { current: c, previous: p, topUsers, signals, dateLabel, mtdLabel, prevLabel } = report;
+  const { current: c, yesterday: y, previous: p, topUsers, signals, dateLabel, mtdLabel, prevLabel, yesterdayLabel } = report;
 
-  const metricLine = (label, curr, prev) =>
-    `*${label}:* ${fmt(curr)} _(prev: ${fmt(prev)})_`;
+  const metricLine = (label, curr, yest, prev) =>
+    `*${label}:* ${fmt(curr)} · _Yesterday: ${fmt(yest)}_ · _(prev mo: ${fmt(prev)})_`;
 
   const topUserLines = topUsers.slice(0, 10).map((u, i) => {
     const modes = [u.used_deal && 'Deal', u.used_coach && 'Coach', u.used_mindset && 'Mindset'].filter(Boolean).join('/') || '—';
@@ -537,14 +553,14 @@ function buildSlackBlocks(report) {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `*PLATFORM SUMMARY* · Current MTD: ${mtdLabel} · Previous: ${prevLabel}\n\n` +
-          metricLine('Active Users', c.platform.active_users, p.platform.active_users) + '\n' +
-          metricLine('New Users', c.platform.new_users, p.platform.new_users) + '\n' +
-          metricLine('Total Sessions', c.platform.total_sessions, p.platform.total_sessions) + '\n' +
-          metricLine('Total Coaching Turns', c.platform.total_turns, p.platform.total_turns) + '\n' +
-          `*Avg Sessions/User:* ${c.platform.avg_sessions_per_user} _(prev: ${p.platform.avg_sessions_per_user})_ · ` +
-          `*Avg Turns/Session:* ${c.platform.avg_turns_per_session} _(prev: ${p.platform.avg_turns_per_session})_ · ` +
-          `*Avg Turns/User:* ${c.platform.avg_turns_per_user} _(prev: ${p.platform.avg_turns_per_user})_`,
+        text: `*PLATFORM SUMMARY* · MTD: ${mtdLabel} · Yesterday: ${yesterdayLabel} · Prev Month: ${prevLabel}\n\n` +
+          metricLine('Active Users', c.platform.active_users, y.platform.active_users, p.platform.active_users) + '\n' +
+          metricLine('New Users', c.platform.new_users, y.platform.new_users, p.platform.new_users) + '\n' +
+          metricLine('Total Sessions', c.platform.total_sessions, y.platform.total_sessions, p.platform.total_sessions) + '\n' +
+          metricLine('Total Coaching Turns', c.platform.total_turns, y.platform.total_turns, p.platform.total_turns) + '\n' +
+          `*Avg Sessions/User:* ${c.platform.avg_sessions_per_user} · _Yest: ${y.platform.avg_sessions_per_user}_ · _(prev: ${p.platform.avg_sessions_per_user})_\n` +
+          `*Avg Turns/Session:* ${c.platform.avg_turns_per_session} · _Yest: ${y.platform.avg_turns_per_session}_ · _(prev: ${p.platform.avg_turns_per_session})_\n` +
+          `*Avg Turns/User:* ${c.platform.avg_turns_per_user} · _Yest: ${y.platform.avg_turns_per_user}_ · _(prev: ${p.platform.avg_turns_per_user})_`,
       },
     },
     { type: 'divider' },
@@ -552,11 +568,11 @@ function buildSlackBlocks(report) {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `*MODE BREAKDOWN*\n\n` +
-          `*Deal Mode* — Active: *${fmt(c.modes.deal.active_users)}* · Sessions: *${fmt(c.modes.deal.sessions)}* · Turns: *${fmt(c.modes.deal.turns)}* · Avg/session: ${c.modes.deal.avg_turns_per_session}\n` +
-          `*Coach Mode* — Active: *${fmt(c.modes.coach.active_users)}* · Sessions: *${fmt(c.modes.coach.sessions)}* · Turns: *${fmt(c.modes.coach.turns)}* · Avg/session: ${c.modes.coach.avg_turns_per_session}\n` +
-          `*Mindset Mode* — Active: *${fmt(c.modes.mindset.active_users)}* · Sessions: *${fmt(c.modes.mindset.sessions)}* · Turns: *${fmt(c.modes.mindset.turns)}* · Avg/session: ${c.modes.mindset.avg_turns_per_session}\n` +
-          `*Totals* — Active: *${fmt(c.modes.totals.active_users)}* · Sessions: *${fmt(c.modes.totals.sessions)}* · Turns: *${fmt(c.modes.totals.turns)}* · Avg/session: ${c.modes.totals.avg_turns_per_session}`,
+        text: `*MODE BREAKDOWN* (MTD · Yesterday · Prev Month)\n\n` +
+          `*Deal Mode* — Active: *${fmt(c.modes.deal.active_users)}* · Sessions: *${fmt(c.modes.deal.sessions)}* (yest: ${fmt(y.modes.deal.sessions)}) · Turns: *${fmt(c.modes.deal.turns)}* (yest: ${fmt(y.modes.deal.turns)}) · Avg/session: ${c.modes.deal.avg_turns_per_session}\n` +
+          `*Coach Mode* — Active: *${fmt(c.modes.coach.active_users)}* · Sessions: *${fmt(c.modes.coach.sessions)}* (yest: ${fmt(y.modes.coach.sessions)}) · Turns: *${fmt(c.modes.coach.turns)}* (yest: ${fmt(y.modes.coach.turns)}) · Avg/session: ${c.modes.coach.avg_turns_per_session}\n` +
+          `*Mindset Mode* — Active: *${fmt(c.modes.mindset.active_users)}* · Sessions: *${fmt(c.modes.mindset.sessions)}* (yest: ${fmt(y.modes.mindset.sessions)}) · Turns: *${fmt(c.modes.mindset.turns)}* (yest: ${fmt(y.modes.mindset.turns)}) · Avg/session: ${c.modes.mindset.avg_turns_per_session}\n` +
+          `*Totals* — Active: *${fmt(c.modes.totals.active_users)}* · Sessions: *${fmt(c.modes.totals.sessions)}* (yest: ${fmt(y.modes.totals.sessions)}) · Turns: *${fmt(c.modes.totals.turns)}* (yest: ${fmt(y.modes.totals.turns)}) · Avg/session: ${c.modes.totals.avg_turns_per_session}`,
       },
     },
     { type: 'divider' },
