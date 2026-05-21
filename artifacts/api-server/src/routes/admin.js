@@ -10,6 +10,7 @@ import { ensureUser } from '../middleware/auth.js';
 import adminOnly from '../middleware/adminOnly.js';
 import { sendInviteEmail, sendBetaApprovedEmail } from '../services/email.js';
 import { runBackup } from '../services/backupService.js';
+import { runDailyReport } from '../services/dailyReport.js';
 import { count as sseCount } from '../services/sseCounter.js';
 import { bustRCCache } from '../services/resourceCenter.js';
 
@@ -1223,6 +1224,13 @@ router.delete('/beta-flags', async (req, res) => {
 router.post('/backup/run', async (req, res) => {
   res.json({ ok: true, message: 'Backup started — results will be emailed to vince@vincebeese.com' });
   runBackup().catch((err) => console.error('Manual backup error:', err));
+});
+
+// === MANUAL DAILY REPORT TRIGGER ===
+
+router.post('/report/run', async (req, res) => {
+  res.json({ ok: true, message: 'Daily report running — results will be emailed to vince@vincebeese.com' });
+  runDailyReport().catch((err) => console.error('Manual report error:', err));
 });
 
 export default router;

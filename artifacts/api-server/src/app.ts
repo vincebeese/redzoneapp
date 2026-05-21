@@ -85,6 +85,7 @@ app.get(["/api/health", "/api/healthz"], (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+
 app.post("/api/auth/login", authRateLimiter);
 app.post("/api/auth/magic-link/request", authRateLimiter);
 app.post("/api/auth/forgot-password", authRateLimiter);
