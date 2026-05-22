@@ -461,7 +461,7 @@ router.get('/system', async (req, res) => {
     anthropic = { status: anthropicCache.status, model: anthropicCache.model };
   } else {
     try {
-      const checkModel = 'claude-haiku-3-5-20241022';
+      const checkModel = 'claude-haiku-4-5';
       await anthropicClient.messages.create({
         model: checkModel,
         max_tokens: 1,
