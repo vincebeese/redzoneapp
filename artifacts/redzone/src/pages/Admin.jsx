@@ -127,7 +127,7 @@ function AnalyticsTab() {
       dauChart.current = new Chart(dauRef.current, {
         type: 'line',
         data: {
-          labels: data.dau_series.map(d => new Date(d.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+          labels: data.dau_series.map(d => new Date(String(d.date).substring(0, 10) + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
           datasets: [{ data: data.dau_series.map(d => d.count), borderColor: '#C62828', backgroundColor: 'rgba(198,40,40,0.08)', fill: true, tension: 0.4, pointRadius: 2 }],
         },
         options: {
@@ -141,7 +141,7 @@ function AnalyticsTab() {
       turnsChart.current = new Chart(turnsRef.current, {
         type: 'bar',
         data: {
-          labels: data.turns_series.map(d => new Date(d.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+          labels: data.turns_series.map(d => new Date(String(d.date).substring(0, 10) + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
           datasets: [{ data: data.turns_series.map(d => d.count), backgroundColor: 'rgba(198,40,40,0.7)' }],
         },
         options: {
