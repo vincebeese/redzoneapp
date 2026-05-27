@@ -23,6 +23,24 @@ function parseSignals(text) {
   let cleanText = text;
   let artifactOffer = null;
   let transcriptPrompt = null;
+  let triggerArtifact = null;
+
+  // TRIGGER_ARTIFACT signal (user explicitly asked — auto-build immediately)
+  const taJson = cleanText.match(/\n?\[TRIGGER_ARTIFACT:(\{.*?\})\]/s);
+  if (taJson) {
+    try {
+      const normalized = taJson[1].replace(/""/g, '"');
+      triggerArtifact = JSON.parse(normalized);
+    } catch (_) {}
+    cleanText = cleanText.replace(/\n?\[TRIGGER_ARTIFACT:\{.*?\}\]/s, '').trim();
+  }
+  if (!triggerArtifact) {
+    const taPlain = cleanText.match(/\n?\[TRIGGER_ARTIFACT:([a-z0-9_]+)\]/i);
+    if (taPlain) {
+      triggerArtifact = { type: taPlain[1] };
+      cleanText = cleanText.replace(/\n?\[TRIGGER_ARTIFACT:[a-z0-9_]+\]/i, '').trim();
+    }
+  }
 
   // JSON ARTIFACT_OFFER signal
   const aoJson = cleanText.match(/\n?\[ARTIFACT_OFFER:(\{.*?\})\]/s);
@@ -51,7 +69,7 @@ function parseSignals(text) {
     cleanText = cleanText.replace(/\n?\[TRANSCRIPT_PROMPT:\{.*?\}\]/s, '').trim();
   }
 
-  return { cleanText, artifactOffer, transcriptPrompt };
+  return { cleanText, artifactOffer, transcriptPrompt, triggerArtifact };
 }
 
 export default function DealMode() {
@@ -83,6 +101,7 @@ export default function DealMode() {
   // Artifact offer state (signal-driven)
   const [artifactOffer, setArtifactOffer] = useState(null);
   const [dismissedOfferTypes, setDismissedOfferTypes] = useState(new Set());
+  const [buildingArtifact, setBuildingArtifact] = useState(null);
 
   // Transcript prompt state (signal-driven)
   const [transcriptPrompt, setTranscriptPrompt] = useState(null);
@@ -360,7 +379,7 @@ export default function DealMode() {
       }
 
       // Strip signals from the final displayed content
-      const { cleanText, artifactOffer: streamOffer, transcriptPrompt: streamPrompt } = parseSignals(assistantContent);
+      const { cleanText, artifactOffer: streamOffer, transcriptPrompt: streamPrompt, triggerArtifact: streamTrigger } = parseSignals(assistantContent);
       const finalId = completePayload?.message_id || Date.now();
 
       setMessages((prev) =>
@@ -371,10 +390,19 @@ export default function DealMode() {
         )
       );
 
-      // Process artifact offer (prefer complete payload, fall back to stream parse)
-      const offer = completePayload?.artifact_offer || streamOffer;
-      if (offer?.type && !dismissedOfferTypes.has(offer.type)) {
-        setArtifactOffer(offer);
+      // Process trigger artifact (user explicitly asked — auto-build, no confirmation)
+      const trigger = completePayload?.trigger_artifact || streamTrigger;
+      if (trigger?.type) {
+        setArtifactOffer(null);
+        setBuildingArtifact(trigger);
+        try { await handleAcceptArtifact(trigger.type); } catch (_) {}
+        setBuildingArtifact(null);
+      } else {
+        // Process artifact offer (prefer complete payload, fall back to stream parse)
+        const offer = completePayload?.artifact_offer || streamOffer;
+        if (offer?.type && !dismissedOfferTypes.has(offer.type)) {
+          setArtifactOffer(offer);
+        }
       }
 
       // Process transcript prompt (only show each trigger once per session, only if no transcripts)
@@ -399,6 +427,7 @@ export default function DealMode() {
 
   async function handleAcceptArtifact(type) {
     if (!selectedDeal) return;
+    setArtifactOffer(null);
     const res = await fetch(`/api/deals/${selectedDeal.id}/artifacts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -532,8 +561,20 @@ export default function DealMode() {
                     showContinuityNote={showContinuityNote}
                   />
 
+                  {/* Building indicator — shown while auto-building a triggered artifact */}
+                  {buildingArtifact && (
+                    <div className="px-4 pb-2 flex-shrink-0">
+                      <div className="bg-rzs-red/5 border border-rzs-red/20 rounded-lg px-4 py-3 flex items-center gap-3">
+                        <div className="w-4 h-4 border-2 border-rzs-red border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                        <p className="text-sm font-medium text-rzs-charcoal">
+                          Building your {buildingArtifact.label || buildingArtifact.type}…
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Artifact offer card — state-driven, signal-based */}
-                  {artifactOffer && !streaming && (
+                  {artifactOffer && !streaming && !buildingArtifact && (
                     <div className="px-4 pb-2 flex-shrink-0">
                       <div className="bg-gradient-to-r from-rzs-red/5 to-rzs-gold/5 border border-rzs-red/20 rounded-lg p-4">
                         <div className="flex items-start gap-3">

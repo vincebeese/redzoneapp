@@ -53,6 +53,28 @@ function extractSignals(fullText) {
   let artifactOffer = null;
   let transcriptPrompt = null;
   let profileUpdate = null;
+  let triggerArtifact = null;
+
+  // Extract TRIGGER_ARTIFACT signal (user explicitly asked — auto-build, no confirmation)
+  const taJsonRegex = /\n?\[TRIGGER_ARTIFACT:(\{.*?\})\]/s;
+  const taJsonMatch = cleanText.match(taJsonRegex);
+  if (taJsonMatch) {
+    try {
+      const normalized = taJsonMatch[1].replace(/""/g, '"');
+      triggerArtifact = JSON.parse(normalized);
+    } catch (e) {
+      console.warn('Trigger artifact JSON parse failed:', e.message);
+    }
+    cleanText = cleanText.replace(taJsonRegex, '').trim();
+  }
+  if (!triggerArtifact) {
+    const taPlainRegex = /\n?\[TRIGGER_ARTIFACT:([a-z0-9_]+)\]/i;
+    const taPlainMatch = cleanText.match(taPlainRegex);
+    if (taPlainMatch) {
+      triggerArtifact = { type: taPlainMatch[1] };
+      cleanText = cleanText.replace(taPlainRegex, '').trim();
+    }
+  }
 
   // Extract ARTIFACT_OFFER signal (JSON format)
   const aoJsonRegex = /\n?\[ARTIFACT_OFFER:(\{.*?\})\]/s;
@@ -106,7 +128,7 @@ function extractSignals(fullText) {
     cleanText = cleanText.replace(/\n?\[ONBOARDING_SKIP\]/g, '').trim();
   }
 
-  return { cleanText, artifactOffer, transcriptPrompt, profileUpdate, onboardingSkip };
+  return { cleanText, artifactOffer, transcriptPrompt, profileUpdate, onboardingSkip, triggerArtifact };
 }
 
 /**
@@ -360,6 +382,34 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
           WHERE is_active = true
           ORDER BY created_at ASC
         `);
+        // Inject TRIGGER_ARTIFACT instruction for deal mode
+        systemPrompt += `\n\n# ARTIFACT BUILD SIGNALS
+
+Two signals control artifact generation. Use the correct one:
+
+## TRIGGER_ARTIFACT — user explicitly asked to build
+Use when the user directly requests an artifact: "build a scorecard", "create a MAP", "make an OTC report", etc.
+Emit this signal on a new line at the END of your response (after your text):
+[TRIGGER_ARTIFACT:{"type":"4f_scorecard","label":"4F Deal Filter Scorecard"}]
+
+Do NOT say "Building your X now" without also emitting the TRIGGER_ARTIFACT signal — that text alone does nothing.
+
+Available types for TRIGGER_ARTIFACT:
+- 4f_scorecard → label: "4F Deal Filter Scorecard"
+- map → label: "Milestone Achievement Plan"
+- otc_scorecard → label: "OTC Scorecard"
+- stakeholder_map → label: "Stakeholder Map"
+- business_case → label: "Business Case"
+- action_plan → label: "72-Hour Action Plan"
+- risk_report → label: "Risk Flag Report"
+- followup_email → label: "Champion Follow-Up Email"
+
+## ARTIFACT_OFFER — proactive suggestion only
+Use ONLY when proactively suggesting an artifact the user has NOT asked for.
+Example: [ARTIFACT_OFFER:{"type":"4f_scorecard","label":"4F Deal Filter Scorecard"}]
+
+NEVER emit both signals in the same response.`;
+
         if (templatesResult.rows.length > 0) {
           systemPrompt += '\n\n# ADDITIONAL ARTIFACTS\nThese custom artifacts are also available. Offer them using the ARTIFACT_OFFER signal.\n\n';
           templatesResult.rows.forEach(t => {
@@ -444,7 +494,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
 
     // Save assistant response for deal mode (strip signals, send complete event)
     if (mode === 'deal' && dealId) {
-      const { cleanText, artifactOffer, transcriptPrompt, profileUpdate } = extractSignals(fullResponse);
+      const { cleanText, artifactOffer, transcriptPrompt, profileUpdate, triggerArtifact } = extractSignals(fullResponse);
       hadArtifactOffer = !!artifactOffer;
       hadTranscriptPrompt = !!transcriptPrompt;
 
@@ -479,6 +529,7 @@ router.post('/:mode', ensureUser, requireSubscription, async (req, res) => {
         type: 'complete',
         message_id: messageId,
         artifact_offer: artifactOffer,
+        trigger_artifact: triggerArtifact,
         transcript_prompt: transcriptPrompt,
         profile_saved: !!profileUpdate,
       })}\n\n`);
