@@ -204,7 +204,7 @@ async function generate4FScorecard(deal, messages, userId) {
 
   const response = await client.messages.create({
     model: SONNET,
-    max_tokens: 2000,
+    max_tokens: 4000,
     system: SCORECARD_4F_SYSTEM,
     messages: [{
       role: 'user',
@@ -283,7 +283,7 @@ async function generateMAP(deal, messages, userId) {
 
   const response = await client.messages.create({
     model: SONNET,
-    max_tokens: 2000,
+    max_tokens: 4000,
     system: MAP_SYSTEM,
     messages: [{
       role: 'user',
@@ -373,7 +373,7 @@ async function generateOTCScorecard(deal, messages, userId) {
 
   const response = await client.messages.create({
     model: SONNET,
-    max_tokens: 2000,
+    max_tokens: 4000,
     system: OTC_SYSTEM,
     messages: [{
       role: 'user',
