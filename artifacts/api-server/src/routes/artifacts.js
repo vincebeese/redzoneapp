@@ -82,4 +82,23 @@ router.get('/', ensureUser, async (req, res) => {
   }
 });
 
+router.delete('/:id', ensureUser, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await query(
+      `DELETE FROM messages
+       WHERE id = $1 AND user_id = $2 AND artifact_type IS NOT NULL
+       RETURNING id`,
+      [id, req.user.id]
+    );
+    if (!result.rows.length) {
+      return res.status(404).json({ error: 'Artifact not found' });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting artifact:', error);
+    res.status(500).json({ error: 'Failed to delete artifact' });
+  }
+});
+
 export default router;
