@@ -1,5 +1,26 @@
 import * as XLSX from 'xlsx';
 
+const RICH_ARTIFACT_TYPES = new Set(['4f_scorecard', 'map', 'otc_scorecard']);
+
+function tryExtractJSON(text) {
+  if (!text) return null;
+  // Strip code fences
+  const stripped = text.trim().replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '').trim();
+  // Try direct parse
+  try { return JSON.parse(stripped); } catch (_) {}
+  // Find first { to last }
+  const s = stripped.indexOf('{'), e = stripped.lastIndexOf('}');
+  if (s !== -1 && e > s) {
+    try { return JSON.parse(stripped.slice(s, e + 1)); } catch (_) {}
+  }
+  // Try the original text
+  const s2 = text.indexOf('{'), e2 = text.lastIndexOf('}');
+  if (s2 !== -1 && e2 > s2) {
+    try { return JSON.parse(text.slice(s2, e2 + 1)); } catch (_) {}
+  }
+  return null;
+}
+
 export function parseArtifactContent(content) {
   const startMatch = content.match(/\[ARTIFACT_START:(\w+)\]/);
   const endMatch = content.match(/\[ARTIFACT_END\]/);
@@ -22,6 +43,13 @@ export function parseArtifactContent(content) {
         console.warn('Failed to parse artifact JSON data:', e.message);
       }
       markdownContent = artifactContent.replace(jsonMatch[0], '').trim();
+    }
+
+    // Recovery path: for rich types that somehow lost the [ARTIFACT_JSON] wrapper,
+    // try to extract JSON directly from the content (handles old broken artifacts)
+    if (!data && RICH_ARTIFACT_TYPES.has(type)) {
+      data = tryExtractJSON(artifactContent);
+      if (data) markdownContent = '';
     }
 
     return { type, content: markdownContent, cleanContent, data };

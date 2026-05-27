@@ -8,6 +8,25 @@ function stripCodeFences(text) {
   return text.trim().replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '').trim();
 }
 
+function extractJSON(text) {
+  // 1. Try stripping code fences and parsing directly
+  const stripped = stripCodeFences(text.trim());
+  try { return JSON.parse(stripped); } catch (_) {}
+  // 2. Find first { to last } in the stripped text
+  const s1 = stripped.indexOf('{');
+  const e1 = stripped.lastIndexOf('}');
+  if (s1 !== -1 && e1 > s1) {
+    try { return JSON.parse(stripped.slice(s1, e1 + 1)); } catch (_) {}
+  }
+  // 3. Find first { to last } in the raw text (handles preamble + fenced block)
+  const s2 = text.indexOf('{');
+  const e2 = text.lastIndexOf('}');
+  if (s2 !== -1 && e2 > s2) {
+    return JSON.parse(text.slice(s2, e2 + 1));
+  }
+  throw new Error('No valid JSON found in AI response');
+}
+
 function logSpend(tokensIn, tokensOut, userId, modeSlug) {
   const estCost = (tokensIn / 1_000_000) * 3.0 + (tokensOut / 1_000_000) * 15.0;
   query(
@@ -197,7 +216,7 @@ async function generate4FScorecard(deal, messages, userId) {
 
   let data;
   try {
-    data = JSON.parse(stripCodeFences(response.content[0].text));
+    data = extractJSON(response.content[0].text);
   } catch (e) {
     console.error('4F scorecard JSON parse error:', e.message, '\nRaw:', response.content[0].text.slice(0, 200));
     return { markdown: response.content[0].text, data: null };
@@ -276,7 +295,7 @@ async function generateMAP(deal, messages, userId) {
 
   let data;
   try {
-    data = JSON.parse(stripCodeFences(response.content[0].text));
+    data = extractJSON(response.content[0].text);
   } catch (e) {
     console.error('MAP JSON parse error:', e.message, '\nRaw:', response.content[0].text.slice(0, 200));
     return { markdown: response.content[0].text, data: null };
@@ -366,7 +385,7 @@ async function generateOTCScorecard(deal, messages, userId) {
 
   let data;
   try {
-    data = JSON.parse(stripCodeFences(response.content[0].text));
+    data = extractJSON(response.content[0].text);
   } catch (e) {
     console.error('OTC scorecard JSON parse error:', e.message, '\nRaw:', response.content[0].text.slice(0, 200));
     return { markdown: response.content[0].text, data: null };
@@ -557,14 +576,20 @@ ${JSON.stringify(
 
   logSpend(response.usage?.input_tokens || 0, response.usage?.output_tokens || 0, deal.user_id, `artifact_template_${template.slug}`);
 
-  const raw = response.content[0].text.trim()
-    .replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-  
   let populated;
   try {
-    populated = JSON.parse(raw);
+    const raw = response.content[0].text;
+    // Try extracting JSON array (find first [ to last ])
+    const stripped = stripCodeFences(raw.trim());
+    let parsed;
+    try { parsed = JSON.parse(stripped); } catch (_) {
+      const sa = stripped.indexOf('['), ea = stripped.lastIndexOf(']');
+      if (sa !== -1 && ea > sa) parsed = JSON.parse(stripped.slice(sa, ea + 1));
+      else throw new Error('No JSON array found');
+    }
+    populated = parsed;
   } catch (err) {
-    console.error('Failed to parse template response JSON:', raw.substring(0, 200));
+    console.error('Failed to parse template response JSON:', response.content[0].text.substring(0, 200));
     throw new Error(`Failed to parse template response: ${err.message}`);
   }
 

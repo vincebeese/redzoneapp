@@ -1,0 +1,111 @@
+[ARTIFACT_START:4f_scorecard]
+```json
+{
+  "company": "SINAI Technologies",
+  "date": "2026-05-27",
+  "criteria": [
+    {
+      "id": "01",
+      "name": "FIT",
+      "question": "Do they match your ICP and use case?",
+      "checkpoints": [
+        {
+          "label": "Operates in a high-fit industry/vertical",
+          "evidence": "SINAI Technologies is a climate tech SaaS company selling carbon accounting and decarbonization software — early-stage enterprise software with a complex, consultative sale and a technically sophisticated buyer. Fits coaching ICP for enterprise sales teams with low win rates.",
+          "checked": true
+        },
+        {
+          "label": "Company size and growth stage match ICP",
+          "evidence": "Small team: 4 AEs, 5 customer success, 1 sales engineer, 3-person marketing. VP of Commercial only 4 months in role. Multiple prior sales leaders. Actively interviewing for a 4th AE. Classic early-stage, scaling sales org — matches ICP for Red Zone Selling coaching engagements.",
+          "checked": true
+        },
+        {
+          "label": "Compatible tech stack or infrastructure",
+          "evidence": "Uses MEDPIC methodology, AI-generated call scoring, Apollo for outbound, Slack for team communication, and Fathom for call recording. Existing infrastructure is compatible with coaching engagement model (Slack integration, call review, pipeline visibility).",
+          "checked": true
+        },
+        {
+          "label": "Solvable use case — problem we win often",
+          "evidence": "15% close rate, single-threaded North America AE, happy-ears Brazil AE, new UK AE ramping, Q3 pipeline at risk, VP of Commercial with no formal sales background — all are directly addressable through deal coaching, pipeline discipline, and champion development. Core Red Zone Selling use case.",
+          "checked": true
+        },
+        {
+          "label": "Similar successful customers / referenceability",
+          "evidence": "Jess (CEO) has a prior working relationship with Vince from Cheetah Mail. Adam (North America AE) also worked with Vince previously. Warm referral-based intro from the economic buyer himself. Strong reference anchor already in place.",
+          "checked": true
+        }
+      ],
+      "verdict": "PASS",
+      "coaching_note": "FIT is strong across all five checkpoints — Jess's prior relationship with Vince is a built-in reference and the team's specific pain points map directly to the Red Zone Selling use case.",
+      "evidence_summary": "SINAI is an early-stage climate SaaS company with 4 AEs, a first-time VP of Commercial, a 15% close rate, and active qualification and pipeline discipline gaps — a textbook ICP match with a CEO who already knows and trusts the seller."
+    },
+    {
+      "id": "02",
+      "name": "FRICTION",
+      "question": "What pain are they experiencing?",
+      "checkpoints": [
+        {
+          "label": "Pain is clearly defined and documented by the prospect",
+          "evidence": "Alisha explicitly named: 15% close rate, Brazil AE with happy-ears and unqualified pipeline, North America AE single-threaded on one $250K deal with no new lead calls on calendar, Q3 pipeline already looking bad, two deals above 60% as the only buffer for the current quarter, and difficulty converting leads into qualified opportunities.",
+          "checked": true
+        },
+        {
+          "label": "Pain owner (stakeholder) has been identified",
+          "evidence": "Alisha Giglio, VP of Commercial, is the operational pain owner — she directly manages the AEs and experiences the pipeline and qualification problems daily. Jess (CEO) is the strategic pain owner and economic buyer who initiated the engagement.",
+          "checked": true
+        },
+        {
+          "label": "Consequence of inaction has been articulated",
+          "evidence": "Alisha stated: 'If they're not managed right, then I don't have a quarter.' She identified that if Adam's single $250K deal falls through and the two deals above 60% are mishandled, the quarter is lost. Q3 pipeline described as already looking 'pretty bad.'",
+          "checked": true
+        },
+        {
+          "label": "Prospect has expressed urgency or frustration",
+          "evidence": "Alisha said: 'Something needs to change, right, in this business. Our last quarter wasn't great. This quarter looks okay. I'm really nervous about Q3.' Tone throughout the call reflected genuine anxiety about near-term results and her team's execution.",
+          "checked": true
+        },
+        {
+          "label": "Pain is tied to a business outcome, not a preference",
+          "evidence": "Pain is tied to revenue — 15% close rate, thin Q3 pipeline, and an AE with one deal representing more than half the North America number. However, Layer 3 (personal stakes for Alisha as a first-time VP with no sales background) was not surfaced, leaving the business outcome connection partially incomplete at the individual level.",
+          "checked": true
+        }
+      ],
+      "verdict": "PASS",
+      "coaching_note": "FRICTION is well-documented at the team and business level, but Layer 3 pain — what Q3 failure means personally for Alisha's credibility and tenure — was never surfaced and remains the most important lever for champion activation.",
+      "evidence_summary": "Alisha articulated multi-layered pain: a 15% win rate, a single-threaded North America AE, a Brazil AE with unqualified pipeline, and a Q3 that is already at risk — all tied directly to revenue outcomes and expressed with genuine urgency."
+    },
+    {
+      "id": "03",
+      "name": "FUNDING",
+      "question": "Do they have budget or a path to it?",
+      "checkpoints": [
+        {
+          "label": "Budget already allocated or in-cycle",
+          "evidence": "No budget confirmation was made during the call. Alisha did not indicate an existing budget line for sales coaching or external advisory. Decision was deferred to Jess with no mention of a pre-approved spend.",
+          "checked": false
+        },
+        {
+          "label": "Deal size fits their typical spend range",
+          "evidence": "Deal value is $14,998. Vince framed it directly to Jess as: 'you're going to pay me a dollar now, and if the team closes one more deal, it more than pays for my fee.' With contracts ranging from $60K–$300K, one incremental close easily justifies the fee — ROI framing is favorable.",
+          "checked": true
+        },
+        {
+          "label": "Champion can secure funds if not yet approved",
+          "evidence": "Alisha deferred entirely to Jess: 'I'll speak to Jess on next steps and such on what he wants to do.' Alisha has not demonstrated the willingness or authority to advocate for budget internally. She is not yet activated as a champion — she is acting as a relay.",
+          "checked": false
+        },
+        {
+          "label": "Path to funding is clear (business case, ROI, exec approval)",
+          "evidence": "Vince shared an overview of two engagement options with Jess prior to this call. ROI framing (one incremental deal covers the fee) was verbalized on this call. However, no formal business case has been built and Jess has not confirmed the ROI logic or approved a path forward.",
+          "checked": false
+        },
+        {
+          "label": "Timeline aligns with budget cycle or fiscal urgency",
+          "evidence": "Q3 starts August 1st and pipeline is already described as bad. There is a real fiscal urgency window — if coaching is to impact Q3, a decision needs to happen in June. However, no budget cycle confirmation or fiscal-year alignment was discussed.",
+          "checked": false
+        }
+      ],
+      "verdict": "FAIL",
+      "coaching_note": "FUNDING is the most vulnerable criterion — budget has not been confirmed, Alisha is not yet a champion who can secure funds, and no formal path to approval has been established beyond Vince's prior conversation with Jess.",
+      "evidence_summary": "No budget has been confirmed or allocated. The deal size is defensible on ROI grounds (one incremental close covers the fee),
+[ARTIFACT_END]
