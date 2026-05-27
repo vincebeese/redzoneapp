@@ -128,6 +128,35 @@ function extractSignals(fullText) {
     cleanText = cleanText.replace(/\n?\[ONBOARDING_SKIP\]/g, '').trim();
   }
 
+  // Fallback: detect build intent from AI prose when signal was not emitted.
+  // If the AI says "Building your X now" but forgot the signal, auto-trigger.
+  if (!triggerArtifact) {
+    const lc = cleanText.toLowerCase();
+    const hasBuildingIntent = [
+      'building your', 'building the', 'building it now', 'generating your',
+      'creating your', 'writing your', 'drafting your',
+    ].some(p => lc.includes(p));
+
+    if (hasBuildingIntent) {
+      const ARTIFACT_FALLBACK = [
+        { type: 'followup_email',  label: 'Champion Follow-Up Email',  patterns: ['follow-up email', 'followup email', 'champion email', 'champion follow-up', 'follow up email'] },
+        { type: '4f_scorecard',    label: '4F Deal Filter Scorecard',   patterns: ['4f deal filter', '4f filter scorecard', '4f scorecard', '4-f scorecard'] },
+        { type: 'otc_scorecard',   label: 'OTC Scorecard',             patterns: ['otc scorecard', 'on the call scorecard', 'otc score'] },
+        { type: 'map',             label: 'Milestone Achievement Plan', patterns: ['milestone achievement plan', 'map artifact', 'milestone plan'] },
+        { type: 'stakeholder_map', label: 'Stakeholder Map',            patterns: ['stakeholder map'] },
+        { type: 'business_case',   label: 'Business Case',             patterns: ['business case'] },
+        { type: 'action_plan',     label: '72-Hour Action Plan',        patterns: ['action plan', '72-hour plan', '72 hour plan', '72-hour action'] },
+        { type: 'risk_report',     label: 'Risk Flag Report',           patterns: ['risk flag report', 'risk report'] },
+      ];
+      for (const { type, label, patterns } of ARTIFACT_FALLBACK) {
+        if (patterns.some(p => lc.includes(p))) {
+          triggerArtifact = { type, label, source: 'text_fallback' };
+          break;
+        }
+      }
+    }
+  }
+
   return { cleanText, artifactOffer, transcriptPrompt, profileUpdate, onboardingSkip, triggerArtifact };
 }
 
