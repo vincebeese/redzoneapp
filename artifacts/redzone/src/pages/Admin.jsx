@@ -98,6 +98,15 @@ function AnalyticsTab() {
   const [reportSending, setReportSending] = useState(false);
   const [reportMsg, setReportMsg] = useState(null);
 
+  function fmtChartDate(raw) {
+    // pg DATE columns may arrive as JS Date objects or "YYYY-MM-DD" strings
+    const iso = raw instanceof Date
+      ? raw.toISOString().substring(0, 10)
+      : String(raw).replace(/T.*$/, '').substring(0, 10);
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
   async function sendDailyReport() {
     setReportSending(true);
     setReportMsg(null);
@@ -127,7 +136,7 @@ function AnalyticsTab() {
       dauChart.current = new Chart(dauRef.current, {
         type: 'line',
         data: {
-          labels: data.dau_series.map(d => new Date(String(d.date).substring(0, 10) + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+          labels: data.dau_series.map(d => fmtChartDate(d.date)),
           datasets: [{ data: data.dau_series.map(d => d.count), borderColor: '#C62828', backgroundColor: 'rgba(198,40,40,0.08)', fill: true, tension: 0.4, pointRadius: 2 }],
         },
         options: {
@@ -141,7 +150,7 @@ function AnalyticsTab() {
       turnsChart.current = new Chart(turnsRef.current, {
         type: 'bar',
         data: {
-          labels: data.turns_series.map(d => new Date(String(d.date).substring(0, 10) + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+          labels: data.turns_series.map(d => fmtChartDate(d.date)),
           datasets: [{ data: data.turns_series.map(d => d.count), backgroundColor: 'rgba(198,40,40,0.7)' }],
         },
         options: {
