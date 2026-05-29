@@ -697,6 +697,38 @@ export async function runDailyReport() {
 
 // ─── Scheduler ────────────────────────────────────────────────────────────────
 
+/**
+ * Check whether today's report has already run successfully.
+ * Uses America/New_York "today" so the check is timezone-aware.
+ */
+async function hasRunTodayET() {
+  try {
+    // Get today's date in ET as a YYYY-MM-DD string
+    const todayET = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const { rows } = await query(
+      `SELECT id FROM report_runs
+       WHERE status = 'success'
+         AND run_at AT TIME ZONE 'America/New_York' >= $1::date
+         AND run_at AT TIME ZONE 'America/New_York' <  ($1::date + INTERVAL '1 day')
+       LIMIT 1`,
+      [todayET]
+    );
+    return rows.length > 0;
+  } catch (err) {
+    console.warn('Daily report: could not check report_runs:', err.message);
+    return false; // Assume not run — better to send a duplicate than to miss it
+  }
+}
+
+/**
+ * Returns true if the current ET clock time is at or past 7:30 AM.
+ */
+function isPast730amET() {
+  const etNow = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hour12: false });
+  const [h, m] = etNow.split(':').map(Number);
+  return h > 7 || (h === 7 && m >= 30);
+}
+
 export function startDailyReportScheduler() {
   // Fire at 7:30 AM Eastern every day — node-cron handles DST via timezone option
   cron.schedule('30 7 * * *', () => {
@@ -704,4 +736,15 @@ export function startDailyReportScheduler() {
   }, { timezone: 'America/New_York' });
 
   console.log('Daily report scheduler started (7:30 AM ET).');
+
+  // Catch-up: if the server restarted after 7:30 AM ET and today's report
+  // was never sent (e.g. killed mid-cron), fire it now.
+  if (isPast730amET()) {
+    hasRunTodayET().then(alreadyRan => {
+      if (!alreadyRan) {
+        console.log('Daily report: catch-up run (missed 7:30 AM window due to restart).');
+        runDailyReport().catch(err => console.error('Daily report catch-up error:', err));
+      }
+    });
+  }
 }
