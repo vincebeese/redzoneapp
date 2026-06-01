@@ -924,6 +924,33 @@ router.delete('/resource-center/:id', async (req, res) => {
 
 // === ANALYTICS ===
 
+/**
+ * Fill in a continuous date series from (today - period days) through today,
+ * inserting count=0 for any day absent from the DB results.
+ * Rows from the DB may have `date` as a JS Date or "YYYY-MM-DD" string.
+ */
+function fillDateSeries(rows, period) {
+  // Build lookup: "YYYY-MM-DD" -> count
+  const lookup = {};
+  for (const r of rows) {
+    const key = r.date instanceof Date
+      ? r.date.toISOString().substring(0, 10)
+      : String(r.date).substring(0, 10);
+    lookup[key] = parseInt(r.count);
+  }
+
+  // Generate every date from (today - period) through today (UTC)
+  const result = [];
+  const now = new Date();
+  const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  for (let i = period; i >= 0; i--) {
+    const d = new Date(todayUTC.getTime() - i * 86400000);
+    const key = d.toISOString().substring(0, 10);
+    result.push({ date: key, count: lookup[key] ?? 0 });
+  }
+  return result;
+}
+
 let analyticsCache = { data: null, ts: 0 };
 const ANALYTICS_TTL = 2 * 60 * 1000; // 2 minutes
 
@@ -1204,8 +1231,8 @@ router.get('/analytics', async (req, res) => {
         turns_this_week: turnsThisWeek,
         turns_last_week: turnsLastWeek,
       },
-      dau_series: dauResult.rows.map(r => ({ date: r.date, count: parseInt(r.count) })),
-      turns_series: turnsSeriesResult.rows.map(r => ({ date: r.date, count: parseInt(r.count) })),
+      dau_series: fillDateSeries(dauResult.rows, period),
+      turns_series: fillDateSeries(turnsSeriesResult.rows, period),
       mode_usage: modeUsage,
       artifact_performance: artifactPerf,
       feature_adoption: featureAdoption,
