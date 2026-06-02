@@ -25,6 +25,7 @@ const basePath = process.env.BASE_PATH ?? "/";
 const ogRoutes: Record<string, string> = {
   "/whitepaper":          "whitepaper/index.html",
   "/scale-or-transform":  "scale-or-transform/index.html",
+  "/cohort":              "cohort/index.html",
 };
 
 const whitepaperOgServe = (): Plugin => ({
@@ -115,6 +116,7 @@ export default defineConfig({
         main:               path.resolve(import.meta.dirname, "index.html"),
         whitepaper:         path.resolve(import.meta.dirname, "whitepaper/index.html"),
         scaleOrTransform:   path.resolve(import.meta.dirname, "scale-or-transform/index.html"),
+        cohort:             path.resolve(import.meta.dirname, "cohort/index.html"),
       },
     },
   },

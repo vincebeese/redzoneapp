@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Red Zone Selling — Founding Coaching Cohort</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #C8102E;
+      --red-dark: #9B0C22;
+      --red-glow: rgba(200,16,46,0.08);
+      --black: #0A0A0A;
+      --dark: #1A1A1A;
+      --dark2: #F0ECEC;
+      --gray: #E5E0E0;
+      --muted: #888888;
+      --light: #FFFFFF;
+      --white: #FFFFFF;
+      --offwhite: #F7F4F1;
+      --gold: #C9A84C;
+      --text: #1A1A1A;
+      --text-muted: #3D3D3D;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,16,46,0.15);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.08em;
+      color: var(--dark);
+    }
+
+    .nav-logo span { color: var(--red); }
+
+    nav a.nav-cta {
+      background: var(--red);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+
+    nav a.nav-cta:hover { background: var(--red-dark); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -100px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(200,16,46,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 820px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px; height: 2px;
+      background: var(--red);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 9vw, 120px);
+      line-height: 0.92;
+      letter-spacing: 0.01em;
+      color: var(--dark);
+      margin-bottom: 32px;
+    }
+
+    .hero h1 em {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 400;
+      color: #2A2A2A;
+      max-width: 560px;
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .hero-sub strong {
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--red-dark);
+      transform: translateY(-1px);
+    }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .hero-note strong { color: var(--gold); }
+
+    /* ── STAT BAR ── */
+    .stat-bar {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: center;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      line-height: 1;
+      color: var(--red);
+      letter-spacing: 0.02em;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 100px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 1.0;
+      letter-spacing: 0.02em;
+      color: var(--dark);
+      margin-bottom: 24px;
+    }
+
+    h2 em {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      color: var(--red);
+    }
+
+    /* ── THREE TRUTHS ── */
+    .truths {
+      background: var(--offwhite);
+    }
+
+    .truths-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .truth-card {
+      background: var(--white);
+      padding: 40px 36px;
+      border-top: 3px solid var(--red);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-top: 3px solid var(--red);
+      position: relative;
+    }
+
+    .truth-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 80px;
+      color: rgba(200,16,46,0.12);
+      line-height: 1;
+      position: absolute;
+      top: 16px; right: 24px;
+    }
+
+    .truth-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      font-style: italic;
+      color: var(--dark);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .truth-card p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ── COHORT INTRO ── */
+    .cohort-intro {
+      background: var(--white);
+    }
+
+    .cohort-intro .lead {
+      font-size: 22px;
+      font-weight: 400;
+      color: #2A2A2A;
+      line-height: 1.7;
+      max-width: 740px;
+      margin-bottom: 32px;
+    }
+
+    .cohort-intro .lead strong {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    /* ── WHAT'S INCLUDED ── */
+    .included {
+      background: var(--offwhite);
+    }
+
+    .included-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .included-item {
+      background: var(--white);
+      padding: 36px 32px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: background 0.2s;
+      border: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .included-item:hover { background: #fef9f9; }
+
+    .included-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--red-glow);
+      border: 1px solid rgba(200,16,46,0.3);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .included-text h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .included-text p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ── PRICING ── */
+    .pricing {
+      background: var(--white);
+    }
+
+    .pricing-card {
+      background: var(--offwhite);
+      border: 1px solid rgba(200,16,46,0.25);
+      border-top: 4px solid var(--red);
+      padding: 56px;
+      max-width: 560px;
+      margin: 56px auto 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--red);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .pricing-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 96px;
+      line-height: 1;
+      color: var(--dark);
+      letter-spacing: 0.02em;
+    }
+
+    .pricing-price sup {
+      font-size: 40px;
+      vertical-align: top;
+      margin-top: 16px;
+    }
+
+    .pricing-period {
+      font-size: 14px;
+      color: #3D3D3D;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .pricing-features li {
+      font-size: 15px;
+      color: var(--text-muted);
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--red);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .pricing-note {
+      font-size: 13px;
+      color: #3D3D3D;
+      margin-top: 20px;
+    }
+
+    .pricing-note strong { color: var(--gold); }
+
+    /* ── FAQ ── */
+    .faq {
+      background: var(--offwhite);
+    }
+
+    .faq-list {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .faq-item {
+      background: var(--white);
+      border-left: 3px solid transparent;
+      border: 1px solid rgba(0,0,0,0.07);
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .faq-item.open {
+      border-left-color: var(--red);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 500;
+      text-align: left;
+      padding: 28px 32px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .faq-question:hover { color: var(--red); }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--red-glow);
+      border: 1px solid rgba(200,16,46,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+      color: var(--red);
+      transition: transform 0.25s;
+      line-height: 1;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.2s;
+      padding: 0 32px;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 0 32px 28px;
+    }
+
+    .faq-answer p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      background: var(--white);
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .about-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+
+    .about-content h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .about-content p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .about-stat {
+      background: var(--offwhite);
+      padding: 28px 32px;
+      border-left: 3px solid var(--red);
+      border: 1px solid rgba(0,0,0,0.07);
+      border-left: 3px solid var(--red);
+    }
+
+    .about-stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .about-stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: var(--red);
+      padding: 100px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta::before {
+      content: 'RED ZONE';
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 240px;
+      color: rgba(0,0,0,0.12);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 0.05em;
+    }
+
+    .final-cta h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 7vw, 88px);
+      color: var(--white);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .final-cta p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.8);
+      max-width: 480px;
+      margin: 0 auto 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-white {
+      display: inline-block;
+      background: var(--white);
+      color: var(--red);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 20px 48px;
+      border-radius: 2px;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.15s, background 0.2s;
+    }
+
+    .btn-white:hover {
+      background: var(--light);
+      transform: translateY(-2px);
+    }
+
+    .final-seats {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+
+    .footer-logo span { color: var(--red); }
+
+    footer p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    footer a {
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    footer a:hover { color: var(--red); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner > * {
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .hero-eyebrow  { animation-delay: 0.1s; }
+    .hero h1       { animation-delay: 0.25s; }
+    .hero-sub      { animation-delay: 0.4s; }
+    .hero-actions  { animation-delay: 0.55s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .hero, section { padding-left: 24px; padding-right: 24px; }
+      .stat-bar { padding: 32px 24px; gap: 40px; }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+      .pricing-card { padding: 40px 28px; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Red Zone <span>Selling</span></div>
+    <a href="#reserve" class="nav-cta">Claim Your Seat</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Founding Coaching Cohort — July – September 2026</div>
+      <h1>The Cohort<br><em>Elite</em> Sellers<br>Run In.</h1>
+      <p class="hero-sub">
+        25 enterprise sellers. One quarter. Weekly accountability, live deal work, and <strong>the full Red Zone system</strong> working for you every day.
+      </p>
+      <div class="hero-actions">
+        <a href="https://buy.stripe.com/4gM3cu0yX1Uu1AH0Qg5ZC0f" class="btn-primary">Claim Your Seat — $750 (3 Months)</a>
+        <span class="hero-note"><strong>25 seats. Closes when full.</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE TRUTHS -->
+  <section class="truths">
+    <div class="section-inner">
+      <div class="section-label">What I've Learned Coaching Enterprise Sellers</div>
+      <h2>Three Things That Keep <em>Costing</em> You Deals</h2>
+      <div class="truths-grid">
+        <div class="truth-card">
+          <div class="truth-number">01</div>
+          <h3>You can't fix what you can't see.</h3>
+          <p>The gaps in your game aren't obvious — if they were, you'd have fixed them already. What you need is someone inside your active deals who can show you exactly where momentum dies and what to do about it.</p>
+        </div>
+        <div class="truth-card">
+          <div class="truth-number">02</div>
+          <h3>Effort doesn't get you promoted. Results do.</h3>
+          <p>You're working hard. The pipeline is full. But the big deals keep slipping and you're not totally sure why. One more bad quarter becomes a label — and that label sticks.</p>
+        </div>
+        <div class="truth-card">
+          <div class="truth-number">03</div>
+          <h3>You're not losing deals on price.</h3>
+          <p>You're losing them on execution. Late-stage deals die because champions go dark, urgency fades, and no one owns the close plan. That's coachable. Most sellers just never get the coaching.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COHORT INTRO -->
+  <section class="cohort-intro">
+    <div class="section-inner">
+      <div class="section-label">Why a Cohort</div>
+      <h2>The Group Effect Is <em>Real.</em></h2>
+      <p class="lead">
+        1:1 coaching builds individual skill. But a strong cohort — sellers who challenge each other, share what's working, and hold each other accountable week over week — <strong>accelerates everything.</strong>
+      </p>
+      <p class="lead">
+        The best sellers I've coached didn't just get better from our sessions. They got better from being around other serious sellers who refused to let them coast. That dynamic is hard to manufacture. When it's there, it's a force multiplier.
+      </p>
+    </div>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="included">
+    <div class="section-inner">
+      <div class="section-label">What You Get</div>
+      <h2>Everything You Need to <em>Close</em> More.</h2>
+      <div class="included-grid">
+        <div class="included-item">
+          <div class="included-icon">🤖</div>
+          <div class="included-text">
+            <h4>RZS AI Coach</h4>
+            <p>24/7 on-demand coaching between sessions. Bring any deal, any objection, any situation — and get immediate coaching grounded in the Red Zone framework.</p>
+          </div>
+        </div>
+        <div class="included-item">
+          <div class="included-icon">🎯</div>
+          <div class="included-text">
+            <h4>Weekly Deal Reviews + Office Hours</h4>
+            <p>Bring your live deals. Leave with a specific plan. Real pipeline coaching every week — not theory.</p>
+          </div>
+        </div>
+        <div class="included-item">
+          <div class="included-icon">⚡</div>
+          <div class="included-text">
+            <h4>Quarterly Masterclasses + Workshops</h4>
+            <p>Execution-focused sessions on the plays and skills that win enterprise deals at every stage.</p>
+          </div>
+        </div>
+        <div class="included-item">
+          <div class="included-icon">📚</div>
+          <div class="included-text">
+            <h4>Online Courses</h4>
+            <p>The full Red Zone Selling framework on demand. Available anytime to build your foundation or reinforce a specific play.</p>
+          </div>
+        </div>
+        <div class="included-item">
+          <div class="included-icon">📋</div>
+          <div class="included-text">
+            <h4>Full Template Library</h4>
+            <p>Scorecards, Mutual Action Plans, business case builders, and more — ready to use on your next deal.</p>
+          </div>
+        </div>
+        <div class="included-item">
+          <div class="included-icon">👥</div>
+          <div class="included-text">
+            <h4>Private Slack Community</h4>
+            <p>Peer accountability and deal support between sessions. The cohort works for you all week, not just on the call.</p>
+          </div>
+        </div>
+        <div class="included-item">
+          <div class="included-icon">💬</div>
+          <div class="included-text">
+            <h4>Direct Slack Access to Vince</h4>
+            <p>Async messaging — group channels for deal crowdsourcing and direct messages to Vince for a quick read when you can't wait for the next session. Dedicated 1:1 sessions available at additional cost.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="reserve">
+    <div class="section-inner" style="text-align:center;">
+      <div class="section-label">Founding Cohort Pricing</div>
+      <h2>One Price. <em>Everything</em> Included.</h2>
+      <div class="pricing-card">
+        <div class="pricing-badge">Founding Coaching Cohort — Capped at 25</div>
+        <div class="pricing-price"><sup>$</sup>750</div>
+        <div class="pricing-period">July – September 2026 · Renewable Each Quarter</div>
+        <ul class="pricing-features">
+          <li>RZS AI Coach — 24/7 on-demand coaching</li>
+          <li>Weekly deal reviews + office hours</li>
+          <li>Quarterly masterclasses + workshops</li>
+          <li>Online courses — full RZS framework</li>
+          <li>Complete template library</li>
+          <li>Private Slack community</li>
+          <li>Direct Slack access to Vince (async)</li>
+        </ul>
+        <a href="https://buy.stripe.com/4gM3cu0yX1Uu1AH0Qg5ZC0f" class="btn-primary" style="width:100%;text-align:center;display:block;">
+          Reserve Your Seat Now
+        </a>
+        <p class="pricing-note">
+          <strong>This price won't come back.</strong> Once 25 seats are filled, enrollment closes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="section-inner">
+      <div class="section-label">Questions</div>
+      <h2>Frequently <em>Asked.</em></h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What is the cohort exactly?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>A 90-day group coaching program for enterprise sellers built around the Red Zone Selling framework. 25 sellers. Weekly live sessions. Real deal work. The goal isn't to teach you sales theory — it's to get inside your active pipeline and help you close more of the deals that actually matter.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Who is this for?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Enterprise AEs carrying significant quotas who are serious about closing bigger deals, winning more consistently, and building the kind of execution discipline that holds up under pressure. This isn't for someone looking for motivation. It's for someone ready to put their live deals on the table and do the work.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Who is this NOT for?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Sellers looking for a passive learning experience. If you're not willing to bring real deals, engage with the group, and be challenged on your thinking — this isn't the right fit.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What does a typical week look like?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Each week includes a live deal review and office hours session where members bring active opportunities for group coaching and feedback. Between sessions, you have 24/7 access to the RZS AI Coach for on-demand coaching on any deal or situation. The Slack community runs all week for async support — both group channels where deals get crowdsourced and direct messaging with Vince for situations that need a quick read outside of a live session.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            How much time does it require?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Plan for one live session per week plus time using the AI Coach and engaging in the Slack community as needed. The more you put in, the more you get out — but the structure is designed for working sellers with full pipelines.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What's the RZS AI Coach?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>An AI-powered coaching tool built on the Red Zone Selling framework. You can bring any deal, any objection, any situation — and get immediate, specific coaching grounded in the same plays we use in live sessions. It's available 24/7 between sessions so you're never stuck waiting for the next call.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Is there 1:1 time with Vince?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Direct Slack access to Vince is included — you can message him async anytime for a quick read on a deal or situation. Dedicated 1:1 coaching sessions are available at an additional cost for situations that need more focused, private attention. Cohort members get preferred scheduling and rates.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Why only 25 seats?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Group coaching only works when the group is the right size. Too large and the dynamic gets diluted — deals don't get real attention, accountability fades, and the cohort effect disappears. 25 is the ceiling to protect the quality of every session.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What happens after three months?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>The cohort runs quarterly — July through September is the first. Members can renew each quarter to stay in. Founding cohort members get priority renewal rights and locked-in pricing before spots open to new applicants.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Why $750 for three months?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>This is the founding cohort price. It won't be offered again at this rate. Once the 25 seats are filled, enrollment closes. If you close one more deal this quarter because of what you learn here, the math works itself out.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT VINCE -->
+  <section class="about">
+    <div class="about-inner">
+      <div class="about-content">
+        <div class="about-label">The Coach</div>
+        <h2>Vince Beese</h2>
+        <p>I'm not a LinkedIn influencer recycling someone else's advice. I've been in the trenches for 25+ years — carrying quotas, running teams, building companies, and closing deals that actually moved the needle.</p>
+        <p>Red Zone Selling is the system I built from what actually works. Everything I coach comes from what I've executed at scale, not what I read in a book.</p>
+        <p style="margin-top:24px;">
+          <a href="https://www.amazon.com/dp/B0FLLHQG13" target="_blank" style="color:var(--red);font-weight:600;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;">
+            → Get the Book: Red Zone Selling
+          </a>
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="about-stat">
+          <div class="about-stat-number">25+</div>
+          <div class="about-stat-label">Years in enterprise sales</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-number">5</div>
+          <div class="about-stat-label">Successful company exits</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-number">$1B+</div>
+          <div class="about-stat-label">Revenue generated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <h2>25 Seats.<br>One Quarter.<br>No Excuses.</h2>
+    <p>This is where serious enterprise sellers come to close more deals. The price won't come back. The seats won't last.</p>
+    <a href="https://buy.stripe.com/4gM3cu0yX1Uu1AH0Qg5ZC0f" class="btn-white">Claim Your Seat — $750 (3 Months)</a>
+    <p class="final-seats">July – September 2026 · Founding cohort · Capped at 25 · Renewable each quarter</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Red Zone <span>Selling</span></div>
+    <p>© 2026 Vince Beese. All rights reserved.</p>
+    <div style="display:flex;gap:24px;">
+      <a href="https://redzoneselling.co" target="_blank">redzoneselling.co</a>
+      <a href="https://linkedin.com/in/vbeese" target="_blank">LinkedIn</a>
+      <a href="https://vbeese.substack.com" target="_blank">Substack</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      // Open clicked if it was closed
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>
