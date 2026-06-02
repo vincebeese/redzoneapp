@@ -26,9 +26,9 @@ export default function PublicLayout({ children, hideBetaBar = false }) {
 
       {!hideBetaBar && (
         <div className="bg-[#1A1A1A] text-white text-sm text-center py-2 px-4">
-          RZS AI Coach is live. Start your 14-day free trial today →{' '}
-          <Link to="/signup" className="text-[#ef9a9a] font-semibold hover:underline whitespace-nowrap">
-            Start Free Trial →
+          Founding Coaching Cohort — July–September 2026. 25 seats. Closes when full.{' '}
+          <Link to="/cohort" className="text-[#ef9a9a] font-semibold hover:underline whitespace-nowrap">
+            Claim Your Seat →
           </Link>
         </div>
       )}
