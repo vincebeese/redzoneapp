@@ -718,3 +718,78 @@ export async function sendInviteEmail({ toEmail, inviteUrl, inviterName }) {
 
   return data;
 }
+
+export async function sendCohortWelcomeEmail({ toEmail, firstName }) {
+  const { client, fromEmail } = await getResendClient();
+  const name = firstName ? firstName : 'there';
+
+  const { data, error } = await client.emails.send({
+    from: fromEmail,
+    to: toEmail,
+    subject: "You're in — Founding Coaching Cohort · Red Zone Selling",
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; color: #1a1a2e;">
+
+        <p style="font-family: sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #c8102e; margin: 0 0 6px 0;">Red Zone Selling™</p>
+        <h1 style="font-size: 26px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0;">You're in.</h1>
+        <p style="font-size: 13px; color: #888; margin: 0 0 28px 0;">Founding Coaching Cohort · July – September 2026</p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 0 0 28px 0;" />
+
+        <p style="font-size: 15px; line-height: 1.7; margin: 0 0 16px 0;">
+          Hey ${name} —
+        </p>
+
+        <p style="font-size: 15px; line-height: 1.7; margin: 0 0 16px 0;">
+          Welcome to the Founding Coaching Cohort. You've claimed one of 25 seats in the first-ever Red Zone Selling group coaching program, and I'm glad you're here.
+        </p>
+
+        <p style="font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
+          Here's what to expect over the next few days — you'll receive separate invites for each of the following:
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 0 0 28px 0;">
+          <tr>
+            <td style="padding: 16px 20px; border-left: 3px solid #c8102e; background: #fdf8f8; vertical-align: top;">
+              <p style="font-size: 14px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0;">🤖 RZS AI Coach</p>
+              <p style="font-size: 13px; color: #555; margin: 0; line-height: 1.6;">Your 24/7 on-demand coaching access. Deal mode, coach mode, mindset mode — all grounded in the Red Zone framework.</p>
+            </td>
+          </tr>
+          <tr><td style="height: 8px;"></td></tr>
+          <tr>
+            <td style="padding: 16px 20px; border-left: 3px solid #c8102e; background: #fdf8f8; vertical-align: top;">
+              <p style="font-size: 14px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0;">💬 Private Slack Channel</p>
+              <p style="font-size: 13px; color: #555; margin: 0; line-height: 1.6;">Your cohort's home base. Share what's working, get fast feedback between sessions, and stay connected to the group.</p>
+            </td>
+          </tr>
+          <tr><td style="height: 8px;"></td></tr>
+          <tr>
+            <td style="padding: 16px 20px; border-left: 3px solid #c8102e; background: #fdf8f8; vertical-align: top;">
+              <p style="font-size: 14px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0;">📅 Weekly Deal Reviews & Office Hours</p>
+              <p style="font-size: 13px; color: #555; margin: 0; line-height: 1.6;">Bring your live deals. Every week we work through real pipeline together — not theory. Calendar invites are on the way.</p>
+            </td>
+          </tr>
+        </table>
+
+        <p style="font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
+          The cohort kicks off in July. Between now and then, I'll be in touch with logistics and a short onboarding note so you can hit the ground running.
+        </p>
+
+        <p style="font-size: 15px; line-height: 1.7; margin: 0 0 8px 0;">
+          If you have any questions in the meantime, reply directly to this email.
+        </p>
+
+        <p style="font-size: 15px; line-height: 1.7; margin: 0 0 32px 0;">
+          — Vince
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 0 0 16px 0;" />
+        <p style="font-size: 11px; color: #aaa; text-align: center; margin: 0;">RED ZONE SELLING™ · REDZONESELLING.CO</p>
+
+      </div>
+    `,
+  });
+
+  if (error) throw new Error(`Failed to send cohort welcome email: ${error.message}`);
+  return data;
+}

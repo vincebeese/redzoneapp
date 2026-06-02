@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 import { query } from '../db/index.js';
 import { ensureUser } from '../middleware/auth.js';
 import adminOnly from '../middleware/adminOnly.js';
-import { sendInviteEmail, sendBetaApprovedEmail } from '../services/email.js';
+import { sendInviteEmail, sendBetaApprovedEmail, sendCohortWelcomeEmail } from '../services/email.js';
 import { runBackup } from '../services/backupService.js';
 import { runDailyReport } from '../services/dailyReport.js';
 import { count as sseCount } from '../services/sseCounter.js';
@@ -1277,6 +1277,18 @@ router.post('/backup/run', async (req, res) => {
 router.post('/report/run', async (req, res) => {
   res.json({ ok: true, message: 'Daily report running — results will be emailed to vince@vincebeese.com' });
   runDailyReport().catch((err) => console.error('Manual report error:', err));
+});
+
+router.post('/cohort/welcome', async (req, res) => {
+  const { email, firstName } = req.body;
+  if (!email) return res.status(400).json({ error: 'email is required' });
+  try {
+    await sendCohortWelcomeEmail({ toEmail: email.trim(), firstName: firstName?.trim() });
+    res.json({ ok: true, message: `Cohort welcome email sent to ${email}` });
+  } catch (err) {
+    req.log.error({ err }, 'Failed to send cohort welcome email');
+    res.status(500).json({ error: err.message });
+  }
 });
 
 export default router;
