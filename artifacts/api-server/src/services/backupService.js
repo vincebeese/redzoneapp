@@ -52,7 +52,21 @@ async function runBackup() {
     return;
   }
 
-  const storage = new Storage();
+  const REPLIT_SIDECAR_ENDPOINT = 'http://127.0.0.1:1106';
+  const storage = new Storage({
+    credentials: {
+      audience: 'replit',
+      subject_token_type: 'access_token',
+      token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
+      type: 'external_account',
+      credential_source: {
+        url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
+        format: { type: 'json', subject_token_field_name: 'access_token' },
+      },
+      universe_domain: 'googleapis.com',
+    },
+    projectId: '',
+  });
   const bucket = storage.bucket(bucketId);
   const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   const folderPrefix = `backups/${dateStr}/`;
